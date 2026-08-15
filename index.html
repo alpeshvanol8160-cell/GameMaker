@@ -70,11 +70,6 @@ color:#111;
 <button onclick="addObject()">➕ Add Object</button>
  <button onclick="addPlayer()">🧍 Add Player</button>
  <button onclick="addEnemy()">👹 Add Enemy</button>
- <label>👹 Enemy Image</label>
-<input id="enemyImage" type="file" accept="image/*">
-
-<button onclick="applyEnemyImage()" style="margin-top:8px;width:100%">
-👹 Apply Enemy Image
 </button>
 <button onclick="playGame()">▶️ Play</button>
 <button onclick="resetGame()">🔄 Reset</button>
@@ -112,12 +107,22 @@ color:#111;
 <button onclick="applyPlayerImage()" style="margin-top:8px;width:100%">
 🧍 Apply Player Image
 </button>
- <label>🖼️ Object Image</label>
-<input id="objImage" type="file" accept="image/*">
+ <label>🧍 Player Image</label>
+<input id="playerImage" type="file" accept="image/*">
 
-<button onclick="applyImage()" style="margin-top:8px;width:100%">
-🖼️ Apply Image
+<button onclick="applyPlayerImage()" style="margin-top:8px;width:100%">
+🧍 Apply Player Image
 </button>
+
+<label>👹 Enemy Image</label>
+<input id="enemyImage" type="file" accept="image/*">
+
+<button onclick="applyEnemyImage()" style="margin-top:8px;width:100%">
+👹 Apply Enemy Image
+</button>
+
+<label>🖼️ Object Image</label>
+<input id="objImage" type="file" accept="image/*">
 </div>
 
 
@@ -170,9 +175,6 @@ function selectObject(obj){
 
  document.getElementById("objColor").value=
  rgbToHex(getComputedStyle(obj).backgroundColor);
-
- document.getElementById("objSize").value=
- parseInt(obj.offsetWidth);
 }
 
 function makeDraggable(obj){
