@@ -484,6 +484,8 @@ function startEnemyAI(enemy){
    function enemyAttack(enemy){
   if(!selected || selected.dataset.name!=="Player") return;
 
+  if(enemy.dataset.attacking==="true") return;
+
   const player=selected;
 
   const ex=parseInt(enemy.style.left)||0;
@@ -496,27 +498,38 @@ function startEnemyAI(enemy){
   );
 
   if(distance<75){
-    let hp=parseInt(player.dataset.hp)||100;
 
-    hp-=10;
-    if(hp<0) hp=0;
+    enemy.dataset.attacking="true";
 
-    player.dataset.hp=hp;
+    setTimeout(function(){
 
-    const hpText=player.querySelector(".hpText");
-    const healthFill=player.querySelector(".healthFill");
+      if(!document.body.contains(enemy)) return;
 
-    if(hpText){
-      hpText.textContent="❤️ "+hp;
-    }
+      let hp=parseInt(player.dataset.hp)||100;
 
-    if(healthFill){
-      healthFill.style.width=hp+"%";
-    }
+      hp-=5;
+      if(hp<0) hp=0;
 
-    if(hp===0){
-      alert("💀 Game Over!");
-    }
+      player.dataset.hp=hp;
+
+      const hpText=player.querySelector(".hpText");
+      const healthFill=player.querySelector(".healthFill");
+
+      if(hpText){
+        hpText.textContent="❤️ "+hp;
+      }
+
+      if(healthFill){
+        healthFill.style.width=hp+"%";
+      }
+
+      if(hp===0){
+        alert("💀 Game Over!");
+      }
+
+      enemy.dataset.attacking="false";
+
+    },1000);
   }
    }
    function playerAttack(){
