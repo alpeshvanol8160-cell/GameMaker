@@ -28,6 +28,7 @@ input{width:100%;padding:8px;margin-top:4px}
 
 <div class="toolbar">
 <button onclick="addObject()">➕ Add Object</button>
+ <button onclick="addPlayer()">🧍 Add Player</button>
 <button onclick="playGame()">▶️ Play</button>
 <button onclick="resetGame()">🔄 Reset</button>
 </div>
@@ -216,4 +217,20 @@ selected.style.backgroundColor = "transparent";
 
   reader.readAsDataURL(file);
  }
+  function addPlayer(){
+  const player=document.createElement("div");
+
+  player.className="object";
+  player.style.left="100px";
+  player.style.top="100px";
+  player.style.width="70px";
+  player.style.height="70px";
+  player.style.backgroundColor="#2563eb";
+  player.dataset.name="Player";
+
+  document.getElementById("gameArea").appendChild(player);
+
+  selectObject(player);
+  makeDraggable(player);
+}
  </script>
