@@ -19,6 +19,19 @@ button.delete{background:#dc2626}
 .panel label{display:block;margin-top:8px}
 input{width:100%;padding:8px;margin-top:4px}
 #status{text-align:center;padding:8px;background:#374151}
+ #controls{
+display:flex;
+justify-content:center;
+gap:10px;
+padding:12px;
+background:#111827;
+}
+
+#controls button{
+width:60px;
+height:50px;
+font-size:20px;
+}
 </style>
 </head>
 
@@ -34,7 +47,12 @@ input{width:100%;padding:8px;margin-top:4px}
 </div>
 
 <div id="gameArea"></div>
-
+<div id="controls">
+<button onclick="movePlayer('up')">⬆️</button>
+<button onclick="movePlayer('left')">⬅️</button>
+<button onclick="movePlayer('down')">⬇️</button>
+<button onclick="movePlayer('right')">➡️</button>
+</div>
 <div id="status">No object selected</div>
 
 <div class="panel">
