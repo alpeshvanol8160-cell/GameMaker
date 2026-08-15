@@ -53,6 +53,12 @@ input{width:100%;padding:8px;margin-top:4px}
 <button class="delete" onclick="deleteObject()" style="margin-top:8px;width:100%">
 🗑️ Delete Selected
 </button>
+ <label>🖼️ Object Image</label>
+<input id="objImage" type="file" accept="image/*">
+
+<button onclick="applyImage()" style="margin-top:8px;width:100%">
+🖼️ Apply Image
+</button>
 </div>
 
 <script>
@@ -186,4 +192,28 @@ function rgbToHex(rgb){
  .map(x=>parseInt(x).toString(16).padStart(2,"0"))
  .join("");
 }
-</script>
+ function applyImage(){
+  if(!selected){
+    alert("Pehle object select karo");
+    return;
+  }
+
+  const file = document.getElementById("objImage").files[0];
+
+  if(!file){
+    alert("Pehle image select karo");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+    selected.style.backgroundImage = "url('" + e.target.result + "')";
+    selected.style.backgroundSize = "cover";
+    selected.style.backgroundPosition = "center";
+    selected.style.backgroundRepeat = "no-repeat";
+  };
+
+  reader.readAsDataURL(file);
+ }
+ </script>
