@@ -62,7 +62,8 @@ input{width:100%;padding:8px;margin-top:4px}
 </button>
 </div>
 
-<script>
+
+  <script>
 let selected=null;
 let count=0;
 
@@ -78,6 +79,23 @@ function addObject(){
  count++;
  selectObject(obj);
  makeDraggable(obj);
+}
+
+function addPlayer(){
+ const player=document.createElement("div");
+
+ player.className="object";
+ player.style.left="100px";
+ player.style.top="100px";
+ player.style.width="70px";
+ player.style.height="70px";
+ player.style.backgroundColor="#2563eb";
+ player.dataset.name="Player";
+
+ document.getElementById("gameArea").appendChild(player);
+
+ selectObject(player);
+ makeDraggable(player);
 }
 
 function selectObject(obj){
@@ -143,7 +161,7 @@ function applyChanges(){
 
  const name=document.getElementById("objName").value.trim();
 
- if(name) {
+ if(name){
    selected.dataset.name=name;
  }
 
@@ -187,50 +205,40 @@ function playGame(){
 
 function rgbToHex(rgb){
  const m=rgb.match(/\d+/g);
+
  if(!m)return "#ff0000";
 
  return "#"+m.slice(0,3)
  .map(x=>parseInt(x).toString(16).padStart(2,"0"))
  .join("");
 }
- function applyImage(){
-  if(!selected){
-    alert("Pehle object select karo");
-    return;
-  }
 
-  const file = document.getElementById("objImage").files[0];
-
-  if(!file){
-    alert("Pehle image select karo");
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = function(e){
-    selected.style.backgroundImage = "url('" + e.target.result + "')";
-    selected.style.backgroundSize = "cover";
-    selected.style.backgroundPosition = "center";
-   selected.style.backgroundRepeat = "no-repeat";
-selected.style.backgroundColor = "transparent";
-
-  reader.readAsDataURL(file);
+function applyImage(){
+ if(!selected){
+   alert("Pehle object select karo");
+   return;
  }
-  
-  const player=document.createElement("div");
 
-  player.className="object";
-  player.style.left="100px";
-  player.style.top="100px";
-  player.style.width="70px";
-  player.style.height="70px";
-  player.style.backgroundColor="#2563eb";
-  player.dataset.name="Player";
+ const file=document.getElementById("objImage").files[0];
 
-  document.getElementById("gameArea").appendChild(player);
+ if(!file){
+   alert("Pehle image select karo");
+   return;
+ }
 
-  selectObject(player);
-  makeDraggable(player);
+ const reader=new FileReader();
+
+ reader.onload=function(e){
+   selected.style.backgroundImage=
+   "url('" + e.target.result + "')";
+
+   selected.style.backgroundSize="cover";
+   selected.style.backgroundPosition="center";
+   selected.style.backgroundRepeat="no-repeat";
+   selected.style.backgroundColor="transparent";
+ };
+
+ reader.readAsDataURL(file);
 }
- </script>
+
+  </script>
