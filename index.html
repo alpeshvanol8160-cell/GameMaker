@@ -320,4 +320,29 @@ document.getElementById("gameArea").addEventListener("touchend",function(e){
     }
   }
 },{passive:true});
+   function applyPlayerImage(){
+  if(!selected || selected.dataset.name!=="Player"){
+    alert("Pehle Player select karo");
+    return;
+  }
+
+  const file=document.getElementById("playerImage").files[0];
+
+  if(!file){
+    alert("Pehle Player image select karo");
+    return;
+  }
+
+  const reader=new FileReader();
+
+  reader.onload=function(e){
+    selected.style.backgroundImage="url('" + e.target.result + "')";
+    selected.style.backgroundSize="cover";
+    selected.style.backgroundPosition="center";
+    selected.style.backgroundRepeat="no-repeat";
+    selected.style.backgroundColor="transparent";
+  };
+
+  reader.readAsDataURL(file);
+   }
   </script>
