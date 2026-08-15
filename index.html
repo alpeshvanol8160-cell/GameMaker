@@ -1,161 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GameMaker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GameMaker V2</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #111827;
-      color: white;
-    }
-
-    header {
-      padding: 15px;
-      background: #1f2937;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      padding: 10px;
-      background: #374151;
-      overflow-x: auto;
-    }
-
-    button {
-      border: none;
-      border-radius: 7px;
-      padding: 10px 14px;
-      background: #2563eb;
-      color: white;
-      font-weight: bold;
-    }
-
-    button:active {
-      transform: scale(0.96);
-    }
-
-    #gameArea {
-      position: relative;
-      width: 100%;
-      height: 500px;
-      background: #dbeafe;
-      overflow: hidden;
-    }
-
-    .player {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      background: red;
-      border-radius: 10px;
-      left: 50px;
-      top: 50px;
-      touch-action: none;
-    }
-
-    .info {
-      padding: 12px;
-      background: #1f2937;
-      text-align: center;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial;background:#111827;color:white}
+header{padding:14px;background:#1f2937;text-align:center;font-size:22px;font-weight:bold}
+.toolbar{display:flex;gap:7px;padding:9px;background:#374151;overflow-x:auto}
+button{border:0;border-radius:7px;padding:10px 13px;background:#2563eb;color:white;font-weight:bold;white-space:nowrap}
+button.delete{background:#dc2626}
+#gameArea{position:relative;width:100%;height:480px;background:#dbeafe;overflow:hidden}
+.object{position:absolute;width:60px;height:60px;background:red;border-radius:10px;touch-action:none;border:3px solid transparent}
+.object.selected{border-color:#111827}
+.panel{padding:12px;background:#1f2937}
+.panel label{display:block;margin-top:8px}
+input{width:100%;padding:8px;margin-top:4px}
+#status{text-align:center;padding:8px;background:#374151}
+</style>
 </head>
 
 <body>
 
-  <header>🎮 My GameMaker</header>
+<header>🎮 My GameMaker V2</header>
 
-  <div class="toolbar">
-    <button onclick="addObject()">➕ Add Object</button>
-    <button onclick="playGame()">▶️ Play</button>
-    <button onclick="resetGame()">🔄 Reset</button>
-  </div>
+<div class="toolbar">
+<button onclick="addObject()">➕ Add Object</button>
+<button onclick="playGame()">▶️ Play</button>
+<button onclick="resetGame()">🔄 Reset</button>
+</div>
 
-  <div id="gameArea"></div>
+<div id="gameArea"></div>
 
-  <div class="info">
-    Objects: <span id="count">0</span>
-  </div>
+<div id="status">No object selected</div>
 
-  <script>
-    let objectCount = 0;
+<div class="panel">
+<label>📝 Object Name</label>
+<input id="objName" placeholder="Select an object">
 
-    function addObject() {
-      const gameArea = document.getElementById("gameArea");
+<label>🎨 Color</label>
+<input id="objColor" type="color" value="#ff0000">
 
-      const obj = document.createElement("div");
-      obj.className = "player";
+<label>📏 Size</label>
+<input id="objSize" type="range" min="20" max="150" value="60">
 
-      obj.style.left = Math.random() * 250 + "px";
-      obj.style.top = Math.random() * 300 + "px";
+<button onclick="applyChanges()" style="margin-top:12px;width:100%">
+✅ Apply Changes
+</button>
 
-      gameArea.appendChild(obj);
+<button class="delete" onclick="deleteObject()" style="margin-top:8px;width:100%">
+🗑️ Delete Selected
+</button>
+</div>
 
-      objectCount++;
-      document.getElementById("count").textContent = objectCount;
+<script>
+let selected=null;
+let count=0;
 
-      makeDraggable(obj);
-    }
+function addObject(){
+ const obj=document.createElement("div");
+ obj.className="object";
+ obj.style.left="50px";
+ obj.style.top="50px";
+ obj.dataset.name="Object "+(count+1);
 
-    function makeDraggable(obj) {
-      let moving = false;
-      let offsetX = 0;
-      let offsetY = 0;
+ document.getElementById("gameArea").appendChild(obj);
 
-      obj.addEventListener("pointerdown", function(e) {
-        moving = true;
+ count++;
+ selectObject(obj);
+ makeDraggable(obj);
+}
 
-        const rect = obj.getBoundingClientRect();
+function selectObject(obj){
+ if(selected) selected.classList.remove("selected");
 
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
+ selected=obj;
+ obj.classList.add("selected");
 
-        obj.setPointerCapture(e.pointerId);
-      });
+ document.getElementById("status").textContent=
+ "Selected: "+obj.dataset.name;
 
-      obj.addEventListener("pointermove", function(e) {
-        if (!moving) return;
+ document.getElementById("objName").value=obj.dataset.name;
 
-        const area = document.getElementById("gameArea");
-        const rect = area.getBoundingClientRect();
+ document.getElementById("objColor").value=
+ rgbToHex(getComputedStyle(obj).backgroundColor);
 
-        let x = e.clientX - rect.left - offsetX;
-        let y = e.clientY - rect.top - offsetY;
+ document.getElementById("objSize").value=
+ parseInt(obj.offsetWidth);
+}
 
-        x = Math.max(0, Math.min(x, area.clientWidth - obj.offsetWidth));
-        y = Math.max(0, Math.min(y, area.clientHeight - obj.offsetHeight));
+function makeDraggable(obj){
+ let moving=false;
+ let offsetX=0;
+ let offsetY=0;
 
-        obj.style.left = x + "px";
-        obj.style.top = y + "px";
-      });
+ obj.addEventListener("pointerdown",function(e){
+   selectObject(obj);
+   moving=true;
 
-      obj.addEventListener("pointerup", function() {
-        moving = false;
-      });
-    }
+   const r=obj.getBoundingClientRect();
+   offsetX=e.clientX-r.left;
+   offsetY=e.clientY-r.top;
 
-    function playGame() {
-      alert("🎮 Game Preview Started!");
-    }
+   obj.setPointerCapture(e.pointerId);
+ });
 
-    function resetGame() {
-      document.getElementById("gameArea").innerHTML = "";
-      objectCount = 0;
-      document.getElementById("count").textContent = "0";
-    }
-  </script>
+ obj.addEventListener("pointermove",function(e){
+   if(!moving)return;
 
-</body>
-</html>
+   const area=document.getElementById("gameArea");
+   const r=area.getBoundingClientRect();
+
+   let x=e.clientX-r.left-offsetX;
+   let y=e.clientY-r.top-offsetY;
+
+   x=Math.max(0,Math.min(x,area.clientWidth-obj.offsetWidth));
+   y=Math.max(0,Math.min(y,area.clientHeight-obj.offsetHeight));
+
+   obj.style.left=x+"px";
+   obj.style.top=y+"px";
+ });
+
+ obj.addEventListener("pointerup",function(){
+   moving=false;
+ });
+}
+
+function applyChanges(){
+ if(!selected){
+   alert("Pehle object select karo");
+   return;
+ }
+
+ const name=document.getElementById("objName").value.trim();
+
+ if(name) {
+   selected.dataset.name=name;
+ }
+
+ selected.style.background=
+ document.getElementById("objColor").value;
+
+ const size=document.getElementById("objSize").value;
+
+ selected.style.width=size+"px";
+ selected.style.height=size+"px";
+
+ document.getElementById("status").textContent=
+ "Selected: "+selected.dataset.name;
+}
+
+function deleteObject(){
+ if(!selected){
+   alert("Pehle object select karo");
+   return;
+ }
+
+ selected.remove();
+ selected=null;
+
+ document.getElementById("status").textContent=
+ "No object selected";
+}
+
+function resetGame(){
+ document.getElementById("gameArea").innerHTML="";
+ selected=null;
+ count=0;
+
+ document.getElementById("status").textContent=
+ "No object selected";
+}
+
+function playGame(){
+ alert("🎮 Game Preview Started!");
+}
+
+function rgbToHex(rgb){
+ const m=rgb.match(/\d+/g);
+ if(!m)return "#ff0000";
+
+ return "#"+m.slice(0,3)
+ .map(x=>parseInt(x).toString(16).padStart(2,"0"))
+ .join("");
+}
+</script>
