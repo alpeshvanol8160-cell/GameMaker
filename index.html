@@ -287,4 +287,31 @@ function movePlayer(direction){
  selected.style.left=x+"px";
  selected.style.top=y+"px";
 }
+   let touchStartX=0;
+let touchStartY=0;
+
+document.getElementById("gameArea").addEventListener("touchstart",function(e){
+  touchStartX=e.touches[0].clientX;
+  touchStartY=e.touches[0].clientY;
+},{passive:true});
+
+document.getElementById("gameArea").addEventListener("touchend",function(e){
+  if(!selected || selected.dataset.name!=="Player") return;
+
+  const touchEndX=e.changedTouches[0].clientX;
+  const touchEndY=e.changedTouches[0].clientY;
+
+  const dx=touchEndX-touchStartX;
+  const dy=touchEndY-touchStartY;
+
+  if(Math.abs(dx)>Math.abs(dy)){
+    if(Math.abs(dx)>30){
+      movePlayer(dx>0?"right":"left");
+    }
+  }else{
+    if(Math.abs(dy)>30){
+      movePlayer(dy>0?"down":"up");
+    }
+  }
+},{passive:true});
   </script>
