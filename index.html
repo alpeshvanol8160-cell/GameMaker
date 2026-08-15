@@ -258,5 +258,33 @@ function applyImage(){
 
  reader.readAsDataURL(file);
 }
+   
+function movePlayer(direction){
+ if(!selected){
+   alert("Pehle Player select karo");
+   return;
+ }
 
+ if(selected.dataset.name!=="Player"){
+   alert("Pehle Player select karo");
+   return;
+ }
+
+ let x=parseInt(selected.style.left)||0;
+ let y=parseInt(selected.style.top)||0;
+
+ const speed=20;
+ const area=document.getElementById("gameArea");
+
+ if(direction==="up") y-=speed;
+ if(direction==="down") y+=speed;
+ if(direction==="left") x-=speed;
+ if(direction==="right") x+=speed;
+
+ x=Math.max(0,Math.min(x,area.clientWidth-selected.offsetWidth));
+ y=Math.max(0,Math.min(y,area.clientHeight-selected.offsetHeight));
+
+ selected.style.left=x+"px";
+ selected.style.top=y+"px";
+}
   </script>
