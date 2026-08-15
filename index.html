@@ -410,6 +410,21 @@ document.getElementById("gameArea").addEventListener("touchend",function(e){
   enemy.style.height="65px";
   enemy.style.backgroundColor="#dc2626";
   enemy.dataset.name="Enemy";
+    const healthBar=document.createElement("div");
+healthBar.className="healthBar";
+
+const healthFill=document.createElement("div");
+healthFill.className="healthFill";
+
+const hpText=document.createElement("div");
+hpText.className="hpText";
+hpText.textContent="❤️ 100";
+
+healthBar.appendChild(healthFill);
+healthBar.appendChild(hpText);
+enemy.appendChild(healthBar);
+
+enemy.dataset.hp=100;
 
   document.getElementById("gameArea").appendChild(enemy);
 
