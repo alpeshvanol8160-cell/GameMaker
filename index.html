@@ -415,4 +415,29 @@ document.getElementById("gameArea").addEventListener("touchend",function(e){
   selectObject(enemy);
   makeDraggable(enemy);
    }
+   function applyEnemyImage(){
+  if(!selected || selected.dataset.name!=="Enemy"){
+    alert("Pehle Enemy select karo");
+    return;
+  }
+
+  const file=document.getElementById("enemyImage").files[0];
+
+  if(!file){
+    alert("Pehle Enemy image select karo");
+    return;
+  }
+
+  const reader=new FileReader();
+
+  reader.onload=function(e){
+    selected.style.backgroundImage="url('" + e.target.result + "')";
+    selected.style.backgroundSize="cover";
+    selected.style.backgroundPosition="center";
+    selected.style.backgroundRepeat="no-repeat";
+    selected.style.backgroundColor="transparent";
+  };
+
+  reader.readAsDataURL(file);
+   }
   </script>
