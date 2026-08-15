@@ -69,6 +69,7 @@ color:#111;
 <div class="toolbar">
 <button onclick="addObject()">➕ Add Object</button>
  <button onclick="addPlayer()">🧍 Add Player</button>
+ <button onclick="addEnemy()">👹 Add Enemy</button>
 <button onclick="playGame()">▶️ Play</button>
 <button onclick="resetGame()">🔄 Reset</button>
 </div>
@@ -389,5 +390,21 @@ document.getElementById("gameArea").addEventListener("touchend",function(e){
   healthBar.appendChild(healthFill);
   player.appendChild(hpText);
   player.appendChild(healthBar);
+   }
+   function addEnemy(){
+  const enemy=document.createElement("div");
+
+  enemy.className="object";
+  enemy.style.left="250px";
+  enemy.style.top="100px";
+  enemy.style.width="65px";
+  enemy.style.height="65px";
+  enemy.style.backgroundColor="#dc2626";
+  enemy.dataset.name="Enemy";
+
+  document.getElementById("gameArea").appendChild(enemy);
+
+  selectObject(enemy);
+  makeDraggable(enemy);
    }
   </script>
