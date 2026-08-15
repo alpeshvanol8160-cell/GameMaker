@@ -32,6 +32,33 @@ width:60px;
 height:50px;
 font-size:20px;
 }
+ .healthBar{
+position:absolute;
+top:-12px;
+left:0;
+width:100%;
+height:8px;
+background:#333;
+border-radius:5px;
+overflow:hidden;
+}
+
+.healthFill{
+width:100%;
+height:100%;
+background:#22c55e;
+}
+
+.hpText{
+position:absolute;
+top:-32px;
+left:0;
+width:100%;
+text-align:center;
+font-size:12px;
+font-weight:bold;
+color:#111;
+}
 </style>
 </head>
 
@@ -120,6 +147,7 @@ function addPlayer(){
 
  selectObject(player);
  makeDraggable(player);
+ setupPlayerHealth(player);
 }
 
 function selectObject(obj){
@@ -344,5 +372,22 @@ document.getElementById("gameArea").addEventListener("touchend",function(e){
   };
 
   reader.readAsDataURL(file);
+   }
+   function setupPlayerHealth(player){
+  player.dataset.hp="100";
+
+  const hpText=document.createElement("div");
+  hpText.className="hpText";
+  hpText.textContent="❤️ 100";
+
+  const healthBar=document.createElement("div");
+  healthBar.className="healthBar";
+
+  const healthFill=document.createElement("div");
+  healthFill.className="healthFill";
+
+  healthBar.appendChild(healthFill);
+  player.appendChild(hpText);
+  player.appendChild(healthBar);
    }
   </script>
