@@ -99,7 +99,6 @@ color:#111;
 <button onclick="addObject()">➕ Add Object</button>
  <button onclick="addPlayer()">🧍 Add Player</button>
  <button onclick="addEnemy()">👹 Add Enemy</button>
-</button>
 <button onclick="playGame()">▶️ Play</button>
 <button onclick="resetGame()">🔄 Reset</button>
  <button onclick="playerAttack()">⚔️ Attack</button>
@@ -539,9 +538,6 @@ function toggleBlock(){
     alert("🛡️ Block OFF");
   }
 }
-
-function enemyAttack(enemy){
-   
    function enemyAttack(enemy){
   if(!selected || selected.dataset.name!=="Player") return;
 
