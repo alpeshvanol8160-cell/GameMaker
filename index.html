@@ -580,8 +580,8 @@ function startEnemyAI(enemy){
       Math.pow(px-ex,2)+Math.pow(py-ey,2)
     );
 
-    if(distance<100){
-
+    
+    if(distance<300){
       hit=true;
 
       let hp=parseInt(enemy.dataset.hp)||100;
