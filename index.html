@@ -59,6 +59,28 @@ font-size:12px;
 font-weight:bold;
 color:#111;
 }
+ .hitEffect{
+  position:absolute;
+  font-size:30px;
+  pointer-events:none;
+  animation:hitAnim 0.4s ease-out forwards;
+  z-index:100;
+}
+
+@keyframes hitAnim{
+  0%{
+    transform:scale(0.5);
+    opacity:1;
+  }
+  50%{
+    transform:scale(1.5);
+    opacity:1;
+  }
+  100%{
+    transform:scale(1);
+    opacity:0;
+  }
+}
 </style>
 </head>
 
