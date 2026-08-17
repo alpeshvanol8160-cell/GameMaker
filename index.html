@@ -551,6 +551,18 @@ function startEnemyAI(enemy){
       if(!document.body.contains(enemy)) return;
 
       let hp=parseInt(player.dataset.hp)||100;
+     const effect=document.createElement("div");
+effect.className="enemyHitEffect";
+effect.textContent="💢";
+
+effect.style.left=(px + player.offsetWidth/2 - 15)+"px";
+effect.style.top=(py - 10)+"px";
+
+document.getElementById("gameArea").appendChild(effect);
+
+setTimeout(function(){
+  effect.remove();
+},500);
 
       hp-=5;
       if(hp<0) hp=0;
