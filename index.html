@@ -651,8 +651,12 @@ setTimeout(function(){
       }
 
       if(hp===0){
-        enemy.remove();
-        alert("💀 Enemy Defeated!");
+  enemy.classList.add("enemyDeath");
+
+  setTimeout(function(){
+    enemy.remove();
+    alert("💀 Enemy Defeated!");
+  },700);
       }
     }
   });
