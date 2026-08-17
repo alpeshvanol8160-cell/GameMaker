@@ -103,6 +103,7 @@ color:#111;
 <button onclick="playGame()">▶️ Play</button>
 <button onclick="resetGame()">🔄 Reset</button>
  <button onclick="playerAttack()">⚔️ Attack</button>
+ <button onclick="toggleBlock()">🛡️ Block</button>
 </div>
 
 <div id="gameArea"></div>
@@ -525,7 +526,22 @@ function startEnemyAI(enemy){
    enemyAttack(enemy);
 
   },30);
+
 }
+   let isBlocking = false;
+
+function toggleBlock(){
+  isBlocking = !isBlocking;
+
+  if(isBlocking){
+    alert("🛡️ Block ON");
+  }else{
+    alert("🛡️ Block OFF");
+  }
+}
+
+function enemyAttack(enemy){
+   
    function enemyAttack(enemy){
   if(!selected || selected.dataset.name!=="Player") return;
 
@@ -564,7 +580,11 @@ setTimeout(function(){
   effect.remove();
 },500);
 
-      hp-=5;
+      if(isBlocking){
+  hp-=2;
+}else{
+  hp-=5;
+      }
       if(hp<0) hp=0;
 
       player.dataset.hp=hp;
