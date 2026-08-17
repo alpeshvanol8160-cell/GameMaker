@@ -66,14 +66,21 @@ color:#111;
   animation:hitAnim 0.5s ease-out forwards;
   z-index:9999;
  }
+ .enemyHitEffect{
+  position:absolute;
+  font-size:35px;
+  pointer-events:none;
+  animation:enemyHitAnim 0.5s ease-out forwards;
+  z-index:9999;
+}
 
-@keyframes hitAnim{
+@keyframes enemyHitAnim{
   0%{
     transform:scale(0.5);
     opacity:1;
   }
   50%{
-    transform:scale(1.5);
+    transform:scale(1.4);
     opacity:1;
   }
   100%{
