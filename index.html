@@ -107,7 +107,36 @@ color:#111;
     transform:scale(1.05);
     opacity:1;
   }
+}.shieldBreak{
+  position:absolute;
+  inset:-15px;
+  border:5px solid #38bdf8;
+  border-radius:25px;
+  pointer-events:none;
+  animation:shieldBreakAnim 0.4s ease-out forwards;
+  z-index:9999;
 }
+
+@keyframes shieldBreakAnim{
+  0%{
+    transform:scale(0.8);
+    opacity:1;
+    box-shadow:0 0 5px #38bdf8;
+  }
+
+  50%{
+    transform:scale(1.25);
+    opacity:1;
+    box-shadow:0 0 35px #38bdf8;
+  }
+
+  100%{
+    transform:scale(1.5);
+    opacity:0;
+    box-shadow:0 0 50px #38bdf8;
+  }
+}
+ 
 </style>
 </head>
 
@@ -620,9 +649,19 @@ function enemyAttack(enemy){
       },500);
 
       if(isBlocking){
-        hp-=2;
-      }else{
-        hp-=5;
+
+  const shield=document.createElement("div");
+  shield.className="shieldBreak";
+  player.appendChild(shield);
+
+  setTimeout(function(){
+    shield.remove();
+  },400);
+
+  hp-=0;
+
+}else{
+  hp-=5;
       }
 
       if(hp<0) hp=0;
