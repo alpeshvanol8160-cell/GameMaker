@@ -597,20 +597,20 @@ function startEnemyAI(enemy){
     );
 
     
-    if(distance<300){
+    if(distance<90){
       hit=true;
      const effect=document.createElement("div");
 effect.className="hitEffect";
 effect.textContent="⚔️";
 
-effect.style.left=ex+"px";
-effect.style.top=ey+"px";
+effect.style.left=(ex + enemy.offsetWidth/2 - 15)+"px";
+effect.style.top=(ey - 10)+"px";
 
 document.getElementById("gameArea").appendChild(effect);
 
 setTimeout(function(){
   effect.remove();
-},400);
+},500);
 
       let hp=parseInt(enemy.dataset.hp)||100;
 
