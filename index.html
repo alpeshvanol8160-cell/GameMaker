@@ -661,6 +661,29 @@ function useStamina(){
   }
 }
    setInterval(useStamina,500);
+   function rechargeStamina(){
+
+  if(!selected || selected.dataset.name!=="Player") return;
+
+  if(isBlocking) return;
+
+  let stamina=parseInt(selected.dataset.stamina)||0;
+
+  if(stamina<100){
+    stamina+=2;
+
+    if(stamina>100) stamina=100;
+
+    selected.dataset.stamina=String(stamina);
+
+    const staminaFill=selected.querySelector(".staminaFill");
+
+    if(staminaFill){
+      staminaFill.style.width=stamina+"%";
+    }
+  }
+   }
+   setInterval(rechargeStamina,500);
 function enemyAttack(enemy){
 
   if(!selected || selected.dataset.name!=="Player") return;
