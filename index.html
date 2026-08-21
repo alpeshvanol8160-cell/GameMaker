@@ -631,7 +631,36 @@ function toggleBlock(){
 
   }
 }
+function useStamina(){
 
+  if(!isBlocking) return;
+  if(!selected || selected.dataset.name!=="Player") return;
+
+  let stamina=parseInt(selected.dataset.stamina)||100;
+
+  stamina-=5;
+
+  if(stamina<=0){
+    stamina=0;
+    isBlocking=false;
+
+    const shield=selected.querySelector(".blockShield");
+    if(shield){
+      shield.remove();
+    }
+
+    alert("⚡ Stamina खत्म! Block OFF");
+  }
+
+  selected.dataset.stamina=String(stamina);
+
+  const staminaFill=selected.querySelector(".staminaFill");
+
+  if(staminaFill){
+    staminaFill.style.width=stamina+"%";
+  }
+}
+   setInterval(useStamina,500);
 function enemyAttack(enemy){
 
   if(!selected || selected.dataset.name!=="Player") return;
