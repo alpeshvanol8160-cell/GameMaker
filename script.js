@@ -1123,9 +1123,118 @@ setInterval(function(){
 // ⚔️ ENEMY AUTO ATTACK
 // ========================================
 
+// ========================================
+// ❤️ PLAYER HP SYSTEM
+// ========================================
+
+let playerHP = 100;
+let isBlocking = false;
+
+
+// ========================================
+// 🛡️ BLOCK
+// ========================================
+
+function toggleBlock(){
+
+  isBlocking = !isBlocking;
+
+  const button =
+    document.getElementById("blockButton");
+
+  if(button){
+
+    button.innerText =
+      isBlocking
+      ? "🛡️ Block ON"
+      : "🛡️ Block OFF";
+
+  }
+
+}
+
+
+// ========================================
+// ❤️ PLAYER DAMAGE
+// ========================================
+
+function damagePlayer(amount){
+
+  if(playerHP <= 0) return;
+
+
+  // 🛡️ Block reduces damage
+  if(isBlocking){
+
+    amount = 2;
+
+  }
+
+
+  playerHP -= amount;
+
+
+  if(playerHP < 0){
+
+    playerHP = 0;
+
+  }
+
+
+  // HP display
+  const hpText =
+    document.getElementById("playerHP");
+
+  const hpFill =
+    document.getElementById("playerHealthFill");
+
+
+  if(hpText){
+
+    hpText.innerText =
+      playerHP + " HP";
+
+  }
+
+
+  if(hpFill){
+
+    hpFill.style.width =
+      playerHP + "%";
+
+  }
+
+
+  // 💀 Player defeated
+  if(playerHP <= 0){
+
+    isPlaying = false;
+
+    const status =
+      document.getElementById("status");
+
+    if(status){
+
+      status.innerText =
+        "💀 Player Defeated";
+
+    }
+
+    alert("💀 Player Defeated!");
+
+  }
+
+}
+
+
+// ========================================
+// ⚔️ ENEMY ATTACK DAMAGE
+// ========================================
+
 function enemyAttack(enemy){
 
   if(!isPlaying) return;
+
 
   const player =
     [...gameArea.children].find(function(obj){
@@ -1136,6 +1245,7 @@ function enemyAttack(enemy){
       );
 
     });
+
 
   if(!player) return;
 
@@ -1153,30 +1263,45 @@ function enemyAttack(enemy){
     parseFloat(player.style.top) || 0;
 
 
-  const dx = enemyX - playerX;
-  const dy = enemyY - playerY;
+  const dx =
+    enemyX - playerX;
+
+  const dy =
+    enemyY - playerY;
+
 
   const distance =
-    Math.sqrt(dx * dx + dy * dy);
+    Math.sqrt(
+      dx * dx +
+      dy * dy
+    );
 
 
   // ⚔️ Attack range
   if(distance <= 75){
 
-    // Cooldown
-    if(enemy.dataset.attacking === "true"){
+    if(
+      enemy.dataset.attacking === "true"
+    ){
+
       return;
+
     }
 
-    enemy.dataset.attacking = "true";
+
+    enemy.dataset.attacking =
+      "true";
 
 
-    // 💥 Hit effect
+    // 💢 Hit effect
     const hit =
       document.createElement("div");
 
-    hit.className = "hitEffect";
-    hit.innerText = "💢";
+    hit.className =
+      "hitEffect";
+
+    hit.innerText =
+      "💢";
 
     hit.style.left =
       (playerX + 20) + "px";
@@ -1184,10 +1309,14 @@ function enemyAttack(enemy){
     hit.style.top =
       (playerY - 20) + "px";
 
+
     gameArea.appendChild(hit);
 
 
-    // ❤️ Player damage
+    // ❤️ Damage
+    damagePlayer(5);
+
+
     setTimeout(function(){
 
       hit.remove();
@@ -1195,10 +1324,11 @@ function enemyAttack(enemy){
     },500);
 
 
-    // ⏱️ Attack cooldown
+    // ⏱️ Cooldown
     setTimeout(function(){
 
-      enemy.dataset.attacking = "false";
+      enemy.dataset.attacking =
+        "false";
 
     },1000);
 
@@ -1206,28 +1336,4 @@ function enemyAttack(enemy){
 
 }
 
-
-// ========================================
-// 🔄 ENEMY ATTACK LOOP
-// ========================================
-
-setInterval(function(){
-
-  if(!isPlaying) return;
-
-  document
-    .querySelectorAll(".object")
-    .forEach(function(enemy){
-
-      if(
-        enemy.dataset.name &&
-        enemy.dataset.name.startsWith("Enemy")
-      ){
-
-        enemyAttack(enemy);
-
-      }
-
-    });
-
-},100);
+    
