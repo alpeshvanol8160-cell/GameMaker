@@ -172,3 +172,26 @@ main{
     padding:7px 3px;
   }
 }
+#mobileControls{
+  position:fixed;
+  left:20px;
+  bottom:20px;
+  z-index:9999;
+  text-align:center;
+}
+
+#mobileControls button{
+  width:55px;
+  height:55px;
+  margin:3px;
+  border:0;
+  border-radius:12px;
+  background:#2563eb;
+  color:white;
+  font-size:22px;
+  touch-action:none;
+}
+
+#mobileControls button:active{
+  transform:scale(.95);
+}
