@@ -74,8 +74,10 @@
   </aside>
 
 </div>
-  <button onclick="switchControl()">🔄 Control: Player</button>
-  
+<button onclick="switchControl()" id="controlButton">
+  🎮 Control: Player
+</button>
+
   <div id="mobileControls">
 
   <button ontouchstart="touchMove('up')"
@@ -626,10 +628,6 @@ function switchControl(){
     controlMode = "Player";
   }
 
-  <button onclick="switchControl()" id="controlButton">
-  🔄 Control: Player
-</button>
-}
 </script>
 
 
