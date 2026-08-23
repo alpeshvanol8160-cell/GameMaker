@@ -481,3 +481,24 @@ main{
   }
 
 }
+#playerHealth{
+  width:220px;
+  margin:10px auto;
+  text-align:center;
+  font-weight:bold;
+}
+
+.healthBar{
+  width:100%;
+  height:18px;
+  background:#374151;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+#playerHealthFill{
+  width:100%;
+  height:100%;
+  background:#22c55e;
+  transition:width 0.2s;
+}
