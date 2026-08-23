@@ -74,6 +74,8 @@
   </aside>
 
 </div>
+  <button onclick="switchControl()">🔄 Control: Player</button>
+  
   <div id="mobileControls">
 
   <button ontouchstart="touchMove('up')"
@@ -625,6 +627,19 @@ function touchMove(direction){
 
 function stopTouch(){
   touchDirection = null;
+}
+  let controlMode = "Player";
+
+function switchControl(){
+
+  if(controlMode === "Player"){
+    controlMode = "Enemy";
+  }else{
+    controlMode = "Player";
+  }
+
+  document.getElementById("controlButton").innerText =
+    "🔄 Control: " + controlMode;
 }
 </script>
 
