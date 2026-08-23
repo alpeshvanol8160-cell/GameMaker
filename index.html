@@ -335,26 +335,36 @@ function saveProject(){
 
       emoji: obj.innerText,
 
-      x: parseInt(obj.style.left),
+      x: parseInt(obj.style.left) || 0,
 
-      y: parseInt(obj.style.top),
+      y: parseInt(obj.style.top) || 0,
 
       width: obj.offsetWidth,
 
       height: obj.offsetHeight,
 
-      color: obj.style.background
+      color: obj.style.backgroundColor,
+
+      image: obj.style.backgroundImage || ""
 
     }))
 
   };
 
-  localStorage.setItem(
-    "GameMakerV2Project",
-    JSON.stringify(project)
-  );
+  try{
 
-  alert("💾 Project Saved!");
+    localStorage.setItem(
+      "GameMakerV2Project",
+      JSON.stringify(project)
+    );
+
+    alert("💾 Project Saved Successfully!");
+
+  }catch(error){
+
+    alert("⚠️ Storage full! Image size is too large.");
+
+  }
 }
 
 
@@ -366,46 +376,77 @@ function loadProject(){
 
   if(!saved) return;
 
-  const project =
-    JSON.parse(saved);
+  try{
 
-  gameArea.innerHTML = "";
+    const project = JSON.parse(saved);
 
-  selectedObject = null;
+    gameArea.innerHTML = "";
 
-  objectCount = 0;
+    selectedObject = null;
 
-  project.objects.forEach(data => {
+    objectCount = 0;
 
-    objectCount++;
+    project.objects.forEach(data => {
 
-    const obj =
-      document.createElement("div");
+      objectCount++;
 
-    obj.className = "object";
+      const obj =
+        document.createElement("div");
 
-    obj.innerText = data.emoji;
+      obj.className = "object";
 
-    obj.dataset.name = data.name;
+      obj.innerText = data.emoji || "";
 
-    obj.style.left = data.x + "px";
-    obj.style.top = data.y + "px";
+      obj.dataset.name = data.name;
 
-    obj.style.width =
-      data.width + "px";
+      obj.style.left =
+        (data.x || 0) + "px";
 
-    obj.style.height =
-      data.height + "px";
+      obj.style.top =
+        (data.y || 0) + "px";
 
-    obj.style.background =
-      data.color;
+      obj.style.width =
+        (data.width || 60) + "px";
 
-    gameArea.appendChild(obj);
+      obj.style.height =
+        (data.height || 60) + "px";
 
-    makeDraggable(obj);
+      obj.style.backgroundColor =
+        data.color || "#64748b";
 
-  });
+      // 🖼️ Restore saved image
+      if(data.image){
 
+        obj.style.backgroundImage =
+          data.image;
+
+        obj.style.backgroundSize =
+          "cover";
+
+        obj.style.backgroundPosition =
+          "center";
+
+        obj.style.backgroundRepeat =
+          "no-repeat";
+
+        obj.innerText = "";
+
+      }
+
+      gameArea.appendChild(obj);
+
+      makeDraggable(obj);
+
+    });
+
+    document.getElementById("selectedName").innerText =
+      "Nothing Selected";
+
+  }catch(error){
+
+    console.log("Project load error:", error);
+
+  }
 }
 
 
@@ -444,10 +485,12 @@ loadProject();
 
     selectedObject.innerText = "";
 
+    alert("🖼️ Image Applied!");
+
   };
 
   reader.readAsDataURL(file);
-}
+  }
 
 
 function removeImage(){
