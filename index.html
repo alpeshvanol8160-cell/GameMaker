@@ -61,6 +61,16 @@
     <input id="objH" type="number" value="60">
 
     <button onclick="applyProperties()">✅ Apply</button>
+    <label>🖼️ Object Image</label>
+<input id="objImage" type="file" accept="image/*">
+
+<button onclick="applyImage()">
+  🖼️ Apply Image
+</button>
+
+<button onclick="removeImage()">
+  ❌ Remove Image
+</button>
   </aside>
 
 </div>
@@ -401,6 +411,56 @@ function loadProject(){
 
 // AUTO LOAD
 loadProject();
+  function applyImage(){
+
+  if(!selectedObject){
+    alert("Select an object first!");
+    return;
+  }
+
+  const file =
+    document.getElementById("objImage").files[0];
+
+  if(!file){
+    alert("Please select an image!");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+
+    selectedObject.style.backgroundImage =
+      `url("${e.target.result}")`;
+
+    selectedObject.style.backgroundSize =
+      "cover";
+
+    selectedObject.style.backgroundPosition =
+      "center";
+
+    selectedObject.style.backgroundRepeat =
+      "no-repeat";
+
+    selectedObject.innerText = "";
+
+  };
+
+  reader.readAsDataURL(file);
+}
+
+
+function removeImage(){
+
+  if(!selectedObject){
+    alert("Select an object first!");
+    return;
+  }
+
+  selectedObject.style.backgroundImage = "none";
+
+  selectedObject.innerText = "⬛";
+}
 </script>
 
 
