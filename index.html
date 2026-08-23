@@ -74,6 +74,24 @@
   </aside>
 
 </div>
+  <div id="mobileControls">
+
+  <button ontouchstart="touchMove('up')"
+          ontouchend="stopTouch()">⬆️</button>
+
+  <div>
+    <button ontouchstart="touchMove('left')"
+            ontouchend="stopTouch()">⬅️</button>
+
+    <button ontouchstart="touchMove('down')"
+            ontouchend="stopTouch()">⬇️</button>
+
+    <button ontouchstart="touchMove('right')"
+            ontouchend="stopTouch()">➡️</button>
+  </div>
+
+</div>
+
 <script>
 let selectedObject = null;
 let objectCount = 0;
@@ -583,6 +601,15 @@ function removeImage(){
   selectedObject.style.backgroundImage = "none";
 
   selectedObject.innerText = "⬛";
+}
+  let touchDirection = null;
+
+function touchMove(direction){
+  touchDirection = direction;
+}
+
+function stopTouch(){
+  touchDirection = null;
 }
 </script>
 
