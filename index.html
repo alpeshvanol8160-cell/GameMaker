@@ -627,6 +627,22 @@ function switchControl(){
   }else{
     controlMode = "Player";
   }
+  let controlMode = "Player";
+
+function switchControl() {
+    if (controlMode === "Player") {
+        controlMode = "Enemy";
+    } else {
+        controlMode = "Player";
+    }
+    
+    // Yahan ID ke zariye button ka text update ho raha hai
+    const btn = document.getElementById("controlButton");
+    if (btn) {
+        btn.innerText = "🎮 Control: " + controlMode;
+    }
+}
+  
 
 </script>
 
