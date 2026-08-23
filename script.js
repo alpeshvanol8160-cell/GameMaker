@@ -1026,40 +1026,96 @@ function gameLoop(){
 loadProject();
 
 gameLoop();
+
+// ========================================
+// 👹 ENEMY AI
+// ========================================
+
 function enemyAI(enemy){
-  const player = document.querySelector('[data-name="Player"]');
 
-  if(!player || !enemy) return;
+  if(!isPlaying) return;
 
-  let enemyX = parseInt(enemy.style.left) || 0;
-  let enemyY = parseInt(enemy.style.top) || 0;
+  const player =
+    [...gameArea.children].find(function(obj){
 
-  let playerX = parseInt(player.style.left) || 0;
-  let playerY = parseInt(player.style.top) || 0;
+      return (
+        obj.dataset.name &&
+        obj.dataset.name.startsWith("Player")
+      );
+
+    });
+
+  if(!player) return;
+
+
+  let enemyX =
+    parseFloat(enemy.style.left) || 0;
+
+  let enemyY =
+    parseFloat(enemy.style.top) || 0;
+
+
+  let playerX =
+    parseFloat(player.style.left) || 0;
+
+  let playerY =
+    parseFloat(player.style.top) || 0;
+
 
   const speed = 1.2;
 
+
+  // ➡️ Move Right
   if(enemyX < playerX - 5){
     enemyX += speed;
   }
 
+
+  // ⬅️ Move Left
   if(enemyX > playerX + 5){
     enemyX -= speed;
   }
 
+
+  // ⬇️ Move Down
   if(enemyY < playerY - 5){
     enemyY += speed;
   }
 
+
+  // ⬆️ Move Up
   if(enemyY > playerY + 5){
     enemyY -= speed;
   }
 
-  enemy.style.left = enemyX + "px";
-  enemy.style.top = enemyY + "px";
+
+  enemy.style.left =
+    enemyX + "px";
+
+  enemy.style.top =
+    enemyY + "px";
 }
-setInterval(() => {
-  document.querySelectorAll('[data-name="Enemy"]').forEach(enemy => {
-    enemyAI(enemy);
-  });
+
+
+// ========================================
+// 🔄 ENEMY AI LOOP
+// ========================================
+
+setInterval(function(){
+
+  document
+    .querySelectorAll(".object")
+    .forEach(function(enemy){
+
+      if(
+        enemy.dataset.name &&
+        enemy.dataset.name.startsWith("Enemy")
+      ){
+
+        enemyAI(enemy);
+
+      }
+
+    });
+
 }, 30);
