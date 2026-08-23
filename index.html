@@ -7,76 +7,167 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial;background:#111827;color:white}
-header{padding:14px;background:#1f2937;text-align:center;font-size:22px;font-weight:bold}
-.toolbar{display:flex;gap:7px;padding:9px;background:#374151;overflow-x:auto}
-button{border:0;border-radius:7px;padding:10px 13px;background:#2563eb;color:white;font-weight:bold;white-space:nowrap}
-button.delete{background:#dc2626}
-#gameArea{position:relative;width:100%;height:480px;background:#dbeafe;overflow:hidden}
-.object{position:absolute;width:60px;height:60px;background:red;border-radius:10px;touch-action:none;border:3px solid transparent}
-.object.selected{border-color:#111827}
-.panel{padding:12px;background:#1f2937}
-.panel label{display:block;margin-top:8px}
-input{width:100%;padding:8px;margin-top:4px}
-#status{text-align:center;padding:8px;background:#374151}
- #controls{
-display:flex;
-justify-content:center;
-gap:10px;
-padding:12px;
-background:#111827;
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:#111827;
+  color:white;
+}
+
+header{
+  padding:14px;
+  background:#1f2937;
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.toolbar{
+  display:flex;
+  gap:7px;
+  padding:9px;
+  background:#374151;
+  overflow-x:auto;
+}
+
+button{
+  border:0;
+  border-radius:7px;
+  padding:10px 13px;
+  background:#2563eb;
+  color:white;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+button.delete{
+  background:#dc2626;
+}
+
+#gameArea{
+  position:relative;
+  width:100%;
+  height:480px;
+  background:#dbeafe;
+  overflow:hidden;
+}
+
+.object{
+  position:absolute;
+  width:60px;
+  height:60px;
+  background:red;
+  border-radius:10px;
+  touch-action:none;
+  border:3px solid transparent;
+}
+
+.object.selected{
+  border-color:#111827;
+}
+
+.panel{
+  padding:12px;
+  background:#1f2937;
+}
+
+.panel label{
+  display:block;
+  margin-top:8px;
+}
+
+input{
+  width:100%;
+  padding:8px;
+  margin-top:4px;
+}
+
+#status{
+  text-align:center;
+  padding:8px;
+  background:#374151;
+}
+
+#controls{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px;
+  background:#111827;
 }
 
 #controls button{
-width:60px;
-height:50px;
-font-size:20px;
+  width:60px;
+  height:50px;
+  font-size:20px;
 }
- .healthBar{
-position:absolute;
-top:-12px;
-left:0;
-width:100%;
-height:8px;
-background:#333;
-border-radius:5px;
-overflow:hidden;
+
+/* HP BAR */
+
+.healthBar{
+  position:absolute;
+  top:-12px;
+  left:0;
+  width:100%;
+  height:8px;
+  background:#333;
+  border-radius:5px;
+  overflow:hidden;
 }
 
 .healthFill{
-width:100%;
-height:100%;
-background:#22c55e;
+  width:100%;
+  height:100%;
+  background:#22c55e;
+  transition:width .2s;
 }
 
 .hpText{
-position:absolute;
-top:-32px;
-left:0;
-width:100%;
-text-align:center;
-font-size:12px;
-font-weight:bold;
-color:#111;
+  position:absolute;
+  top:-32px;
+  left:0;
+  width:100%;
+  text-align:center;
+  font-size:12px;
+  font-weight:bold;
+  color:#111;
+  white-space:nowrap;
 }
- .hitEffect{
+
+/* STAMINA */
+
+.staminaBar{
+  position:absolute;
+  top:-44px;
+  left:0;
+  width:100%;
+  height:7px;
+  background:#333;
+  border-radius:5px;
+  overflow:hidden;
+}
+
+.staminaFill{
+  width:100%;
+  height:100%;
+  background:#22c55e;
+  transition:width .2s,background .2s;
+}
+
+/* PLAYER ATTACK EFFECT */
+
+.hitEffect{
   position:absolute;
   font-size:40px;
   pointer-events:none;
-  animation:hitAnim 0.5s ease-out forwards;
-  z-index:9999;
- }
- .enemyHitEffect{
-  position:absolute;
-  font-size:35px;
-  pointer-events:none;
-  animation:enemyHitAnim 0.5s ease-out forwards;
+  animation:hitAnim .5s ease-out forwards;
   z-index:9999;
 }
 
-@keyframes enemyHitAnim{
+@keyframes hitAnim{
   0%{
-    transform:scale(0.5);
+    transform:scale(.5);
     opacity:1;
   }
   50%{
@@ -88,38 +179,71 @@ color:#111;
     opacity:0;
   }
 }
- .blockShield{
+
+/* ENEMY ATTACK EFFECT */
+
+.enemyHitEffect{
+  position:absolute;
+  font-size:35px;
+  pointer-events:none;
+  animation:enemyHitAnim .5s ease-out forwards;
+  z-index:9999;
+}
+
+@keyframes enemyHitAnim{
+  0%{
+    transform:scale(.5);
+    opacity:1;
+  }
+  50%{
+    transform:scale(1.4);
+    opacity:1;
+  }
+  100%{
+    transform:scale(1);
+    opacity:0;
+  }
+}
+
+/* BLOCK SHIELD */
+
+.blockShield{
   position:absolute;
   inset:-10px;
   border:4px solid #38bdf8;
   border-radius:20px;
   box-shadow:0 0 20px #38bdf8;
   pointer-events:none;
-  animation:shieldPulse 0.8s infinite alternate;
+  animation:shieldPulse .8s infinite alternate;
+  z-index:10;
 }
 
 @keyframes shieldPulse{
   from{
-    transform:scale(0.95);
-    opacity:0.6;
+    transform:scale(.95);
+    opacity:.6;
   }
   to{
     transform:scale(1.05);
     opacity:1;
   }
-}.shieldBreak{
+}
+
+/* SHIELD BREAK */
+
+.shieldBreak{
   position:absolute;
   inset:-15px;
   border:5px solid #38bdf8;
   border-radius:25px;
   pointer-events:none;
-  animation:shieldBreakAnim 0.4s ease-out forwards;
+  animation:shieldBreakAnim .4s ease-out forwards;
   z-index:9999;
 }
 
 @keyframes shieldBreakAnim{
   0%{
-    transform:scale(0.8);
+    transform:scale(.8);
     opacity:1;
     box-shadow:0 0 5px #38bdf8;
   }
@@ -136,24 +260,30 @@ color:#111;
     box-shadow:0 0 50px #38bdf8;
   }
 }
- .staminaBar{
-  position:absolute;
-  top:-44px;
-  left:0;
-  width:100%;
-  height:7px;
-  background:#333;
-  border-radius:5px;
-  overflow:hidden;
+
+/* ENEMY DEATH */
+
+.enemyDeath{
+  animation:enemyDeathAnim .7s ease-out forwards;
 }
 
-.staminaFill{
-  width:100%;
-  height:100%;
-  background:#22c55e;
-  transition:width 0.2s, background 0.2s;
+@keyframes enemyDeathAnim{
+  0%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  50%{
+    transform:scale(1.3);
+    opacity:.8;
+  }
+
+  100%{
+    transform:scale(0);
+    opacity:0;
+  }
 }
- 
+
 </style>
 </head>
 
@@ -162,32 +292,53 @@ color:#111;
 <header>🎮 My GameMaker V2</header>
 
 <div class="toolbar">
+
 <button onclick="addObject()">➕ Add Object</button>
- <button onclick="addPlayer()">🧍 Add Player</button>
- <button onclick="addEnemy()">👹 Add Enemy</button>
+
+<button onclick="addPlayer()">🧍 Add Player</button>
+
+<button onclick="addEnemy()">👹 Add Enemy</button>
+
 <button onclick="playGame()">▶️ Play</button>
+
 <button onclick="resetGame()">🔄 Reset</button>
- <button onclick="playerAttack()">⚔️ Attack</button>
- <button onclick="toggleBlock()">🛡️ Block</button>
+
+<button onclick="playerAttack()">⚔️ Attack</button>
+
+<button onclick="toggleBlock()">🛡️ Block</button>
+
 </div>
 
 <div id="gameArea"></div>
+
 <div id="controls">
+
 <button onclick="movePlayer('up')">⬆️</button>
+
 <button onclick="movePlayer('left')">⬅️</button>
+
 <button onclick="movePlayer('down')">⬇️</button>
+
 <button onclick="movePlayer('right')">➡️</button>
+
 </div>
-<div id="status">No object selected</div>
+
+<div id="status">
+No object selected
+</div>
 
 <div class="panel">
+
 <label>📝 Object Name</label>
+
 <input id="objName" placeholder="Select an object">
 
 <label>🎨 Color</label>
+
 <input id="objColor" type="color" value="#ff0000">
 
 <label>📏 Size</label>
+
 <input id="objSize" type="range" min="20" max="150" value="60">
 
 <button onclick="applyChanges()" style="margin-top:12px;width:100%">
@@ -197,13 +348,9 @@ color:#111;
 <button class="delete" onclick="deleteObject()" style="margin-top:8px;width:100%">
 🗑️ Delete Selected
 </button>
- <label>🧍 Player Image</label>
-<input id="playerImage" type="file" accept="image/*">
 
-<button onclick="applyPlayerImage()" style="margin-top:8px;width:100%">
-🧍 Apply Player Image
-</button>
- <label>🧍 Player Image</label>
+<label>🧍 Player Image</label>
+
 <input id="playerImage" type="file" accept="image/*">
 
 <button onclick="applyPlayerImage()" style="margin-top:8px;width:100%">
@@ -211,6 +358,7 @@ color:#111;
 </button>
 
 <label>👹 Enemy Image</label>
+
 <input id="enemyImage" type="file" accept="image/*">
 
 <button onclick="applyEnemyImage()" style="margin-top:8px;width:100%">
@@ -218,646 +366,1046 @@ color:#111;
 </button>
 
 <label>🖼️ Object Image</label>
+
 <input id="objImage" type="file" accept="image/*">
+
+<button onclick="applyImage()" style="margin-top:8px;width:100%">
+🖼️ Apply Object Image
+</button>
+
 </div>
 
 
-  <script>
+<script>
+
 let selected=null;
 let count=0;
 
+let isBlocking=false;
+
+let enemySpeed=1;
+
+
+/* =========================
+   ADD OBJECT
+========================= */
+
 function addObject(){
- const obj=document.createElement("div");
- obj.className="object";
- obj.style.left="50px";
- obj.style.top="50px";
- obj.dataset.name="Object "+(count+1);
 
- document.getElementById("gameArea").appendChild(obj);
+  const obj=document.createElement("div");
 
- count++;
- selectObject(obj);
- makeDraggable(obj);
+  obj.className="object";
+
+  obj.style.left="50px";
+  obj.style.top="50px";
+
+  obj.dataset.name="Object "+(count+1);
+
+  document.getElementById("gameArea").appendChild(obj);
+
+  count++;
+
+  selectObject(obj);
+
+  makeDraggable(obj);
 }
+
+
+/* =========================
+   ADD PLAYER
+========================= */
 
 function addPlayer(){
- const player=document.createElement("div");
 
- player.className="object";
- player.style.left="100px";
- player.style.top="100px";
- player.style.width="70px";
- player.style.height="70px";
- player.style.backgroundColor="#2563eb";
- player.dataset.name="Player";
+  const player=document.createElement("div");
 
- document.getElementById("gameArea").appendChild(player);
+  player.className="object";
 
- selectObject(player);
- makeDraggable(player);
- setupPlayerHealth(player);
+  player.style.left="100px";
+  player.style.top="100px";
+
+  player.style.width="70px";
+  player.style.height="70px";
+
+  player.style.backgroundColor="#2563eb";
+
+  player.dataset.name="Player";
+
+  document.getElementById("gameArea").appendChild(player);
+
+  selectObject(player);
+
+  makeDraggable(player);
+
+  setupPlayerHealth(player);
 }
+
+
+/* =========================
+   SELECT OBJECT
+========================= */
 
 function selectObject(obj){
- if(selected) selected.classList.remove("selected");
 
- selected=obj;
- obj.classList.add("selected");
+  if(selected){
 
- document.getElementById("status").textContent=
- "Selected: "+obj.dataset.name;
+    selected.classList.remove("selected");
 
- document.getElementById("objName").value=obj.dataset.name;
+  }
 
- document.getElementById("objColor").value=
- rgbToHex(getComputedStyle(obj).backgroundColor);
+  selected=obj;
+
+  obj.classList.add("selected");
+
+  document.getElementById("status").textContent=
+  "Selected: "+obj.dataset.name;
+
+  document.getElementById("objName").value=
+  obj.dataset.name;
+
+  document.getElementById("objColor").value=
+  rgbToHex(getComputedStyle(obj).backgroundColor);
 }
+
+
+/* =========================
+   DRAG
+========================= */
 
 function makeDraggable(obj){
- let moving=false;
- let offsetX=0;
- let offsetY=0;
 
- obj.addEventListener("pointerdown",function(e){
-   selectObject(obj);
-   moving=true;
+  let moving=false;
 
-   const r=obj.getBoundingClientRect();
-   offsetX=e.clientX-r.left;
-   offsetY=e.clientY-r.top;
+  let offsetX=0;
+  let offsetY=0;
 
-   obj.setPointerCapture(e.pointerId);
- });
+  obj.addEventListener("pointerdown",function(e){
 
- obj.addEventListener("pointermove",function(e){
-   if(!moving)return;
+    selectObject(obj);
 
-   const area=document.getElementById("gameArea");
-   const r=area.getBoundingClientRect();
+    moving=true;
 
-   let x=e.clientX-r.left-offsetX;
-   let y=e.clientY-r.top-offsetY;
+    const r=obj.getBoundingClientRect();
 
-   x=Math.max(0,Math.min(x,area.clientWidth-obj.offsetWidth));
-   y=Math.max(0,Math.min(y,area.clientHeight-obj.offsetHeight));
+    offsetX=e.clientX-r.left;
+    offsetY=e.clientY-r.top;
 
-   obj.style.left=x+"px";
-   obj.style.top=y+"px";
- });
+    obj.setPointerCapture(e.pointerId);
 
- obj.addEventListener("pointerup",function(){
-   moving=false;
- });
+  });
+
+  obj.addEventListener("pointermove",function(e){
+
+    if(!moving)return;
+
+    const area=document.getElementById("gameArea");
+
+    const r=area.getBoundingClientRect();
+
+    let x=e.clientX-r.left-offsetX;
+
+    let y=e.clientY-r.top-offsetY;
+
+    x=Math.max(
+      0,
+      Math.min(
+        x,
+        area.clientWidth-obj.offsetWidth
+      )
+    );
+
+    y=Math.max(
+      0,
+      Math.min(
+        y,
+        area.clientHeight-obj.offsetHeight
+      )
+    );
+
+    obj.style.left=x+"px";
+
+    obj.style.top=y+"px";
+
+  });
+
+  obj.addEventListener("pointerup",function(){
+
+    moving=false;
+
+  });
+
 }
+
+
+/* =========================
+   APPLY CHANGES
+========================= */
 
 function applyChanges(){
- if(!selected){
-   alert("Pehle object select karo");
-   return;
- }
 
- const name=document.getElementById("objName").value.trim();
+  if(!selected){
 
- if(name){
-   selected.dataset.name=name;
- }
+    alert("Pehle object select karo");
 
- selected.style.background=
- document.getElementById("objColor").value;
-
- const size=document.getElementById("objSize").value;
-
- selected.style.width=size+"px";
- selected.style.height=size+"px";
-
- document.getElementById("status").textContent=
- "Selected: "+selected.dataset.name;
-}
-
-function deleteObject(){
- if(!selected){
-   alert("Pehle object select karo");
-   return;
- }
-
- selected.remove();
- selected=null;
-
- document.getElementById("status").textContent=
- "No object selected";
-}
-
-function resetGame(){
- document.getElementById("gameArea").innerHTML="";
- selected=null;
- count=0;
-
- document.getElementById("status").textContent=
- "No object selected";
-}
-
-function playGame(){
- alert("🎮 Game Preview Started!");
-}
-
-function rgbToHex(rgb){
- const m=rgb.match(/\d+/g);
-
- if(!m)return "#ff0000";
-
- return "#"+m.slice(0,3)
- .map(x=>parseInt(x).toString(16).padStart(2,"0"))
- .join("");
-}
-
-function applyImage(){
- if(!selected){
-   alert("Pehle object select karo");
-   return;
- }
-
- const file=document.getElementById("objImage").files[0];
-
- if(!file){
-   alert("Pehle image select karo");
-   return;
- }
-
- const reader=new FileReader();
-
- reader.onload=function(e){
-   selected.style.backgroundImage=
-   "url('" + e.target.result + "')";
-
-   selected.style.backgroundSize="cover";
-   selected.style.backgroundPosition="center";
-   selected.style.backgroundRepeat="no-repeat";
-   selected.style.backgroundColor="transparent";
- };
-
- reader.readAsDataURL(file);
-}
-   
-function movePlayer(direction){
- if(!selected){
-   alert("Pehle Player select karo");
-   return;
- }
-
- if(selected.dataset.name!=="Player"){
-   alert("Pehle Player select karo");
-   return;
- }
-
- let x=parseInt(selected.style.left)||0;
- let y=parseInt(selected.style.top)||0;
-
- const speed=20;
- const area=document.getElementById("gameArea");
-
- if(direction==="up") y-=speed;
- if(direction==="down") y+=speed;
- if(direction==="left") x-=speed;
- if(direction==="right") x+=speed;
-
- x=Math.max(0,Math.min(x,area.clientWidth-selected.offsetWidth));
- y=Math.max(0,Math.min(y,area.clientHeight-selected.offsetHeight));
-
- selected.style.left=x+"px";
- selected.style.top=y+"px";
-}
-   let touchStartX=0;
-let touchStartY=0;
-
-document.getElementById("gameArea").addEventListener("touchstart",function(e){
-  touchStartX=e.touches[0].clientX;
-  touchStartY=e.touches[0].clientY;
-},{passive:true});
-
-document.getElementById("gameArea").addEventListener("touchend",function(e){
-  if(!selected || selected.dataset.name!=="Player") return;
-
-  const touchEndX=e.changedTouches[0].clientX;
-  const touchEndY=e.changedTouches[0].clientY;
-
-  const dx=touchEndX-touchStartX;
-  const dy=touchEndY-touchStartY;
-
-  if(Math.abs(dx)>Math.abs(dy)){
-    if(Math.abs(dx)>30){
-      movePlayer(dx>0?"right":"left");
-    }
-  }else{
-    if(Math.abs(dy)>30){
-      movePlayer(dy>0?"down":"up");
-    }
-  }
-},{passive:true});
-   function applyPlayerImage(){
-  if(!selected || selected.dataset.name!=="Player"){
-    alert("Pehle Player select karo");
     return;
   }
 
-  const file=document.getElementById("playerImage").files[0];
+  const name=
+  document.getElementById("objName").value.trim();
+
+  if(name){
+
+    selected.dataset.name=name;
+
+  }
+
+  selected.style.background=
+  document.getElementById("objColor").value;
+
+  const size=
+  document.getElementById("objSize").value;
+
+  selected.style.width=size+"px";
+
+  selected.style.height=size+"px";
+
+  document.getElementById("status").textContent=
+  "Selected: "+selected.dataset.name;
+
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+function deleteObject(){
+
+  if(!selected){
+
+    alert("Pehle object select karo");
+
+    return;
+  }
+
+  selected.remove();
+
+  selected=null;
+
+  isBlocking=false;
+
+  document.getElementById("status").textContent=
+  "No object selected";
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetGame(){
+
+  document.getElementById("gameArea").innerHTML="";
+
+  selected=null;
+
+  count=0;
+
+  isBlocking=false;
+
+  document.getElementById("status").textContent=
+  "No object selected";
+
+}
+
+
+/* =========================
+   PLAY
+========================= */
+
+function playGame(){
+
+  alert("🎮 Game Preview Started!");
+
+}
+
+
+/* =========================
+   RGB TO HEX
+========================= */
+
+function rgbToHex(rgb){
+
+  const m=rgb.match(/\d+/g);
+
+  if(!m)return "#ff0000";
+
+  return "#"+
+  m.slice(0,3)
+  .map(x=>
+    parseInt(x)
+    .toString(16)
+    .padStart(2,"0")
+  )
+  .join("");
+
+}
+
+
+/* =========================
+   OBJECT IMAGE
+========================= */
+
+function applyImage(){
+
+  if(!selected){
+
+    alert("Pehle object select karo");
+
+    return;
+  }
+
+  const file=
+  document.getElementById("objImage").files[0];
 
   if(!file){
-    alert("Pehle Player image select karo");
+
+    alert("Pehle image select karo");
+
     return;
   }
 
   const reader=new FileReader();
 
   reader.onload=function(e){
-    selected.style.backgroundImage="url('" + e.target.result + "')";
+
+    selected.style.backgroundImage=
+    "url('"+e.target.result+"')";
+
     selected.style.backgroundSize="cover";
+
     selected.style.backgroundPosition="center";
+
     selected.style.backgroundRepeat="no-repeat";
+
     selected.style.backgroundColor="transparent";
+
   };
 
   reader.readAsDataURL(file);
-   }
-   function setupPlayerHealth(player){
+
+}
+
+
+/* =========================
+   PLAYER MOVEMENT
+========================= */
+
+function movePlayer(direction){
+
+  if(!selected){
+
+    alert("Pehle Player select karo");
+
+    return;
+  }
+
+  if(selected.dataset.name!=="Player"){
+
+    alert("Pehle Player select karo");
+
+    return;
+  }
+
+  let x=parseInt(selected.style.left)||0;
+
+  let y=parseInt(selected.style.top)||0;
+
+  const speed=20;
+
+  const area=
+  document.getElementById("gameArea");
+
+  if(direction==="up")y-=speed;
+
+  if(direction==="down")y+=speed;
+
+  if(direction==="left")x-=speed;
+
+  if(direction==="right")x+=speed;
+
+  x=Math.max(
+    0,
+    Math.min(
+      x,
+      area.clientWidth-selected.offsetWidth
+    )
+  );
+
+  y=Math.max(
+    0,
+    Math.min(
+      y,
+      area.clientHeight-selected.offsetHeight
+    )
+  );
+
+  selected.style.left=x+"px";
+
+  selected.style.top=y+"px";
+
+}
+
+
+/* =========================
+   SWIPE MOVEMENT
+========================= */
+
+let touchStartX=0;
+let touchStartY=0;
+
+document
+.getElementById("gameArea")
+.addEventListener(
+  "touchstart",
+  function(e){
+
+    touchStartX=e.touches[0].clientX;
+
+    touchStartY=e.touches[0].clientY;
+
+  },
+  {passive:true}
+);
+
+document
+.getElementById("gameArea")
+.addEventListener(
+  "touchend",
+  function(e){
+
+    if(
+      !selected ||
+      selected.dataset.name!=="Player"
+    )return;
+
+    const touchEndX=
+    e.changedTouches[0].clientX;
+
+    const touchEndY=
+    e.changedTouches[0].clientY;
+
+    const dx=touchEndX-touchStartX;
+
+    const dy=touchEndY-touchStartY;
+
+    if(Math.abs(dx)>Math.abs(dy)){
+
+      if(Math.abs(dx)>30){
+
+        movePlayer(
+          dx>0 ? "right" : "left"
+        );
+
+      }
+
+    }else{
+
+      if(Math.abs(dy)>30){
+
+        movePlayer(
+          dy>0 ? "down" : "up"
+        );
+
+      }
+
+    }
+
+  },
+  {passive:true}
+);
+
+
+/* =========================
+   PLAYER IMAGE
+========================= */
+
+function applyPlayerImage(){
+
+  if(
+    !selected ||
+    selected.dataset.name!=="Player"
+  ){
+
+    alert("Pehle Player select karo");
+
+    return;
+  }
+
+  const file=
+  document.getElementById("playerImage").files[0];
+
+  if(!file){
+
+    alert("Pehle Player image select karo");
+
+    return;
+  }
+
+  const reader=new FileReader();
+
+  reader.onload=function(e){
+
+    selected.style.backgroundImage=
+    "url('"+e.target.result+"')";
+
+    selected.style.backgroundSize="cover";
+
+    selected.style.backgroundPosition="center";
+
+    selected.style.backgroundRepeat="no-repeat";
+
+    selected.style.backgroundColor="transparent";
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =========================
+   PLAYER HEALTH
+========================= */
+
+function setupPlayerHealth(player){
+
   player.dataset.hp="100";
 
-  const hpText=document.createElement("div");
+  player.dataset.stamina="100";
+
+  const hpText=
+  document.createElement("div");
+
   hpText.className="hpText";
+
   hpText.textContent="❤️ 100";
 
-  const healthBar=document.createElement("div");
+
+  const healthBar=
+  document.createElement("div");
+
   healthBar.className="healthBar";
 
-  const healthFill=document.createElement("div");
+
+  const healthFill=
+  document.createElement("div");
+
   healthFill.className="healthFill";
 
   healthBar.appendChild(healthFill);
+
   player.appendChild(hpText);
+
   player.appendChild(healthBar);
-    player.dataset.stamina="100";
 
-const staminaBar=document.createElement("div");
-staminaBar.className="staminaBar";
 
-const staminaFill=document.createElement("div");
-staminaFill.className="staminaFill";
+  const staminaBar=
+  document.createElement("div");
 
-staminaBar.appendChild(staminaFill);
-player.appendChild(staminaBar);
-   }
-   function addEnemy(){
-  const enemy=document.createElement("div");
+  staminaBar.className="staminaBar";
+
+
+  const staminaFill=
+  document.createElement("div");
+
+  staminaFill.className="staminaFill";
+
+  staminaBar.appendChild(staminaFill);
+
+  player.appendChild(staminaBar);
+
+}
+
+
+/* =========================
+   ADD ENEMY
+========================= */
+
+function addEnemy(){
+
+  const enemy=
+  document.createElement("div");
 
   enemy.className="object";
+
   enemy.style.left="250px";
+
   enemy.style.top="100px";
+
   enemy.style.width="65px";
+
   enemy.style.height="65px";
+
   enemy.style.backgroundColor="#dc2626";
+
   enemy.dataset.name="Enemy";
-    const healthBar=document.createElement("div");
-healthBar.className="healthBar";
 
-const healthFill=document.createElement("div");
-healthFill.className="healthFill";
+  enemy.dataset.hp="100";
 
-const hpText=document.createElement("div");
-hpText.className="hpText";
-hpText.textContent="❤️ 100";
+  enemy.dataset.attacking="false";
 
-healthBar.appendChild(healthFill);
 
-enemy.appendChild(hpText);
-enemy.appendChild(healthBar);
+  const hpText=
+  document.createElement("div");
 
-enemy.dataset.hp="100";
+  hpText.className="hpText";
 
-  document.getElementById("gameArea").appendChild(enemy);
+  hpText.textContent="❤️ 100";
+
+
+  const healthBar=
+  document.createElement("div");
+
+  healthBar.className="healthBar";
+
+
+  const healthFill=
+  document.createElement("div");
+
+  healthFill.className="healthFill";
+
+  healthBar.appendChild(healthFill);
+
+  enemy.appendChild(hpText);
+
+  enemy.appendChild(healthBar);
+
+
+  document
+  .getElementById("gameArea")
+  .appendChild(enemy);
+
 
   selectObject(enemy);
+
   makeDraggable(enemy);
-    startEnemyAI(enemy);
-   }
-   function applyEnemyImage(){
-  if(!selected || selected.dataset.name!=="Enemy"){
+
+  startEnemyAI(enemy);
+
+}
+
+
+/* =========================
+   ENEMY IMAGE
+========================= */
+
+function applyEnemyImage(){
+
+  if(
+    !selected ||
+    selected.dataset.name!=="Enemy"
+  ){
+
     alert("Pehle Enemy select karo");
+
     return;
   }
 
-  const file=document.getElementById("enemyImage").files[0];
+  const file=
+  document.getElementById("enemyImage").files[0];
 
   if(!file){
+
     alert("Pehle Enemy image select karo");
+
     return;
   }
 
   const reader=new FileReader();
 
   reader.onload=function(e){
-    selected.style.backgroundImage="url('" + e.target.result + "')";
+
+    selected.style.backgroundImage=
+    "url('"+e.target.result+"')";
+
     selected.style.backgroundSize="cover";
+
     selected.style.backgroundPosition="center";
+
     selected.style.backgroundRepeat="no-repeat";
+
     selected.style.backgroundColor="transparent";
+
   };
 
   reader.readAsDataURL(file);
-   }
-   let enemySpeed=1;
+
+}
+
+
+/* =========================
+   ENEMY AI
+========================= */
 
 function startEnemyAI(enemy){
+
   const timer=setInterval(function(){
 
     if(!document.body.contains(enemy)){
+
       clearInterval(timer);
+
       return;
     }
 
-    if(!selected || selected.dataset.name!=="Player"){
+    if(
+      !selected ||
+      selected.dataset.name!=="Player"
+    ){
+
       return;
     }
 
     const player=selected;
 
-    let ex=parseInt(enemy.style.left)||0;
-    let ey=parseInt(enemy.style.top)||0;
+    let ex=
+    parseInt(enemy.style.left)||0;
 
-    let px=parseInt(player.style.left)||0;
-    let py=parseInt(player.style.top)||0;
+    let ey=
+    parseInt(enemy.style.top)||0;
 
-    if(ex<px) ex+=enemySpeed;
-    if(ex>px) ex-=enemySpeed;
+    const px=
+    parseInt(player.style.left)||0;
 
-    if(ey<py) ey+=enemySpeed;
-    if(ey>py) ey-=enemySpeed;
+    const py=
+    parseInt(player.style.top)||0;
 
-    const area=document.getElementById("gameArea");
 
-    ex=Math.max(0,Math.min(ex,area.clientWidth-enemy.offsetWidth));
-    ey=Math.max(0,Math.min(ey,area.clientHeight-enemy.offsetHeight));
+    if(ex<px)ex+=enemySpeed;
+
+    if(ex>px)ex-=enemySpeed;
+
+    if(ey<py)ey+=enemySpeed;
+
+    if(ey>py)ey-=enemySpeed;
+
+
+    const area=
+    document.getElementById("gameArea");
+
+
+    ex=Math.max(
+      0,
+      Math.min(
+        ex,
+        area.clientWidth-enemy.offsetWidth
+      )
+    );
+
+    ey=Math.max(
+      0,
+      Math.min(
+        ey,
+        area.clientHeight-enemy.offsetHeight
+      )
+    );
+
 
     enemy.style.left=ex+"px";
+
     enemy.style.top=ey+"px";
-   enemyAttack(enemy);
+
+
+    enemyAttack(enemy);
 
   },30);
 
 }
-  let isBlocking = false;
+
+
+/* =========================
+   BLOCK
+========================= */
 
 function toggleBlock(){
 
-  if(!selected || selected.dataset.name!=="Player"){
+  if(
+    !selected ||
+    selected.dataset.name!=="Player"
+  ){
+
     alert("Pehle Player select karo");
+
     return;
   }
 
-  isBlocking = !isBlocking;
+  const stamina=
+  parseInt(selected.dataset.stamina)||0;
 
-  const oldShield=selected.querySelector(".blockShield");
+  if(!isBlocking && stamina<=0){
+
+    alert("⚡ Stamina khatam hai!");
+
+    return;
+  }
+
+  isBlocking=!isBlocking;
+
+
+  const oldShield=
+  selected.querySelector(".blockShield");
+
 
   if(isBlocking){
 
     if(!oldShield){
-      const shield=document.createElement("div");
+
+      const shield=
+      document.createElement("div");
+
       shield.className="blockShield";
+
       selected.appendChild(shield);
+
     }
 
   }else{
 
     if(oldShield){
+
       oldShield.remove();
+
     }
 
   }
+
 }
+
+
+/* =========================
+   UPDATE STAMINA BAR
+========================= */
+
+function updateStaminaBar(player){
+
+  if(!player)return;
+
+  const stamina=
+  parseInt(player.dataset.stamina)||0;
+
+  const staminaFill=
+  player.querySelector(".staminaFill");
+
+  if(!staminaFill)return;
+
+  staminaFill.style.width=
+  stamina+"%";
+
+
+  if(stamina<=20){
+
+    staminaFill.style.background="#ef4444";
+
+  }else if(stamina<=50){
+
+    staminaFill.style.background="#f97316";
+
+  }else{
+
+    staminaFill.style.background="#22c55e";
+
+  }
+
+}
+
+
+/* =========================
+   STAMINA DRAIN
+========================= */
+
 function useStamina(){
 
-  if(!isBlocking) return;
-  if(!selected || selected.dataset.name!=="Player") return;
+  if(!isBlocking)return;
 
-  let stamina=parseInt(selected.dataset.stamina)||100;
+  if(
+    !selected ||
+    selected.dataset.name!=="Player"
+  ){
+
+    return;
+  }
+
+  let stamina=
+  parseInt(selected.dataset.stamina)||0;
+
 
   stamina-=5;
 
+
   if(stamina<=0){
+
     stamina=0;
+
     isBlocking=false;
 
-    const shield=selected.querySelector(".blockShield");
+
+    const shield=
+    selected.querySelector(".blockShield");
+
     if(shield){
+
       shield.remove();
+
     }
 
-    alert("⚡ Stamina खत्म! Block OFF");
   }
 
-  selected.dataset.stamina=String(stamina);
 
-  const staminaFill=selected.querySelector(".staminaFill");
+  selected.dataset.stamina=
+  String(stamina);
 
-  if(staminaFill){
+  updateStaminaBar(selected);
 
-  staminaFill.style.width=stamina+"%";
-
-  if(stamina<=20){
-    staminaFill.style.background="#ef4444";
-  }else if(stamina<=50){
-    staminaFill.style.background="#f97316";
-  }else{
-    staminaFill.style.background="#22c55e";
-  }
 }
-   setInterval(useStamina,500);
-   function rechargeStamina(){
 
-  if(!selected || selected.dataset.name!=="Player") return;
 
-  if(isBlocking) return;
+/* =========================
+   STAMINA RECHARGE
+========================= */
 
-  let stamina=parseInt(selected.dataset.stamina)||0;
+function rechargeStamina(){
+
+  if(
+    !selected ||
+    selected.dataset.name!=="Player"
+  ){
+
+    return;
+  }
+
+  if(isBlocking)return;
+
+
+  let stamina=
+  parseInt(selected.dataset.stamina)||0;
+
 
   if(stamina<100){
+
     stamina+=2;
 
-    if(stamina>100) stamina=100;
+    if(stamina>100){
 
-    selected.dataset.stamina=String(stamina);
+      stamina=100;
 
-    const staminaFill=selected.querySelector(".staminaFill");
+    }
 
-    if(staminaFill){
-  staminaFill.style.width=stamina+"%";
 
-  if(stamina<=20){
-    staminaFill.style.background="#ef4444";
-  }else if(stamina<=50){
-    staminaFill.style.background="#f97316";
-  }else{
-    staminaFill.style.background="#22c55e";
+    selected.dataset.stamina=
+    String(stamina);
+
+    updateStaminaBar(selected);
+
   }
+
 }
-   setInterval(rechargeStamina,500);
+
+
+/* IMPORTANT:
+   INTERVALS FUNCTION KE BAHAR
+*/
+
+setInterval(useStamina,500);
+
+setInterval(rechargeStamina,500);
+
+
+/* =========================
+   ENEMY ATTACK
+========================= */
+
 function enemyAttack(enemy){
 
-  if(!selected || selected.dataset.name!=="Player") return;
+  if(
+    !selected ||
+    selected.dataset.name!=="Player"
+  ){
 
-  if(enemy.dataset.attacking==="true") return;
+    return;
+  }
+
+  if(enemy.dataset.attacking==="true"){
+
+    return;
+  }
+
 
   const player=selected;
 
-  const ex=parseInt(enemy.style.left)||0;
-  const ey=parseInt(enemy.style.top)||0;
-  const px=parseInt(player.style.left)||0;
-  const py=parseInt(player.style.top)||0;
 
-  const distance=Math.sqrt(
-    Math.pow(ex-px,2)+Math.pow(ey-py,2)
+  const ex=
+  parseInt(enemy.style.left)||0;
+
+  const ey=
+  parseInt(enemy.style.top)||0;
+
+  const px=
+  parseInt(player.style.left)||0;
+
+  const py=
+  parseInt(player.style.top)||0;
+
+
+  const distance=
+  Math.sqrt(
+    Math.pow(ex-px,2)+
+    Math.pow(ey-py,2)
   );
+
 
   if(distance<75){
 
     enemy.dataset.attacking="true";
 
+
     setTimeout(function(){
 
-      if(!document.body.contains(enemy)){
+      if(
+        !document.body.contains(enemy)
+      ){
+
+        enemy.dataset.attacking="false";
+
         return;
       }
 
-      let hp=parseInt(player.dataset.hp)||100;
 
-      const effect=document.createElement("div");
-      effect.className="enemyHitEffect";
+      let hp=
+      parseInt(player.dataset.hp)||100;
+
+
+      const effect=
+      document.createElement("div");
+
+      effect.className=
+      "enemyHitEffect";
+
       effect.textContent="💢";
 
-      effect.style.left=(px + player.offsetWidth/2 - 15)+"px";
-      effect.style.top=(py - 10)+"px";
 
-      document.getElementById("gameArea").appendChild(effect);
+      effect.style.left=
+      (
+        px+
+        player.offsetWidth/2-
+        15
+      )+"px";
 
-      setTimeout(function(){
-        effect.remove();
-      },500);
 
-      if(isBlocking){
+      effect.style.top=
+      (py-10)+"px";
 
-  const shield=document.createElement("div");
-  shield.className="shieldBreak";
-  player.appendChild(shield);
 
-  setTimeout(function(){
-    shield.remove();
-  },400);
-
-  hp-=0;
-
-}else{
-  hp-=5;
-      }
-
-      if(hp<0) hp=0;
-
-      player.dataset.hp=String(hp);
-
-      const hpText=player.querySelector(".hpText");
-      const healthFill=player.querySelector(".healthFill");
-
-      if(hpText){
-        hpText.textContent="❤️ "+hp;
-      }
-
-      if(healthFill){
-        healthFill.style.width=hp+"%";
-      }
-
-      if(hp===0){
-        alert("💀 Game Over!");
-      }
-
-      enemy.dataset.attacking="false";
-
-    },1000);
-  }
-}
-
-function playerAttack(){
-
-  if(!selected || selected.dataset.name!=="Player"){
-    alert("Pehle Player select karo");
-    return;
-  }
-
-  const player=selected;
-  const enemies=document.querySelectorAll(".object");
-
-  let hit=false;
-
-  enemies.forEach(function(enemy){
-
-    if(enemy.dataset.name!=="Enemy") return;
-
-    const px=parseInt(player.style.left)||0;
-    const py=parseInt(player.style.top)||0;
-
-    const ex=parseInt(enemy.style.left)||0;
-    const ey=parseInt(enemy.style.top)||0;
-
-    const distance=Math.sqrt(
-      Math.pow(px-ex,2)+Math.pow(py-ey,2)
-    );
-
-    if(distance<90){
-
-      hit=true;
-
-      const effect=document.createElement("div");
-      effect.className="hitEffect";
-      effect.textContent="⚔️";
-
-      effect.style.left=(ex + enemy.offsetWidth/2 - 15)+"px";
-      effect.style.top=(ey - 10)+"px";
-
-      document.getElementById("gameArea").appendChild(effect);
-
-      setTimeout(function(){
-        effect.remove();
-      },500);
-
-      let hp=parseInt(enemy.dataset.hp)||100;
-
-      hp-=20;
-
-      if(hp<0) hp=0;
-
-      enemy.dataset.hp=String(hp);
-
-      const hpText=enemy.querySelector(".hpText");
-      const healthFill=enemy.querySelector(".healthFill");
-
-      if(hpText){
-        hpText.textContent="❤️ "+hp;
-      }
-
-      if(healthFill){
-        healthFill.style.width=hp+"%";
-      }
-
-      if(hp===0){
-
-        enemy.classList.add("enemyDeath");
-
-        setTimeout(function(){
-          enemy.remove();
-          alert("💀 Enemy Defeated!");
-        },700);
-      }
-    }
-  });
-
-  if(!hit){
-    alert("⚔️ Enemy range me nahi hai!");
-  }
-}
-  </script>
+      document
+     
