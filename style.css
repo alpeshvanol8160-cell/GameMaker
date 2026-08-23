@@ -1,0 +1,174 @@
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#111827;
+  color:white;
+  overflow:hidden;
+}
+
+header{
+  height:60px;
+  background:#1f2937;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 15px;
+  border-bottom:1px solid #374151;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:bold;
+  margin-right:auto;
+}
+
+header button,
+.leftPanel button,
+.rightPanel button{
+  background:#2563eb;
+  color:white;
+  border:0;
+  border-radius:7px;
+  padding:9px 12px;
+  cursor:pointer;
+}
+
+header button:hover,
+.leftPanel button:hover,
+.rightPanel button:hover{
+  background:#1d4ed8;
+}
+
+.editor{
+  height:calc(100vh - 60px);
+  display:flex;
+}
+
+.leftPanel{
+  width:150px;
+  background:#1f2937;
+  padding:15px;
+  border-right:1px solid #374151;
+}
+
+.leftPanel h3,
+.rightPanel h3{
+  margin-top:0;
+}
+
+.leftPanel button{
+  width:100%;
+  margin-bottom:10px;
+}
+
+main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.gameTop{
+  height:40px;
+  background:#374151;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 15px;
+  font-size:14px;
+}
+
+#gameArea{
+  position:relative;
+  flex:1;
+  margin:15px;
+  background:#0f172a;
+  border:2px solid #475569;
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.object{
+  position:absolute;
+  width:60px;
+  height:60px;
+  background:#ef4444;
+  border:2px solid white;
+  border-radius:6px;
+  cursor:move;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  user-select:none;
+}
+
+.object.selected{
+  outline:3px solid #facc15;
+}
+
+.rightPanel{
+  width:220px;
+  background:#1f2937;
+  padding:15px;
+  border-left:1px solid #374151;
+  overflow-y:auto;
+}
+
+.rightPanel label{
+  display:block;
+  margin-top:12px;
+  margin-bottom:5px;
+  font-size:13px;
+}
+
+.rightPanel input{
+  width:100%;
+  padding:8px;
+  border:1px solid #4b5563;
+  border-radius:6px;
+  background:#111827;
+  color:white;
+}
+
+.rightPanel button{
+  width:100%;
+  margin-top:15px;
+}
+
+#selectedName{
+  background:#111827;
+  padding:10px;
+  border-radius:6px;
+  color:#facc15;
+}
+
+@media(max-width:700px){
+
+  .leftPanel{
+    width:90px;
+    padding:8px;
+  }
+
+  .rightPanel{
+    width:150px;
+    padding:8px;
+  }
+
+  .logo{
+    font-size:15px;
+  }
+
+  header button{
+    padding:7px;
+    font-size:12px;
+  }
+
+  .leftPanel button{
+    font-size:11px;
+    padding:7px 3px;
+  }
+}
