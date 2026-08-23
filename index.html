@@ -1,1 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GameMaker V2</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+
+    <div class="logo">
+      🎮 GameMaker V2
+    </div>
+
+    <button onclick="newProject()">
+      ＋ New Project
+    </button>
+
+    <button onclick="playGame()">
+      ▶ Play
+    </button>
+
+    <button onclick="saveProject()">
+      💾 Save
+    </button>
+
+    <button onclick="loadProject()">
+      📂 Load
+    </button>
+
+  </header>
+
+
+  <!-- MAIN EDITOR -->
+  <div class="editor">
+
+
+    <!-- LEFT TOOLBAR -->
+    <aside class="leftPanel">
+
+      <h3>🛠️ Tools</h3>
+
+      <button onclick="addPlayer()">
+        🧙 Player
+      </button>
+
+      <button onclick="addEnemy()">
+        👹 Enemy
+      </button>
+
+      <button onclick="addObject()">
+        ⬛ Object
+      </button>
+
+      <button onclick="deleteObject()">
+        🗑️ Delete
+      </button>
+
+    </aside>
+
+
+    <!-- GAME AREA -->
+    <main>
+
+      <div class="gameTop">
+
+        <span>
+          🎬 Scene 1
+        </span>
+
+        <span id="status">
+          Editor Mode
+        </span>
+
+      </div>
+
+
+      <div id="gameArea"></div>
+
+
+      <!-- MOBILE GAME CONTROLS -->
+      <div id="mobileControls">
+
+        <button
+          ontouchstart="touchMove('up')"
+          ontouchend="stopTouch()">
+          ⬆️
+        </button>
+
+        <div>
+
+          <button
+            ontouchstart="touchMove('left')"
+            ontouchend="stopTouch()">
+            ⬅️
+          </button>
+
+          <button
+            ontouchstart="touchMove('down')"
+            ontouchend="stopTouch()">
+            ⬇️
+          </button>
+
+          <button
+            ontouchstart="touchMove('right')"
+            ontouchend="stopTouch()">
+            ➡️
+          </button>
+
+        </div>
+
+      </div>
+
+    </main>
+
+
+    <!-- RIGHT PROPERTIES -->
+    <aside class="rightPanel">
+
+      <h3>
+        ⚙️ Properties
+      </h3>
+
+
+      <p id="selectedName">
+        Nothing Selected
+      </p>
+
+
+      <!-- OBJECT NAME -->
+      <label>
+        Object Name
+      </label>
+
+      <input
+        id="objName"
+        type="text"
+        placeholder="Object name">
+
+
+      <!-- X -->
+      <label>
+        X Position
+      </label>
+
+      <input
+        id="objX"
+        type="number"
+        value="100">
+
+
+      <!-- Y -->
+      <label>
+        Y Position
+      </label>
+
+      <input
+        id="objY"
+        type="number"
+        value="100">
+
+
+      <!-- WIDTH -->
+      <label>
+        Width
+      </label>
+
+      <input
+        id="objW"
+        type="number"
+        value="60">
+
+
+      <!-- HEIGHT -->
+      <label>
+        Height
+      </label>
+
+      <input
+        id="objH"
+        type="number"
+        value="60">
+
+
+      <button onclick="applyProperties()">
+        ✅ Apply
+      </button>
+
+
+      <!-- IMAGE -->
+      <label>
+        🖼️ Object Image
+      </label>
+
+      <input
+        id="objImage"
+        type="file"
+        accept="image/*">
+
+
+      <button onclick="applyImage()">
+        🖼️ Apply Image
+      </button>
+
+
+      <button onclick="removeImage()">
+        ❌ Remove Image
+      </button>
+
+
+      <!-- CONTROL -->
+      <button
+        id="controlButton"
+        onclick="switchControl()">
+
+        🔄 Control: Player
+
+      </button>
+
+    </aside>
+
+  </div>
+
+
+  <!-- IMPORTANT:
+       JavaScript is in a separate file -->
+  <script src="script.js"></script>
+
+</body>
+
+</html>
