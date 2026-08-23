@@ -1026,3 +1026,40 @@ function gameLoop(){
 loadProject();
 
 gameLoop();
+function enemyAI(enemy){
+  const player = document.querySelector('[data-name="Player"]');
+
+  if(!player || !enemy) return;
+
+  let enemyX = parseInt(enemy.style.left) || 0;
+  let enemyY = parseInt(enemy.style.top) || 0;
+
+  let playerX = parseInt(player.style.left) || 0;
+  let playerY = parseInt(player.style.top) || 0;
+
+  const speed = 1.2;
+
+  if(enemyX < playerX - 5){
+    enemyX += speed;
+  }
+
+  if(enemyX > playerX + 5){
+    enemyX -= speed;
+  }
+
+  if(enemyY < playerY - 5){
+    enemyY += speed;
+  }
+
+  if(enemyY > playerY + 5){
+    enemyY -= speed;
+  }
+
+  enemy.style.left = enemyX + "px";
+  enemy.style.top = enemyY + "px";
+}
+setInterval(() => {
+  document.querySelectorAll('[data-name="Enemy"]').forEach(enemy => {
+    enemyAI(enemy);
+  });
+}, 30);
