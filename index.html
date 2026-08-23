@@ -513,6 +513,21 @@ function movePlayer(){
     if(keys["arrowup"] || keys["w"]){
       y -= speed;
     }
+    if(touchDirection === "left"){
+  x -= speed;
+}
+
+if(touchDirection === "right"){
+  x += speed;
+}
+
+if(touchDirection === "up"){
+  y -= speed;
+}
+
+if(touchDirection === "down"){
+  y += speed;
+}
 
     if(keys["arrowdown"] || keys["s"]){
       y += speed;
