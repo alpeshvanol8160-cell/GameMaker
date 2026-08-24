@@ -6,14 +6,21 @@ let selectedObject = null;
 let objectCount = 0;
 
 let isPlaying = false;
-
 let controlMode = "Player";
 
 let touchDirection = null;
-
 let keys = {};
 
 const gameArea = document.getElementById("gameArea");
+
+
+// ========================================
+// ❤️ PLAYER / COMBAT VARIABLES
+// ========================================
+
+let playerHP = 100;
+let stamina = 100;
+let isBlocking = false;
 
 
 // ========================================
@@ -30,32 +37,22 @@ function createObject(name, emoji, color){
 
   obj.innerText = emoji;
 
-  obj.dataset.name =
-    name + objectCount;
-
-  obj.dataset.emoji =
-    emoji;
-
-  obj.dataset.color =
-    color;
+  obj.dataset.name = name + objectCount;
+  obj.dataset.emoji = emoji;
+  obj.dataset.color = color;
 
   obj.style.left = "100px";
-
   obj.style.top = "100px";
 
   obj.style.width = "60px";
-
   obj.style.height = "60px";
 
-  obj.style.backgroundColor =
-    color;
+  obj.style.backgroundColor = color;
 
   gameArea.appendChild(obj);
 
   selectObject(obj);
-
   makeDraggable(obj);
-
 }
 
 
@@ -112,22 +109,17 @@ function selectObject(obj){
 
   if(selectedObject){
 
-    selectedObject.classList.remove(
-      "selected"
-    );
+    selectedObject.classList.remove("selected");
 
   }
 
   selectedObject = obj;
 
-  obj.classList.add(
-    "selected"
-  );
+  obj.classList.add("selected");
 
   document.getElementById(
     "selectedName"
-  ).innerText =
-    obj.dataset.name;
+  ).innerText = obj.dataset.name;
 
   updateProperties();
 
@@ -142,34 +134,24 @@ function updateProperties(){
 
   if(!selectedObject) return;
 
-
   document.getElementById(
     "objName"
-  ).value =
-    selectedObject.dataset.name;
-
+  ).value = selectedObject.dataset.name;
 
   document.getElementById(
     "objX"
   ).value =
-    parseInt(
-      selectedObject.style.left
-    ) || 0;
-
+    parseInt(selectedObject.style.left) || 0;
 
   document.getElementById(
     "objY"
   ).value =
-    parseInt(
-      selectedObject.style.top
-    ) || 0;
-
+    parseInt(selectedObject.style.top) || 0;
 
   document.getElementById(
     "objW"
   ).value =
     selectedObject.offsetWidth;
-
 
   document.getElementById(
     "objH"
@@ -187,52 +169,32 @@ function applyProperties(){
 
   if(!selectedObject){
 
-    alert(
-      "Select an object first!"
-    );
+    alert("Select an object first!");
 
     return;
 
   }
 
-
   const name =
-    document.getElementById(
-      "objName"
-    ).value.trim();
-
+    document.getElementById("objName").value.trim();
 
   if(name){
 
-    selectedObject.dataset.name =
-      name;
+    selectedObject.dataset.name = name;
 
   }
 
-
   selectedObject.style.left =
-    document.getElementById(
-      "objX"
-    ).value + "px";
-
+    document.getElementById("objX").value + "px";
 
   selectedObject.style.top =
-    document.getElementById(
-      "objY"
-    ).value + "px";
-
+    document.getElementById("objY").value + "px";
 
   selectedObject.style.width =
-    document.getElementById(
-      "objW"
-    ).value + "px";
-
+    document.getElementById("objW").value + "px";
 
   selectedObject.style.height =
-    document.getElementById(
-      "objH"
-    ).value + "px";
-
+    document.getElementById("objH").value + "px";
 
   document.getElementById(
     "selectedName"
@@ -251,9 +213,7 @@ function makeDraggable(obj){
   let dragging = false;
 
   let offsetX = 0;
-
   let offsetY = 0;
-
 
   obj.addEventListener(
     "pointerdown",
@@ -261,26 +221,18 @@ function makeDraggable(obj){
 
       if(isPlaying) return;
 
-
       dragging = true;
-
 
       const rect =
         obj.getBoundingClientRect();
 
-
       offsetX =
-        e.clientX -
-        rect.left;
-
+        e.clientX - rect.left;
 
       offsetY =
-        e.clientY -
-        rect.top;
-
+        e.clientY - rect.top;
 
       selectObject(obj);
-
 
       obj.setPointerCapture(
         e.pointerId
@@ -294,31 +246,24 @@ function makeDraggable(obj){
     "pointermove",
     function(e){
 
-      if(
-        !dragging ||
-        isPlaying
-      ){
+      if(!dragging || isPlaying){
 
         return;
 
       }
 
-
       const area =
         gameArea.getBoundingClientRect();
-
 
       let x =
         e.clientX -
         area.left -
         offsetX;
 
-
       let y =
         e.clientY -
         area.top -
         offsetY;
-
 
       x = Math.max(
         0,
@@ -329,7 +274,6 @@ function makeDraggable(obj){
         )
       );
 
-
       y = Math.max(
         0,
         Math.min(
@@ -339,14 +283,11 @@ function makeDraggable(obj){
         )
       );
 
-
       obj.style.left =
         x + "px";
 
-
       obj.style.top =
         y + "px";
-
 
       updateProperties();
 
@@ -384,19 +325,15 @@ function deleteObject(){
 
   if(!selectedObject){
 
-    alert(
-      "Select an object first!"
-    );
+    alert("Select an object first!");
 
     return;
 
   }
 
-
   selectedObject.remove();
 
   selectedObject = null;
-
 
   document.getElementById(
     "selectedName"
@@ -412,16 +349,11 @@ function deleteObject(){
 
 function newProject(){
 
-  if(
-    !confirm(
-      "Create a new project?"
-    )
-  ){
+  if(!confirm("Create a new project?")){
 
     return;
 
   }
-
 
   gameArea.innerHTML = "";
 
@@ -429,6 +361,12 @@ function newProject(){
 
   objectCount = 0;
 
+  playerHP = 100;
+  stamina = 100;
+  isBlocking = false;
+
+  updateHPUI();
+  updateStaminaUI();
 
   document.getElementById(
     "selectedName"
@@ -444,21 +382,15 @@ function newProject(){
 
 function playGame(){
 
-  isPlaying =
-    !isPlaying;
-
+  isPlaying = !isPlaying;
 
   const status =
-    document.getElementById(
-      "status"
-    );
-
+    document.getElementById("status");
 
   if(isPlaying){
 
     status.innerText =
       "▶ Play Mode";
-
 
   }else{
 
@@ -478,39 +410,28 @@ function applyImage(){
 
   if(!selectedObject){
 
-    alert(
-      "Select an object first!"
-    );
+    alert("Select an object first!");
 
     return;
 
   }
 
-
   const input =
-    document.getElementById(
-      "objImage"
-    );
-
+    document.getElementById("objImage");
 
   const file =
     input.files[0];
 
-
   if(!file){
 
-    alert(
-      "Please select an image!"
-    );
+    alert("Please select an image!");
 
     return;
 
   }
 
-
   const reader =
     new FileReader();
-
 
   reader.onload =
     function(e){
@@ -518,24 +439,18 @@ function applyImage(){
       selectedObject.style.backgroundImage =
         `url("${e.target.result}")`;
 
-
       selectedObject.style.backgroundSize =
         "cover";
-
 
       selectedObject.style.backgroundPosition =
         "center";
 
-
       selectedObject.style.backgroundRepeat =
         "no-repeat";
 
-
-      selectedObject.innerText =
-        "";
+      selectedObject.innerText = "";
 
     };
-
 
   reader.readAsDataURL(file);
 
@@ -550,18 +465,14 @@ function removeImage(){
 
   if(!selectedObject){
 
-    alert(
-      "Select an object first!"
-    );
+    alert("Select an object first!");
 
     return;
 
   }
 
-
   selectedObject.style.backgroundImage =
     "none";
-
 
   selectedObject.innerText =
     selectedObject.dataset.emoji || "⬛";
@@ -576,7 +487,6 @@ function removeImage(){
 function saveProject(){
 
   const objects = [];
-
 
   [...gameArea.children].forEach(
     function(obj){
@@ -595,14 +505,10 @@ function saveProject(){
           obj.style.backgroundColor,
 
         x:
-          parseInt(
-            obj.style.left
-          ) || 0,
+          parseInt(obj.style.left) || 0,
 
         y:
-          parseInt(
-            obj.style.top
-          ) || 0,
+          parseInt(obj.style.top) || 0,
 
         width:
           obj.offsetWidth,
@@ -633,16 +539,10 @@ function saveProject(){
 
     localStorage.setItem(
       "GameMakerV2Project",
-      JSON.stringify(
-        project
-      )
+      JSON.stringify(project)
     );
 
-
-    alert(
-      "💾 Project Saved!"
-    );
-
+    alert("💾 Project Saved!");
 
   }catch(error){
 
@@ -666,30 +566,22 @@ function loadProject(){
       "GameMakerV2Project"
     );
 
-
   if(!saved){
 
     return;
 
   }
 
-
   try{
 
     const project =
       JSON.parse(saved);
 
+    gameArea.innerHTML = "";
 
-    gameArea.innerHTML =
-      "";
+    selectedObject = null;
 
-
-    selectedObject =
-      null;
-
-
-    objectCount =
-      0;
+    objectCount = 0;
 
 
     project.objects.forEach(
@@ -697,59 +589,38 @@ function loadProject(){
 
         objectCount++;
 
-
         const obj =
-          document.createElement(
-            "div"
-          );
-
+          document.createElement("div");
 
         obj.className =
           "object";
 
-
         obj.dataset.name =
           data.name;
 
-
         obj.dataset.emoji =
-          data.emoji ||
-          "⬛";
-
+          data.emoji || "⬛";
 
         obj.dataset.color =
-          data.color ||
-          "#64748b";
-
+          data.color || "#64748b";
 
         obj.innerText =
-          data.emoji ||
-          "⬛";
-
+          data.emoji || "⬛";
 
         obj.style.left =
-          (data.x || 0) +
-          "px";
-
+          (data.x || 0) + "px";
 
         obj.style.top =
-          (data.y || 0) +
-          "px";
-
+          (data.y || 0) + "px";
 
         obj.style.width =
-          (data.width || 60) +
-          "px";
-
+          (data.width || 60) + "px";
 
         obj.style.height =
-          (data.height || 60) +
-          "px";
-
+          (data.height || 60) + "px";
 
         obj.style.backgroundColor =
-          data.color ||
-          "#64748b";
+          data.color || "#64748b";
 
 
         if(data.image){
@@ -757,33 +628,22 @@ function loadProject(){
           obj.style.backgroundImage =
             data.image;
 
-
           obj.style.backgroundSize =
             "cover";
-
 
           obj.style.backgroundPosition =
             "center";
 
-
           obj.style.backgroundRepeat =
             "no-repeat";
 
-
-          obj.innerText =
-            "";
+          obj.innerText = "";
 
         }
 
+        gameArea.appendChild(obj);
 
-        gameArea.appendChild(
-          obj
-        );
-
-
-        makeDraggable(
-          obj
-        );
+        makeDraggable(obj);
 
       }
     );
@@ -793,7 +653,6 @@ function loadProject(){
       "selectedName"
     ).innerText =
       "Nothing Selected";
-
 
   }catch(error){
 
@@ -877,7 +736,6 @@ function switchControl(){
 
   }
 
-
   document.getElementById(
     "controlButton"
   ).innerText =
@@ -917,18 +775,14 @@ function gameLoop(){
           controlledObject.style.left
         ) || 0;
 
-
       let y =
         parseInt(
           controlledObject.style.top
         ) || 0;
 
-
-      const speed =
-        4;
+      const speed = 4;
 
 
-      // LEFT
       if(
         keys["a"] ||
         keys["arrowleft"] ||
@@ -940,7 +794,6 @@ function gameLoop(){
       }
 
 
-      // RIGHT
       if(
         keys["d"] ||
         keys["arrowright"] ||
@@ -952,7 +805,6 @@ function gameLoop(){
       }
 
 
-      // UP
       if(
         keys["w"] ||
         keys["arrowup"] ||
@@ -964,7 +816,6 @@ function gameLoop(){
       }
 
 
-      // DOWN
       if(
         keys["s"] ||
         keys["arrowdown"] ||
@@ -975,8 +826,6 @@ function gameLoop(){
 
       }
 
-
-      // KEEP INSIDE GAME AREA
 
       x =
         Math.max(
@@ -1003,7 +852,6 @@ function gameLoop(){
       controlledObject.style.left =
         x + "px";
 
-
       controlledObject.style.top =
         y + "px";
 
@@ -1011,21 +859,10 @@ function gameLoop(){
 
   }
 
-
-  requestAnimationFrame(
-    gameLoop
-  );
+  requestAnimationFrame(gameLoop);
 
 }
 
-
-// ========================================
-// 🚀 START ENGINE
-// ========================================
-
-loadProject();
-
-gameLoop();
 
 // ========================================
 // 👹 ENEMY AI
@@ -1036,14 +873,16 @@ function enemyAI(enemy){
   if(!isPlaying) return;
 
   const player =
-    [...gameArea.children].find(function(obj){
+    [...gameArea.children].find(
+      function(obj){
 
-      return (
-        obj.dataset.name &&
-        obj.dataset.name.startsWith("Player")
-      );
+        return (
+          obj.dataset.name &&
+          obj.dataset.name.startsWith("Player")
+        );
 
-    });
+      }
+    );
 
   if(!player) return;
 
@@ -1053,7 +892,6 @@ function enemyAI(enemy){
 
   let enemyY =
     parseFloat(enemy.style.top) || 0;
-
 
   let playerX =
     parseFloat(player.style.left) || 0;
@@ -1065,25 +903,18 @@ function enemyAI(enemy){
   const speed = 1.2;
 
 
-  // ➡️ Move Right
   if(enemyX < playerX - 5){
     enemyX += speed;
   }
 
-
-  // ⬅️ Move Left
   if(enemyX > playerX + 5){
     enemyX -= speed;
   }
 
-
-  // ⬇️ Move Down
   if(enemyY < playerY - 5){
     enemyY += speed;
   }
 
-
-  // ⬆️ Move Up
   if(enemyY > playerY + 5){
     enemyY -= speed;
   }
@@ -1094,6 +925,7 @@ function enemyAI(enemy){
 
   enemy.style.top =
     enemyY + "px";
+
 }
 
 
@@ -1118,36 +950,99 @@ setInterval(function(){
 
     });
 
-}, 30);
-// ========================================
-// ⚔️ ENEMY AUTO ATTACK
-// ========================================
-
-// ========================================
-// ❤️ PLAYER HP SYSTEM
-// ========================================
-
-let playerHP = 100;
-let isBlocking = false;
+},30);
 
 
 // ========================================
-// 🛡️ BLOCK
+// ❤️ UPDATE HP UI
 // ========================================
 
-function toggleBlock(){
+function updateHPUI(){
 
-  isBlocking = !isBlocking;
+  const hpText =
+    document.getElementById("playerHP");
 
-  const button =
-    document.getElementById("blockButton");
+  const hpFill =
+    document.getElementById("playerHealthFill");
 
-  if(button){
 
-    button.innerText =
-      isBlocking
-      ? "🛡️ Block ON"
-      : "🛡️ Block OFF";
+  if(hpText){
+
+    hpText.innerText =
+      "❤️ " + playerHP + " HP";
+
+  }
+
+  if(hpFill){
+
+    hpFill.style.width =
+      playerHP + "%";
+
+    if(playerHP <= 20){
+
+      hpFill.style.background =
+        "#ef4444";
+
+    }else if(playerHP <= 50){
+
+      hpFill.style.background =
+        "#f97316";
+
+    }else{
+
+      hpFill.style.background =
+        "#22c55e";
+
+    }
+
+  }
+
+}
+
+
+// ========================================
+// ⚡ UPDATE STAMINA UI
+// ========================================
+
+function updateStaminaUI(){
+
+  const fill =
+    document.getElementById("staminaFill");
+
+  const text =
+    document.getElementById("staminaText");
+
+
+  if(fill){
+
+    fill.style.width =
+      stamina + "%";
+
+    if(stamina <= 20){
+
+      fill.style.background =
+        "#ef4444";
+
+    }else if(stamina <= 50){
+
+      fill.style.background =
+        "#f97316";
+
+    }else{
+
+      fill.style.background =
+        "#3b82f6";
+
+    }
+
+  }
+
+
+  if(text){
+
+    text.innerText =
+      "⚡ Stamina: " +
+      Math.round(stamina);
 
   }
 
@@ -1163,7 +1058,6 @@ function damagePlayer(amount){
   if(playerHP <= 0) return;
 
 
-  // 🛡️ Block reduces damage
   if(isBlocking){
 
     amount = 2;
@@ -1181,34 +1075,14 @@ function damagePlayer(amount){
   }
 
 
-  // HP display
-  const hpText =
-    document.getElementById("playerHP");
-
-  const hpFill =
-    document.getElementById("playerHealthFill");
+  updateHPUI();
 
 
-  if(hpText){
-
-    hpText.innerText =
-      playerHP + " HP";
-
-  }
-
-
-  if(hpFill){
-
-    hpFill.style.width =
-      playerHP + "%";
-
-  }
-
-
-  // 💀 Player defeated
   if(playerHP <= 0){
 
     isPlaying = false;
+
+    isBlocking = false;
 
     const status =
       document.getElementById("status");
@@ -1220,7 +1094,15 @@ function damagePlayer(amount){
 
     }
 
-    alert("💀 Player Defeated!");
+    const button =
+      document.getElementById("blockButton");
+
+    if(button){
+
+      button.innerText =
+        "🛡️ Block OFF";
+
+    }
 
   }
 
@@ -1228,7 +1110,7 @@ function damagePlayer(amount){
 
 
 // ========================================
-// ⚔️ ENEMY ATTACK DAMAGE
+// ⚔️ ENEMY ATTACK
 // ========================================
 
 function enemyAttack(enemy){
@@ -1237,14 +1119,16 @@ function enemyAttack(enemy){
 
 
   const player =
-    [...gameArea.children].find(function(obj){
+    [...gameArea.children].find(
+      function(obj){
 
-      return (
-        obj.dataset.name &&
-        obj.dataset.name.startsWith("Player")
-      );
+        return (
+          obj.dataset.name &&
+          obj.dataset.name.startsWith("Player")
+        );
 
-    });
+      }
+    );
 
 
   if(!player) return;
@@ -1277,7 +1161,6 @@ function enemyAttack(enemy){
     );
 
 
-  // ⚔️ Attack range
   if(distance <= 75){
 
     if(
@@ -1293,7 +1176,8 @@ function enemyAttack(enemy){
       "true";
 
 
-    // 💢 Hit effect
+    // 💢 HIT EFFECT
+
     const hit =
       document.createElement("div");
 
@@ -1313,18 +1197,24 @@ function enemyAttack(enemy){
     gameArea.appendChild(hit);
 
 
-    // ❤️ Damage
+    // ❤️ DAMAGE
+
     damagePlayer(5);
 
 
     setTimeout(function(){
 
-      hit.remove();
+      if(hit){
+
+        hit.remove();
+
+      }
 
     },500);
 
 
-    // ⏱️ Cooldown
+    // ⏱️ COOLDOWN
+
     setTimeout(function(){
 
       enemy.dataset.attacking =
@@ -1335,15 +1225,38 @@ function enemyAttack(enemy){
   }
 
 }
+
+
 // ========================================
-// 🛡️ BLOCK + ⚡ STAMINA
+// ⚔️ ENEMY ATTACK LOOP
 // ========================================
 
-let stamina = 100;
-let isBlocking = false;
+setInterval(function(){
+
+  if(!isPlaying) return;
 
 
-// BLOCK BUTTON
+  document
+    .querySelectorAll(".object")
+    .forEach(function(enemy){
+
+      if(
+        enemy.dataset.name &&
+        enemy.dataset.name.startsWith("Enemy")
+      ){
+
+        enemyAttack(enemy);
+
+      }
+
+    });
+
+},100);
+
+
+// ========================================
+// 🛡️ BLOCK
+// ========================================
 
 function toggleBlock(){
 
@@ -1351,16 +1264,18 @@ function toggleBlock(){
 
     isBlocking = false;
 
-    alert("⚡ Stamina खत्म!");
-
     return;
 
   }
 
-  isBlocking = !isBlocking;
+
+  isBlocking =
+    !isBlocking;
+
 
   const button =
     document.getElementById("blockButton");
+
 
   if(button){
 
@@ -1374,7 +1289,9 @@ function toggleBlock(){
 }
 
 
-// STAMINA SYSTEM
+// ========================================
+// ⚡ STAMINA SYSTEM
+// ========================================
 
 setInterval(function(){
 
@@ -1388,12 +1305,15 @@ setInterval(function(){
 
       isBlocking = false;
 
+
       const button =
         document.getElementById("blockButton");
 
       if(button){
+
         button.innerText =
           "🛡️ Block OFF";
+
       }
 
     }
@@ -1403,34 +1323,27 @@ setInterval(function(){
     stamina += 2;
 
     if(stamina > 100){
+
       stamina = 100;
+
     }
 
   }
 
 
-  const fill =
-    document.getElementById("staminaFill");
-
-  const text =
-    document.getElementById("staminaText");
-
-
-  if(fill){
-
-    fill.style.width =
-      stamina + "%";
-
-  }
-
-
-  if(text){
-
-    text.innerText =
-      "⚡ Stamina: " +
-      Math.round(stamina);
-
-  }
+  updateStaminaUI();
 
 },500);
-    
+
+
+// ========================================
+// 🚀 START ENGINE
+// ========================================
+
+loadProject();
+
+updateHPUI();
+
+updateStaminaUI();
+
+gameLoop();
