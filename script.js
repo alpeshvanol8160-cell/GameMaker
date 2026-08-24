@@ -86,6 +86,42 @@ function addEnemy(){
     "#dc2626"
   );
 
+  const enemies =
+    [...gameArea.children].filter(function(obj){
+
+      return (
+        obj.dataset.name &&
+        obj.dataset.name.startsWith("Enemy")
+      );
+
+    });
+
+  const enemy =
+    enemies[enemies.length - 1];
+
+  if(enemy){
+
+    const hpBar =
+      document.createElement("div");
+
+    hpBar.className =
+      "enemyHealthBar";
+
+    const hpFill =
+      document.createElement("div");
+
+    hpFill.className =
+      "enemyHealthFill";
+
+    hpFill.style.width =
+      "100%";
+
+    hpBar.appendChild(hpFill);
+
+    enemy.appendChild(hpBar);
+
+  }
+
 }
 
 
