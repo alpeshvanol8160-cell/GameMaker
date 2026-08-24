@@ -40,6 +40,9 @@ function createObject(name, emoji, color){
   obj.dataset.name = name + objectCount;
   obj.dataset.emoji = emoji;
   obj.dataset.color = color;
+  if(name === "Enemy"){
+  obj.dataset.hp = 100;
+  }
 
   obj.style.left = "100px";
   obj.style.top = "100px";
