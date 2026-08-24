@@ -2,34 +2,50 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>GameMaker V2</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css">
+
 </head>
+
 
 <body>
 
-  <!-- HEADER -->
+
+  <!-- ========================================
+       HEADER
+  ========================================= -->
+
   <header>
 
     <div class="logo">
       🎮 GameMaker V2
     </div>
 
+
     <button onclick="newProject()">
       ＋ New Project
     </button>
+
 
     <button onclick="playGame()">
       ▶ Play
     </button>
 
+
     <button onclick="saveProject()">
       💾 Save
     </button>
+
 
     <button onclick="loadProject()">
       📂 Load
@@ -38,26 +54,39 @@
   </header>
 
 
-  <!-- MAIN EDITOR -->
+
+  <!-- ========================================
+       MAIN EDITOR
+  ========================================= -->
+
   <div class="editor">
 
 
-    <!-- LEFT TOOLBAR -->
+    <!-- ======================================
+         LEFT TOOLBAR
+    ======================================= -->
+
     <aside class="leftPanel">
 
-      <h3>🛠️ Tools</h3>
+      <h3>
+        🛠️ Tools
+      </h3>
+
 
       <button onclick="addPlayer()">
         🧙 Player
       </button>
 
+
       <button onclick="addEnemy()">
         👹 Enemy
       </button>
 
+
       <button onclick="addObject()">
         ⬛ Object
       </button>
+
 
       <button onclick="deleteObject()">
         🗑️ Delete
@@ -66,31 +95,22 @@
     </aside>
 
 
-    <div id="playerHealth">
-  <div id="playerHP">❤️ 100 HP</div>
-  <div class="healthBar">
-    <div id="playerHealthFill"></div>
-  </div>
-    </div>
-    <div id="staminaBox">
-  <div id="staminaText">⚡ Stamina: 100</div>
 
-  <div class="staminaBar">
-    <div id="staminaFill"></div>
-  </div>
+    <!-- ======================================
+         GAME
+    ======================================= -->
 
-  <button id="blockButton" onclick="toggleBlock()">
-    🛡️ Block OFF
-  </button>
-    </div>
-  <!-- GAME AREA -->
     <main>
+
+
+      <!-- GAME TOP -->
 
       <div class="gameTop">
 
         <span>
           🎬 Scene 1
         </span>
+
 
         <span id="status">
           Editor Mode
@@ -99,47 +119,128 @@
       </div>
 
 
-      <div id="gameArea"></div>
+
+      <!-- ====================================
+           ❤️ PLAYER HP
+      ===================================== -->
+
+      <div id="playerHealth">
+
+        <div id="playerHP">
+          ❤️ 100 HP
+        </div>
 
 
-      <!-- MOBILE GAME CONTROLS -->
-      <div id="mobileControls">
+        <div class="healthBar">
 
-        <button
-          ontouchstart="touchMove('up')"
-          ontouchend="stopTouch()">
-          ⬆️
-        </button>
-
-        <div>
-
-          <button
-            ontouchstart="touchMove('left')"
-            ontouchend="stopTouch()">
-            ⬅️
-          </button>
-
-          <button
-            ontouchstart="touchMove('down')"
-            ontouchend="stopTouch()">
-            ⬇️
-          </button>
-
-          <button
-            ontouchstart="touchMove('right')"
-            ontouchend="stopTouch()">
-            ➡️
-          </button>
+          <div id="playerHealthFill"></div>
 
         </div>
 
       </div>
 
+
+
+      <!-- ====================================
+           ⚡ STAMINA + BLOCK
+      ===================================== -->
+
+      <div id="staminaBox">
+
+        <div id="staminaText">
+          ⚡ Stamina: 100
+        </div>
+
+
+        <div class="staminaBar">
+
+          <div id="staminaFill"></div>
+
+        </div>
+
+
+        <button
+          id="blockButton"
+          onclick="toggleBlock()">
+
+          🛡️ Block OFF
+
+        </button>
+
+      </div>
+
+
+
+      <!-- ====================================
+           🎮 GAME AREA
+      ===================================== -->
+
+      <div id="gameArea"></div>
+
+
+
+      <!-- ====================================
+           📱 MOBILE CONTROLS
+      ===================================== -->
+
+      <div id="mobileControls">
+
+
+        <button
+          ontouchstart="touchMove('up')"
+          ontouchend="stopTouch()">
+
+          ⬆️
+
+        </button>
+
+
+
+        <div>
+
+
+          <button
+            ontouchstart="touchMove('left')"
+            ontouchend="stopTouch()">
+
+            ⬅️
+
+          </button>
+
+
+          <button
+            ontouchstart="touchMove('down')"
+            ontouchend="stopTouch()">
+
+            ⬇️
+
+          </button>
+
+
+          <button
+            ontouchstart="touchMove('right')"
+            ontouchend="stopTouch()">
+
+            ➡️
+
+          </button>
+
+
+        </div>
+
+      </div>
+
+
     </main>
 
 
-    <!-- RIGHT PROPERTIES -->
+
+    <!-- ======================================
+         RIGHT PROPERTIES
+    ======================================= -->
+
     <aside class="rightPanel">
+
 
       <h3>
         ⚙️ Properties
@@ -151,10 +252,13 @@
       </p>
 
 
+
       <!-- OBJECT NAME -->
+
       <label>
         Object Name
       </label>
+
 
       <input
         id="objName"
@@ -162,10 +266,13 @@
         placeholder="Object name">
 
 
-      <!-- X -->
+
+      <!-- X POSITION -->
+
       <label>
         X Position
       </label>
+
 
       <input
         id="objX"
@@ -173,10 +280,13 @@
         value="100">
 
 
-      <!-- Y -->
+
+      <!-- Y POSITION -->
+
       <label>
         Y Position
       </label>
+
 
       <input
         id="objY"
@@ -184,10 +294,13 @@
         value="100">
 
 
+
       <!-- WIDTH -->
+
       <label>
         Width
       </label>
+
 
       <input
         id="objW"
@@ -195,10 +308,13 @@
         value="60">
 
 
+
       <!-- HEIGHT -->
+
       <label>
         Height
       </label>
+
 
       <input
         id="objH"
@@ -206,15 +322,24 @@
         value="60">
 
 
-      <button onclick="applyProperties()">
+
+      <button
+        onclick="applyProperties()">
+
         ✅ Apply
+
       </button>
 
 
-      <!-- IMAGE -->
+
+      <!-- ====================================
+           🖼️ IMAGE
+      ===================================== -->
+
       <label>
         🖼️ Object Image
       </label>
+
 
       <input
         id="objImage"
@@ -222,17 +347,27 @@
         accept="image/*">
 
 
-      <button onclick="applyImage()">
+      <button
+        onclick="applyImage()">
+
         🖼️ Apply Image
+
       </button>
 
 
-      <button onclick="removeImage()">
+      <button
+        onclick="removeImage()">
+
         ❌ Remove Image
+
       </button>
 
 
-      <!-- CONTROL -->
+
+      <!-- ====================================
+           🔄 CONTROL
+      ===================================== -->
+
       <button
         id="controlButton"
         onclick="switchControl()">
@@ -241,14 +376,20 @@
 
       </button>
 
+
     </aside>
+
 
   </div>
 
 
-  <!-- IMPORTANT:
-       JavaScript is in a separate file -->
+
+  <!-- ========================================
+       JAVASCRIPT
+  ========================================= -->
+
   <script src="script.js"></script>
+
 
 </body>
 
