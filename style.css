@@ -1,24 +1,17 @@
 /* ========================================
-   🎮 GAMEMAKER V2 - STYLE
+   🎮 GAMEMAKER V2 - MAIN STYLE
 ======================================== */
 
 *{
   box-sizing:border-box;
 }
 
-html,
-body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-}
 
 body{
+  margin:0;
   font-family:Arial, sans-serif;
   background:#111827;
   color:white;
-  overflow:hidden;
 }
 
 
@@ -27,55 +20,47 @@ body{
 ======================================== */
 
 header{
-  height:60px;
-  width:100%;
-
   display:flex;
   align-items:center;
-
-  gap:8px;
-
-  padding:10px 15px;
-
+  gap:10px;
+  padding:12px;
   background:#1f2937;
-
   border-bottom:1px solid #374151;
+  flex-wrap:wrap;
 }
+
 
 .logo{
   font-size:20px;
   font-weight:bold;
-
   margin-right:auto;
 }
 
+
 header button{
-  background:#2563eb;
-  color:white;
-
-  border:0;
-  border-radius:7px;
-
   padding:9px 12px;
-
+  border:none;
+  border-radius:7px;
+  background:#374151;
+  color:white;
   cursor:pointer;
+  font-size:14px;
 }
 
+
 header button:hover{
-  background:#1d4ed8;
+  background:#4b5563;
 }
 
 
 /* ========================================
-   EDITOR
+   MAIN EDITOR
 ======================================== */
 
 .editor{
-  height:calc(100vh - 60px);
-
-  width:100%;
-
-  display:flex;
+  display:grid;
+  grid-template-columns:180px 1fr 220px;
+  min-height:calc(100vh - 65px);
 }
 
 
@@ -84,451 +69,356 @@ header button:hover{
 ======================================== */
 
 .leftPanel{
-  width:150px;
-
-  background:#1f2937;
-
   padding:15px;
-
+  background:#1f2937;
   border-right:1px solid #374151;
-
-  flex-shrink:0;
 }
+
 
 .leftPanel h3{
   margin-top:0;
-  margin-bottom:15px;
 }
+
 
 .leftPanel button{
   width:100%;
-
-  margin-bottom:10px;
-
-  padding:10px 5px;
-
-  border:0;
+  padding:10px;
+  margin-bottom:8px;
+  border:none;
   border-radius:7px;
-
-  background:#2563eb;
-
+  background:#374151;
   color:white;
-
   cursor:pointer;
+  font-size:14px;
 }
 
+
 .leftPanel button:hover{
-  background:#1d4ed8;
+  background:#4b5563;
 }
 
 
 /* ========================================
-   MAIN GAME EDITOR
+   MAIN GAME
 ======================================== */
 
 main{
-  flex:1;
-
-  min-width:0;
-
-  display:flex;
-
-  flex-direction:column;
-
   position:relative;
-
-  background:#0b1220;
+  min-width:0;
+  padding:10px;
+  background:#0f172a;
 }
 
-
-/* ========================================
-   GAME TOP BAR
-======================================== */
 
 .gameTop{
-  height:40px;
-
   display:flex;
-
-  align-items:center;
-
   justify-content:space-between;
-
-  padding:0 15px;
-
-  background:#374151;
-
-  font-size:14px;
-
-  flex-shrink:0;
-}
-
-
-/* ========================================
-   GAME AREA
-======================================== */
-
-#gameArea{
-  position:relative;
-
-  flex:1;
-
-  margin:15px;
-
-  min-height:0;
-
-  background:#0f172a;
-
-  border:2px solid #475569;
-
-  border-radius:8px;
-
-  overflow:hidden;
-}
-
-
-/* ========================================
-   GAME OBJECT
-======================================== */
-
-.object{
-  position:absolute;
-
-  width:60px;
-  height:60px;
-
-  display:flex;
-
   align-items:center;
-  justify-content:center;
-
-  background:#64748b;
-
-  border:2px solid white;
-
-  border-radius:6px;
-
-  cursor:move;
-
-  user-select:none;
-
-  touch-action:none;
-
-  font-size:30px;
-
-  overflow:hidden;
-}
-
-
-/* SELECTED OBJECT */
-
-.object.selected{
-  outline:3px solid #facc15;
-
-  outline-offset:2px;
-}
-
-
-/* ========================================
-   RIGHT PROPERTIES PANEL
-======================================== */
-
-.rightPanel{
-  width:220px;
-
-  background:#1f2937;
-
-  padding:15px;
-
-  border-left:1px solid #374151;
-
-  overflow-y:auto;
-
-  flex-shrink:0;
-}
-
-.rightPanel h3{
-  margin-top:0;
-}
-
-.rightPanel p{
-  background:#111827;
-
   padding:10px;
-
-  border-radius:6px;
-
-  color:#facc15;
-
-  word-break:break-word;
-}
-
-.rightPanel label{
-  display:block;
-
-  margin-top:12px;
-
-  margin-bottom:5px;
-
-  font-size:13px;
-}
-
-.rightPanel input{
-  width:100%;
-
-  padding:8px;
-
-  border:1px solid #4b5563;
-
-  border-radius:6px;
-
-  background:#111827;
-
-  color:white;
-}
-
-.rightPanel button{
-  width:100%;
-
-  margin-top:10px;
-
-  padding:9px;
-
-  border:0;
-
-  border-radius:7px;
-
-  background:#2563eb;
-
-  color:white;
-
-  cursor:pointer;
-}
-
-.rightPanel button:hover{
-  background:#1d4ed8;
+  background:#1e293b;
+  border-radius:8px;
+  margin-bottom:8px;
 }
 
 
 /* ========================================
-   MOBILE CONTROLS
+   ❤️ PLAYER HP
 ======================================== */
 
-#mobileControls{
-  position:absolute;
-
-  left:20px;
-
-  bottom:20px;
-
-  z-index:9999;
-
-  text-align:center;
-
-  user-select:none;
-}
-
-#mobileControls button{
-  width:55px;
-  height:55px;
-
-  margin:3px;
-
-  border:0;
-
-  border-radius:12px;
-
-  background:#2563eb;
-
-  color:white;
-
-  font-size:22px;
-
-  touch-action:none;
-
-  cursor:pointer;
-}
-
-#mobileControls button:active{
-  transform:scale(.94);
-
-  background:#1d4ed8;
-}
-
-
-/* ========================================
-   MOBILE SCREEN
-======================================== */
-
-@media(max-width:700px){
-
-  header{
-    height:55px;
-
-    padding:7px;
-
-    gap:5px;
-  }
-
-  .logo{
-    font-size:15px;
-  }
-
-  header button{
-    padding:7px 6px;
-
-    font-size:11px;
-  }
-
-
-  .editor{
-    height:calc(100vh - 55px);
-  }
-
-
-  .leftPanel{
-    width:85px;
-
-    padding:7px;
-  }
-
-  .leftPanel h3{
-    font-size:13px;
-  }
-
-  .leftPanel button{
-    font-size:11px;
-
-    padding:8px 3px;
-  }
-
-
-  .rightPanel{
-    width:150px;
-
-    padding:8px;
-  }
-
-  .rightPanel h3{
-    font-size:14px;
-  }
-
-  .rightPanel label{
-    font-size:11px;
-  }
-
-  .rightPanel input{
-    padding:6px;
-
-    font-size:12px;
-  }
-
-  .rightPanel button{
-    font-size:11px;
-
-    padding:7px;
-  }
-
-
-  #gameArea{
-    margin:8px;
-  }
-
-
-  #mobileControls{
-    left:10px;
-
-    bottom:10px;
-  }
-
-  #mobileControls button{
-    width:48px;
-    height:48px;
-
-    font-size:19px;
-  }
-
-}
-
-
-/* ========================================
-   VERY SMALL MOBILE SCREEN
-======================================== */
-
-@media(max-width:450px){
-
-  .leftPanel{
-    width:70px;
-  }
-
-  .rightPanel{
-    width:125px;
-  }
-
-  .logo{
-    font-size:13px;
-  }
-
-  header button{
-    font-size:9px;
-
-    padding:6px 4px;
-  }
-
-  #mobileControls button{
-    width:44px;
-    height:44px;
-  }
-
-}
 #playerHealth{
-  width:220px;
-  margin:10px auto;
-  text-align:center;
-  font-weight:bold;
-}
-
-.healthBar{
-  width:100%;
-  height:18px;
-  background:#374151;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-#playerHealthFill{
-  width:100%;
-  height:100%;
-  background:#22c55e;
-  transition:width 0.2s;
-}
-#staminaBox{
   width:220px;
   margin:8px auto;
   text-align:center;
   font-weight:bold;
 }
 
-.staminaBar{
+
+.healthBar{
   width:100%;
-  height:14px;
+  height:18px;
+  margin-top:5px;
   background:#374151;
   border-radius:10px;
   overflow:hidden;
-  margin:5px 0;
 }
+
+
+#playerHealthFill{
+  width:100%;
+  height:100%;
+  background:#22c55e;
+  transition:width .2s;
+}
+
+
+/* ========================================
+   ⚡ STAMINA
+======================================== */
+
+#staminaBox{
+  width:220px;
+  margin:8px auto 12px;
+  text-align:center;
+  font-weight:bold;
+}
+
+
+.staminaBar{
+  width:100%;
+  height:14px;
+  margin-top:5px;
+  background:#374151;
+  border-radius:10px;
+  overflow:hidden;
+}
+
 
 #staminaFill{
   width:100%;
   height:100%;
   background:#3b82f6;
-  transition:width 0.2s;
+  transition:width .2s;
 }
 
+
+/* ========================================
+   🛡️ BLOCK BUTTON
+======================================== */
+
 #blockButton{
-  margin-top:5px;
-  padding:8px 15px;
+  margin-top:7px;
+  padding:9px 16px;
   border:none;
   border-radius:8px;
+  background:#374151;
+  color:white;
+  font-size:14px;
+  font-weight:bold;
   cursor:pointer;
+}
+
+
+#blockButton:hover{
+  background:#4b5563;
+}
+
+
+/* ========================================
+   🎮 GAME AREA
+======================================== */
+
+#gameArea{
+  position:relative;
+  width:100%;
+  height:500px;
+  background:#020617;
+  border:2px solid #334155;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+
+/* ========================================
+   🎮 OBJECT
+======================================== */
+
+.object{
+  position:absolute;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  user-select:none;
+  touch-action:none;
+  font-size:35px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+
+.object.selected{
+  outline:3px solid #facc15;
+  outline-offset:2px;
+}
+
+
+/* ========================================
+   💢 HIT EFFECT
+======================================== */
+
+.hitEffect{
+  position:absolute;
+  font-size:40px;
+  pointer-events:none;
+  z-index:9999;
+  animation:hitAnim .5s ease-out forwards;
+}
+
+
+@keyframes hitAnim{
+
+  0%{
+    opacity:1;
+    transform:scale(.6);
+  }
+
+  100%{
+    opacity:0;
+    transform:scale(1.4) translateY(-20px);
+  }
+
+}
+
+
+/* ========================================
+   📱 MOBILE CONTROLS
+======================================== */
+
+#mobileControls{
+  margin-top:12px;
+  text-align:center;
+}
+
+
+#mobileControls button{
+  width:55px;
+  height:45px;
+  margin:3px;
+  border:none;
+  border-radius:8px;
+  background:#374151;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+  touch-action:none;
+}
+
+
+#mobileControls button:active{
+  background:#4b5563;
+}
+
+
+/* ========================================
+   ⚙️ RIGHT PANEL
+======================================== */
+
+.rightPanel{
+  padding:15px;
+  background:#1f2937;
+  border-left:1px solid #374151;
+}
+
+
+.rightPanel h3{
+  margin-top:0;
+}
+
+
+.rightPanel label{
+  display:block;
+  margin-top:10px;
+  margin-bottom:4px;
+  font-size:13px;
+}
+
+
+.rightPanel input{
+  width:100%;
+  padding:8px;
+  border:none;
+  border-radius:6px;
+  background:#374151;
+  color:white;
+}
+
+
+.rightPanel button{
+  width:100%;
+  padding:9px;
+  margin-top:8px;
+  border:none;
+  border-radius:7px;
+  background:#374151;
+  color:white;
+  cursor:pointer;
+}
+
+
+.rightPanel button:hover{
+  background:#4b5563;
+}
+
+
+#selectedName{
+  padding:8px;
+  background:#111827;
+  border-radius:6px;
+  word-break:break-word;
+}
+
+
+/* ========================================
+   📱 MOBILE RESPONSIVE
+======================================== */
+
+@media(max-width:900px){
+
+  .editor{
+    grid-template-columns:1fr;
+  }
+
+
+  .leftPanel{
+    border-right:none;
+    border-bottom:1px solid #374151;
+  }
+
+
+  .leftPanel button{
+    width:auto;
+    margin-right:5px;
+  }
+
+
+  .rightPanel{
+    border-left:none;
+    border-top:1px solid #374151;
+  }
+
+
+  #gameArea{
+    height:420px;
+  }
+
+}
+
+
+@media(max-width:600px){
+
+  header{
+    justify-content:center;
+  }
+
+
+  .logo{
+    width:100%;
+    text-align:center;
+    margin-right:0;
+  }
+
+
+  header button{
+    flex:1;
+  }
+
+
+  #gameArea{
+    height:350px;
+  }
+
+
+  .object{
+    font-size:30px;
+  }
+
 }
