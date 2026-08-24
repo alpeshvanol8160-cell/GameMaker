@@ -1365,3 +1365,146 @@ function addReward() {
     scoreCount.textContent = score;
   }
 }
+// ========================================
+// ⚔️ PLAYER ATTACK
+// ========================================
+
+function playerAttack(){
+
+  if(!isPlaying){
+    return;
+  }
+
+  const player =
+    [...gameArea.children].find(function(obj){
+
+      return (
+        obj.dataset.name &&
+        obj.dataset.name.startsWith("Player")
+      );
+
+    });
+
+  if(!player){
+    return;
+  }
+
+
+  const enemies =
+    [...gameArea.children].filter(function(obj){
+
+      return (
+        obj.dataset.name &&
+        obj.dataset.name.startsWith("Enemy")
+      );
+
+    });
+
+
+  let nearestEnemy = null;
+  let nearestDistance = Infinity;
+
+
+  enemies.forEach(function(enemy){
+
+    const playerX =
+      parseFloat(player.style.left) || 0;
+
+    const playerY =
+      parseFloat(player.style.top) || 0;
+
+    const enemyX =
+      parseFloat(enemy.style.left) || 0;
+
+    const enemyY =
+      parseFloat(enemy.style.top) || 0;
+
+
+    const dx = enemyX - playerX;
+    const dy = enemyY - playerY;
+
+    const distance =
+      Math.sqrt(dx * dx + dy * dy);
+
+
+    if(distance < nearestDistance){
+
+      nearestDistance = distance;
+      nearestEnemy = enemy;
+
+    }
+
+  });
+
+
+  if(!nearestEnemy){
+    return;
+  }
+
+
+  // ⚔️ ATTACK RANGE
+
+  if(nearestDistance > 90){
+
+    return;
+  }
+
+
+  // ❤️ ENEMY HP
+
+  let hp =
+    parseInt(nearestEnemy.dataset.hp) || 100;
+
+
+  hp -= 20;
+
+
+  if(hp < 0){
+    hp = 0;
+  }
+
+
+  nearestEnemy.dataset.hp = hp;
+
+
+  // 💢 HIT EFFECT
+
+  const hit =
+    document.createElement("div");
+
+  hit.className =
+    "hitEffect";
+
+  hit.innerText =
+    "⚔️";
+
+  hit.style.left =
+    (parseFloat(nearestEnemy.style.left) + 20) + "px";
+
+  hit.style.top =
+    (parseFloat(nearestEnemy.style.top) - 20) + "px";
+
+
+  gameArea.appendChild(hit);
+
+
+  setTimeout(function(){
+
+    hit.remove();
+
+  },500);
+
+
+  // 💀 ENEMY DEFEATED
+
+  if(hp <= 0){
+
+    addReward();
+
+    nearestEnemy.remove();
+
+    return;
+
+  }
+
+}
