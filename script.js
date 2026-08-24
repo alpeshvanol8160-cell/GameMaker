@@ -1347,3 +1347,21 @@ updateHPUI();
 updateStaminaUI();
 
 gameLoop();
+let coins = 0;
+let score = 0;
+
+function addReward() {
+  coins += 10;
+  score += 100;
+
+  const coinCount = document.getElementById("coinCount");
+  const scoreCount = document.getElementById("scoreCount");
+
+  if (coinCount) {
+    coinCount.textContent = coins;
+  }
+
+  if (scoreCount) {
+    scoreCount.textContent = score;
+  }
+}
