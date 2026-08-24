@@ -1335,5 +1335,102 @@ function enemyAttack(enemy){
   }
 
 }
+// ========================================
+// 🛡️ BLOCK + ⚡ STAMINA
+// ========================================
 
+let stamina = 100;
+let isBlocking = false;
+
+
+// BLOCK BUTTON
+
+function toggleBlock(){
+
+  if(stamina <= 0){
+
+    isBlocking = false;
+
+    alert("⚡ Stamina खत्म!");
+
+    return;
+
+  }
+
+  isBlocking = !isBlocking;
+
+  const button =
+    document.getElementById("blockButton");
+
+  if(button){
+
+    button.innerText =
+      isBlocking
+      ? "🛡️ Block ON"
+      : "🛡️ Block OFF";
+
+  }
+
+}
+
+
+// STAMINA SYSTEM
+
+setInterval(function(){
+
+  if(isBlocking){
+
+    stamina -= 5;
+
+    if(stamina <= 0){
+
+      stamina = 0;
+
+      isBlocking = false;
+
+      const button =
+        document.getElementById("blockButton");
+
+      if(button){
+        button.innerText =
+          "🛡️ Block OFF";
+      }
+
+    }
+
+  }else{
+
+    stamina += 2;
+
+    if(stamina > 100){
+      stamina = 100;
+    }
+
+  }
+
+
+  const fill =
+    document.getElementById("staminaFill");
+
+  const text =
+    document.getElementById("staminaText");
+
+
+  if(fill){
+
+    fill.style.width =
+      stamina + "%";
+
+  }
+
+
+  if(text){
+
+    text.innerText =
+      "⚡ Stamina: " +
+      Math.round(stamina);
+
+  }
+
+},500);
     
