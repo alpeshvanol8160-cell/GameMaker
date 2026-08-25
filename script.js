@@ -1,5 +1,5 @@
 // ========================================
-// 🎮 GAMEMAKER V2 - COMPLETE SCRIPT
+// 🎮 GAMEMAKER V2 - COMPLETE SCRIPT V3
 // ========================================
 
 let selectedObject = null;
@@ -14,7 +14,7 @@ let keys = {};
 const gameArea = document.getElementById("gameArea");
 
 // ========================================
-// ❤️ PLAYER VARIABLES
+// ❤️ PLAYER
 // ========================================
 
 let playerHP = 100;
@@ -22,30 +22,17 @@ let stamina = 100;
 let isBlocking = false;
 
 // ========================================
-// 🪙 COINS + SCORE
+// 🪙 SCORE
 // ========================================
 
 let coins = 0;
 let score = 0;
 
 // ========================================
-// 🌟 LEVEL SYSTEM
+// 🌟 LEVEL
 // ========================================
 
 let level = 1;
-
-function updateLevelUI(){
-
-  const levelText =
-    document.getElementById("levelCount");
-
-  if(levelText){
-
-    levelText.textContent = level;
-
-  }
-
-}
 
 
 // ========================================
@@ -59,50 +46,86 @@ function createObject(name, emoji, color){
   const obj = document.createElement("div");
 
   obj.className = "object";
+
   obj.innerText = emoji;
 
-  obj.dataset.name = name + objectCount;
-  obj.dataset.emoji = emoji;
-  obj.dataset.color = color;
+  obj.dataset.name =
+    name + objectCount;
 
+  obj.dataset.emoji =
+    emoji;
+
+  obj.dataset.color =
+    color;
+
+  obj.style.left =
+    "100px";
+
+  obj.style.top =
+    "100px";
+
+  obj.style.width =
+    "60px";
+
+  obj.style.height =
+    "60px";
+
+  obj.style.backgroundColor =
+    color;
+
+  // Enemy data
   if(name === "Enemy"){
-    obj.dataset.hp = "100";
-    obj.dataset.attacking = "false";
-  }
 
-  obj.style.left = "100px";
-  obj.style.top = "100px";
-  obj.style.width = "60px";
-  obj.style.height = "60px";
-  obj.style.backgroundColor = color;
+    obj.dataset.hp = "100";
+    obj.dataset.maxHp = "100";
+    obj.dataset.enemyType = "Normal";
+    obj.dataset.attacking = "false";
+
+    createEnemyHealthBar(obj);
+
+  }
 
   gameArea.appendChild(obj);
 
-  // Enemy HP bar
-  if(name === "Enemy"){
-    createEnemyHealthBar(obj);
-  }
-
   selectObject(obj);
+
   makeDraggable(obj);
+
+  return obj;
 }
 
 
 // ========================================
-// ❤️ CREATE ENEMY HP BAR
+// ❤️ ENEMY HP BAR
 // ========================================
 
 function createEnemyHealthBar(enemy){
 
-  const hpBar = document.createElement("div");
-  hpBar.className = "enemyHealthBar";
+  // Remove old bar if already exists
+  const oldBar =
+    enemy.querySelector(".enemyHealthBar");
 
-  const hpFill = document.createElement("div");
-  hpFill.className = "enemyHealthFill";
+  if(oldBar){
+    oldBar.remove();
+  }
 
-  hpFill.style.width = "100%";
+  const hpBar =
+    document.createElement("div");
+
+  hpBar.className =
+    "enemyHealthBar";
+
+  const hpFill =
+    document.createElement("div");
+
+  hpFill.className =
+    "enemyHealthFill";
+
+  hpFill.style.width =
+    "100%";
 
   hpBar.appendChild(hpFill);
+
   enemy.appendChild(hpBar);
 }
 
@@ -123,47 +146,100 @@ function addPlayer(){
 
 
 // ========================================
-// 👹 ENEMY
+// 👹 NORMAL ENEMY
 // ========================================
 
 function addEnemy(){
 
-  createObject(
-    "Enemy",
-    "👹",
-    "#dc2626"
-  );
+  const enemy =
+    createObject(
+      "Enemy",
+      "👹",
+      "#dc2626"
+    );
+
+  if(enemy){
+
+    enemy.dataset.hp =
+      "100";
+
+    enemy.dataset.maxHp =
+      "100";
+
+    enemy.dataset.enemyType =
+      "Normal";
+
+    positionEnemy(enemy);
+
+    updateEnemyHealthBar(enemy);
+
+  }
 
 }
+
+
 // ========================================
 // 👺 STRONG ENEMY
 // ========================================
 
 function addStrongEnemy(){
 
-  createObject(
-    "Enemy",
-    "👺",
-    "#ea580c"
-  );
-
-  const enemies =
-    [...gameArea.children].filter(
-      obj =>
-      obj.dataset.name &&
-      obj.dataset.name.startsWith("Enemy")
-    );
+  objectCount++;
 
   const enemy =
-    enemies[enemies.length - 1];
+    document.createElement("div");
 
-  if(enemy){
+  enemy.className =
+    "object";
 
-    enemy.dataset.hp = 200;
+  enemy.innerText =
+    "👺";
 
-    createEnemyHealthBar(enemy);
+  enemy.dataset.name =
+    "Enemy" + objectCount;
 
-  }
+  enemy.dataset.emoji =
+    "👺";
+
+  enemy.dataset.color =
+    "#ea580c";
+
+  enemy.dataset.hp =
+    "200";
+
+  enemy.dataset.maxHp =
+    "200";
+
+  enemy.dataset.enemyType =
+    "Strong";
+
+  enemy.dataset.attacking =
+    "false";
+
+  enemy.style.left =
+    "250px";
+
+  enemy.style.top =
+    "100px";
+
+  enemy.style.width =
+    "60px";
+
+  enemy.style.height =
+    "60px";
+
+  enemy.style.backgroundColor =
+    "#ea580c";
+
+  gameArea.appendChild(enemy);
+
+  createEnemyHealthBar(enemy);
+
+  makeDraggable(enemy);
+
+  selectObject(enemy);
+
+  updateEnemyHealthBar(enemy);
 
 }
 
@@ -174,34 +250,156 @@ function addStrongEnemy(){
 
 function addBossEnemy(){
 
-  createObject(
-    "Enemy",
-    "💀",
-    "#7e22ce"
-  );
+  objectCount++;
 
-  const enemies =
-    [...gameArea.children].filter(
-      obj =>
-      obj.dataset.name &&
-      obj.dataset.name.startsWith("Enemy")
+  const boss =
+    document.createElement("div");
+
+  boss.className =
+    "object";
+
+  boss.innerText =
+    "💀";
+
+  boss.dataset.name =
+    "Enemy" + objectCount;
+
+  boss.dataset.emoji =
+    "💀";
+
+  boss.dataset.color =
+    "#7e22ce";
+
+  boss.dataset.hp =
+    "500";
+
+  boss.dataset.maxHp =
+    "500";
+
+  boss.dataset.enemyType =
+    "Boss";
+
+  boss.dataset.attacking =
+    "false";
+
+  boss.style.left =
+    "300px";
+
+  boss.style.top =
+    "120px";
+
+  boss.style.width =
+    "90px";
+
+  boss.style.height =
+    "90px";
+
+  boss.style.backgroundColor =
+    "#7e22ce";
+
+  gameArea.appendChild(boss);
+
+  createEnemyHealthBar(boss);
+
+  makeDraggable(boss);
+
+  selectObject(boss);
+
+  updateEnemyHealthBar(boss);
+
+}
+
+
+// ========================================
+// 📍 ENEMY POSITION
+// ========================================
+
+function positionEnemy(enemy){
+
+  let x =
+    100 +
+    Math.random() *
+    Math.max(
+      50,
+      gameArea.clientWidth - 200
     );
 
-  const enemy =
-    enemies[enemies.length - 1];
+  let y =
+    50 +
+    Math.random() *
+    Math.max(
+      50,
+      gameArea.clientHeight - 150
+    );
 
-  if(enemy){
+  enemy.style.left =
+    Math.max(
+      0,
+      Math.min(
+        x,
+        gameArea.clientWidth -
+        enemy.offsetWidth
+      )
+    ) + "px";
 
-    enemy.dataset.hp = 500;
+  enemy.style.top =
+    Math.max(
+      0,
+      Math.min(
+        y,
+        gameArea.clientHeight -
+        enemy.offsetHeight
+      )
+    ) + "px";
 
-    enemy.style.width = "90px";
-    enemy.style.height = "90px";
+}
 
-    createEnemyHealthBar(enemy);
+
+// ========================================
+// ❤️ UPDATE ENEMY HP BAR
+// ========================================
+
+function updateEnemyHealthBar(enemy){
+
+  if(!enemy) return;
+
+  let hp =
+    parseInt(enemy.dataset.hp);
+
+  let maxHp =
+    parseInt(enemy.dataset.maxHp);
+
+  if(isNaN(hp)){
+    hp = 100;
+  }
+
+  if(isNaN(maxHp)){
+    maxHp = 100;
+  }
+
+  const fill =
+    enemy.querySelector(
+      ".enemyHealthFill"
+    );
+
+  if(fill){
+
+    const percent =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          (hp / maxHp) * 100
+        )
+      );
+
+    fill.style.width =
+      percent + "%";
 
   }
 
 }
+
 
 // ========================================
 // ⬛ OBJECT
@@ -227,72 +425,108 @@ function selectObject(obj){
   if(!obj) return;
 
   if(selectedObject){
-    selectedObject.classList.remove("selected");
+
+    selectedObject.classList.remove(
+      "selected"
+    );
+
   }
 
-  selectedObject = obj;
+  selectedObject =
+    obj;
 
-  obj.classList.add("selected");
+  obj.classList.add(
+    "selected"
+  );
 
-  const nameBox =
-    document.getElementById("selectedName");
+  const selectedName =
+    document.getElementById(
+      "selectedName"
+    );
 
-  if(nameBox){
-    nameBox.innerText =
+  if(selectedName){
+
+    selectedName.innerText =
       obj.dataset.name;
+
   }
 
   updateProperties();
+
 }
 
 
 // ========================================
-// ⚙️ UPDATE PROPERTIES
+// ⚙️ PROPERTIES
 // ========================================
 
 function updateProperties(){
 
   if(!selectedObject) return;
 
-  const name =
-    document.getElementById("objName");
+  const objName =
+    document.getElementById(
+      "objName"
+    );
 
-  const x =
-    document.getElementById("objX");
+  const objX =
+    document.getElementById(
+      "objX"
+    );
 
-  const y =
-    document.getElementById("objY");
+  const objY =
+    document.getElementById(
+      "objY"
+    );
 
-  const w =
-    document.getElementById("objW");
+  const objW =
+    document.getElementById(
+      "objW"
+    );
 
-  const h =
-    document.getElementById("objH");
+  const objH =
+    document.getElementById(
+      "objH"
+    );
 
 
-  if(name){
-    name.value =
-      selectedObject.dataset.name || "";
+  if(objName){
+
+    objName.value =
+      selectedObject.dataset.name;
+
   }
 
-  if(x){
-    x.value =
-      parseInt(selectedObject.style.left) || 0;
+  if(objX){
+
+    objX.value =
+      parseInt(
+        selectedObject.style.left
+      ) || 0;
+
   }
 
-  if(y){
-    y.value =
-      parseInt(selectedObject.style.top) || 0;
+  if(objY){
+
+    objY.value =
+      parseInt(
+        selectedObject.style.top
+      ) || 0;
+
   }
 
-  if(w){
-    w.value =
-      selectedObject.offsetWidth || 60;
+  if(objW){
+
+    objW.value =
+      selectedObject.offsetWidth;
+
   }
 
-  if(h){
-    h.value =
-      selectedObject.offsetHeight || 60;
+  if(objH){
+
+    objH.value =
+      selectedObject.offsetHeight;
+
   }
 
 }
@@ -306,25 +540,38 @@ function applyProperties(){
 
   if(!selectedObject){
 
-    alert("Select an object first!");
+    alert(
+      "Select an object first!"
+    );
 
     return;
+
   }
 
   const name =
-    document.getElementById("objName").value.trim();
+    document.getElementById(
+      "objName"
+    ).value.trim();
 
   const x =
-    document.getElementById("objX").value;
+    document.getElementById(
+      "objX"
+    ).value;
 
   const y =
-    document.getElementById("objY").value;
+    document.getElementById(
+      "objY"
+    ).value;
 
   const w =
-    document.getElementById("objW").value;
+    document.getElementById(
+      "objW"
+    ).value;
 
   const h =
-    document.getElementById("objH").value;
+    document.getElementById(
+      "objH"
+    ).value;
 
 
   if(name){
@@ -336,20 +583,26 @@ function applyProperties(){
 
 
   selectedObject.style.left =
-    (parseInt(x) || 0) + "px";
+    (parseInt(x) || 0) +
+    "px";
 
   selectedObject.style.top =
-    (parseInt(y) || 0) + "px";
+    (parseInt(y) || 0) +
+    "px";
 
   selectedObject.style.width =
-    (parseInt(w) || 60) + "px";
+    (parseInt(w) || 60) +
+    "px";
 
   selectedObject.style.height =
-    (parseInt(h) || 60) + "px";
+    (parseInt(h) || 60) +
+    "px";
 
 
   const selectedName =
-    document.getElementById("selectedName");
+    document.getElementById(
+      "selectedName"
+    );
 
   if(selectedName){
 
@@ -362,15 +615,19 @@ function applyProperties(){
 
 
 // ========================================
-// 🖱️ DRAG OBJECT
+// 🖱️ DRAG
 // ========================================
 
 function makeDraggable(obj){
 
-  let dragging = false;
+  let dragging =
+    false;
 
-  let offsetX = 0;
-  let offsetY = 0;
+  let offsetX =
+    0;
+
+  let offsetY =
+    0;
 
 
   obj.addEventListener(
@@ -379,16 +636,19 @@ function makeDraggable(obj){
 
       if(isPlaying) return;
 
-      dragging = true;
+      dragging =
+        true;
 
       const rect =
         obj.getBoundingClientRect();
 
       offsetX =
-        e.clientX - rect.left;
+        e.clientX -
+        rect.left;
 
       offsetY =
-        e.clientY - rect.top;
+        e.clientY -
+        rect.top;
 
       selectObject(obj);
 
@@ -408,8 +668,13 @@ function makeDraggable(obj){
     "pointermove",
     function(e){
 
-      if(!dragging || isPlaying){
+      if(
+        !dragging ||
+        isPlaying
+      ){
+
         return;
+
       }
 
       const area =
@@ -426,24 +691,26 @@ function makeDraggable(obj){
         offsetY;
 
 
-      x = Math.max(
-        0,
-        Math.min(
-          x,
-          gameArea.clientWidth -
-          obj.offsetWidth
-        )
-      );
+      x =
+        Math.max(
+          0,
+          Math.min(
+            x,
+            gameArea.clientWidth -
+            obj.offsetWidth
+          )
+        );
 
 
-      y = Math.max(
-        0,
-        Math.min(
-          y,
-          gameArea.clientHeight -
-          obj.offsetHeight
-        )
-      );
+      y =
+        Math.max(
+          0,
+          Math.min(
+            y,
+            gameArea.clientHeight -
+            obj.offsetHeight
+          )
+        );
 
 
       obj.style.left =
@@ -462,7 +729,8 @@ function makeDraggable(obj){
     "pointerup",
     function(){
 
-      dragging = false;
+      dragging =
+        false;
 
     }
   );
@@ -472,7 +740,8 @@ function makeDraggable(obj){
     "pointercancel",
     function(){
 
-      dragging = false;
+      dragging =
+        false;
 
     }
   );
@@ -481,24 +750,30 @@ function makeDraggable(obj){
 
 
 // ========================================
-// 🗑️ DELETE OBJECT
+// 🗑️ DELETE
 // ========================================
 
 function deleteObject(){
 
   if(!selectedObject){
 
-    alert("Select an object first!");
+    alert(
+      "Select an object first!"
+    );
 
     return;
+
   }
 
   selectedObject.remove();
 
-  selectedObject = null;
+  selectedObject =
+    null;
 
   const selectedName =
-    document.getElementById("selectedName");
+    document.getElementById(
+      "selectedName"
+    );
 
   if(selectedName){
 
@@ -516,59 +791,92 @@ function deleteObject(){
 
 function newProject(){
 
-  if(!confirm("Create a new project?")){
+  if(
+    !confirm(
+      "Create a new project?"
+    )
+  ){
+
     return;
+
   }
 
-  gameArea.innerHTML = "";
+  gameArea.innerHTML =
+    "";
 
-  selectedObject = null;
+  selectedObject =
+    null;
 
-  objectCount = 0;
+  objectCount =
+    0;
 
-  playerHP = 100;
-  stamina = 100;
-  isBlocking = false;
+  playerHP =
+    100;
 
-  coins = 0;
-  score = 0;
+  stamina =
+    100;
+
+  isBlocking =
+    false;
+
+  coins =
+    0;
+
+  score =
+    0;
+
+  level =
+    1;
+
+  isPlaying =
+    false;
 
   updateHPUI();
   updateStaminaUI();
   updateStatsUI();
+  updateLevelUI();
+  updateBlockButton();
 
   const selectedName =
-    document.getElementById("selectedName");
+    document.getElementById(
+      "selectedName"
+    );
 
   if(selectedName){
+
     selectedName.innerText =
       "Nothing Selected";
+
   }
 
   const status =
-    document.getElementById("status");
+    document.getElementById(
+      "status"
+    );
 
   if(status){
+
     status.innerText =
       "Editor Mode";
+
   }
 
-  isPlaying = false;
-
-  updateBlockButton();
 }
 
 
 // ========================================
-// ▶️ PLAY MODE
+// ▶️ PLAY
 // ========================================
 
 function playGame(){
 
-  isPlaying = !isPlaying;
+  isPlaying =
+    !isPlaying;
 
   const status =
-    document.getElementById("status");
+    document.getElementById(
+      "status"
+    );
 
   if(isPlaying){
 
@@ -593,24 +901,31 @@ function applyImage(){
 
   if(!selectedObject){
 
-    alert("Select an object first!");
+    alert(
+      "Select an object first!"
+    );
 
     return;
+
   }
 
   const input =
-    document.getElementById("objImage");
+    document.getElementById(
+      "objImage"
+    );
 
   const file =
     input.files[0];
 
   if(!file){
 
-    alert("Please select an image!");
+    alert(
+      "Please select an image!"
+    );
 
     return;
-  }
 
+  }
 
   const reader =
     new FileReader();
@@ -631,7 +946,8 @@ function applyImage(){
       selectedObject.style.backgroundRepeat =
         "no-repeat";
 
-      selectedObject.innerText = "";
+      selectedObject.innerText =
+        "";
 
     };
 
@@ -649,9 +965,12 @@ function removeImage(){
 
   if(!selectedObject){
 
-    alert("Select an object first!");
+    alert(
+      "Select an object first!"
+    );
 
     return;
+
   }
 
   selectedObject.style.backgroundImage =
@@ -665,12 +984,13 @@ function removeImage(){
 
 
 // ========================================
-// 💾 SAVE PROJECT
+// 💾 SAVE
 // ========================================
 
 function saveProject(){
 
-  const objects = [];
+  const objects =
+    [];
 
 
   [...gameArea.children].forEach(
@@ -690,10 +1010,14 @@ function saveProject(){
           obj.style.backgroundColor,
 
         x:
-          parseInt(obj.style.left) || 0,
+          parseInt(
+            obj.style.left
+          ) || 0,
 
         y:
-          parseInt(obj.style.top) || 0,
+          parseInt(
+            obj.style.top
+          ) || 0,
 
         width:
           obj.offsetWidth,
@@ -706,7 +1030,16 @@ function saveProject(){
           "",
 
         hp:
-          obj.dataset.hp || null
+          obj.dataset.hp ||
+          null,
+
+        maxHp:
+          obj.dataset.maxHp ||
+          null,
+
+        enemyType:
+          obj.dataset.enemyType ||
+          null
 
       });
 
@@ -716,9 +1049,11 @@ function saveProject(){
 
   const project = {
 
-    version: 2,
+    version:
+      3,
 
-    objects: objects,
+    objects:
+      objects,
 
     playerHP:
       playerHP,
@@ -730,7 +1065,10 @@ function saveProject(){
       coins,
 
     score:
-      score
+      score,
+
+    level:
+      level
 
   };
 
@@ -742,7 +1080,9 @@ function saveProject(){
       JSON.stringify(project)
     );
 
-    alert("💾 Project Saved!");
+    alert(
+      "💾 Project Saved!"
+    );
 
   }catch(error){
 
@@ -756,7 +1096,7 @@ function saveProject(){
 
 
 // ========================================
-// 📂 LOAD PROJECT
+// 📂 LOAD
 // ========================================
 
 function loadProject(){
@@ -767,7 +1107,9 @@ function loadProject(){
     );
 
   if(!saved){
+
     return;
+
   }
 
 
@@ -776,136 +1118,182 @@ function loadProject(){
     const project =
       JSON.parse(saved);
 
+    gameArea.innerHTML =
+      "";
 
-    gameArea.innerHTML = "";
+    selectedObject =
+      null;
 
-    selectedObject = null;
-
-    objectCount = 0;
+    objectCount =
+      0;
 
 
     playerHP =
-      typeof project.playerHP === "number"
+      typeof project.playerHP ===
+      "number"
       ? project.playerHP
       : 100;
 
     stamina =
-      typeof project.stamina === "number"
+      typeof project.stamina ===
+      "number"
       ? project.stamina
       : 100;
 
     coins =
-      typeof project.coins === "number"
+      typeof project.coins ===
+      "number"
       ? project.coins
       : 0;
 
     score =
-      typeof project.score === "number"
+      typeof project.score ===
+      "number"
       ? project.score
       : 0;
 
-
-    (project.objects || []).forEach(
-      function(data){
-
-        objectCount++;
-
-        const obj =
-          document.createElement("div");
-
-        obj.className =
-          "object";
-
-        obj.dataset.name =
-          data.name || "Object" + objectCount;
-
-        obj.dataset.emoji =
-          data.emoji || "⬛";
-
-        obj.dataset.color =
-          data.color || "#64748b";
-
-        obj.dataset.hp =
-          data.hp || "";
-
-        obj.dataset.attacking =
-          "false";
-
-        obj.innerText =
-          data.emoji || "⬛";
-
-        obj.style.left =
-          (data.x || 0) + "px";
-
-        obj.style.top =
-          (data.y || 0) + "px";
-
-        obj.style.width =
-          (data.width || 60) + "px";
-
-        obj.style.height =
-          (data.height || 60) + "px";
-
-        obj.style.backgroundColor =
-          data.color || "#64748b";
+    level =
+      typeof project.level ===
+      "number"
+      ? project.level
+      : 1;
 
 
-        if(data.image){
+    (project.objects || [])
+      .forEach(
+        function(data){
 
-          obj.style.backgroundImage =
-            data.image;
+          objectCount++;
 
-          obj.style.backgroundSize =
-            "cover";
+          const obj =
+            document.createElement(
+              "div"
+            );
 
-          obj.style.backgroundPosition =
-            "center";
+          obj.className =
+            "object";
 
-          obj.style.backgroundRepeat =
-            "no-repeat";
+          obj.dataset.name =
+            data.name ||
+            "Object" +
+            objectCount;
 
-          obj.innerText = "";
+          obj.dataset.emoji =
+            data.emoji ||
+            "⬛";
 
-        }
+          obj.dataset.color =
+            data.color ||
+            "#64748b";
+
+          obj.dataset.hp =
+            data.hp ||
+            "";
+
+          obj.dataset.maxHp =
+            data.maxHp ||
+            "";
+
+          obj.dataset.enemyType =
+            data.enemyType ||
+            "";
+
+          obj.dataset.attacking =
+            "false";
+
+          obj.innerText =
+            data.emoji ||
+            "⬛";
 
 
-        if(
-          obj.dataset.name.startsWith("Enemy")
-        ){
+          obj.style.left =
+            (data.x || 0) +
+            "px";
 
-          if(!obj.dataset.hp){
+          obj.style.top =
+            (data.y || 0) +
+            "px";
 
-            obj.dataset.hp = "100";
+          obj.style.width =
+            (data.width || 60) +
+            "px";
+
+          obj.style.height =
+            (data.height || 60) +
+            "px";
+
+          obj.style.backgroundColor =
+            data.color ||
+            "#64748b";
+
+
+          if(data.image){
+
+            obj.style.backgroundImage =
+              data.image;
+
+            obj.style.backgroundSize =
+              "cover";
+
+            obj.style.backgroundPosition =
+              "center";
+
+            obj.style.backgroundRepeat =
+              "no-repeat";
+
+            obj.innerText =
+              "";
 
           }
 
-          createEnemyHealthBar(obj);
+
+          if(
+            obj.dataset.name
+              .startsWith("Enemy")
+          ){
+
+            if(!obj.dataset.hp){
+
+              obj.dataset.hp =
+                "100";
+
+            }
+
+            if(!obj.dataset.maxHp){
+
+              obj.dataset.maxHp =
+                obj.dataset.hp;
+
+            }
+
+            createEnemyHealthBar(
+              obj
+            );
+
+            updateEnemyHealthBar(
+              obj
+            );
+
+          }
+
+
+          gameArea.appendChild(
+            obj
+          );
+
+          makeDraggable(
+            obj
+          );
 
         }
-
-
-        gameArea.appendChild(obj);
-
-        makeDraggable(obj);
-
-      }
-    );
+      );
 
 
     updateHPUI();
     updateStaminaUI();
     updateStatsUI();
-
-
-    const selectedName =
-      document.getElementById("selectedName");
-
-    if(selectedName){
-
-      selectedName.innerText =
-        "Nothing Selected";
-
-    }
+    updateLevelUI();
+    updateBlockButton();
 
 
   }catch(error){
@@ -934,7 +1322,8 @@ document.addEventListener(
 
     keys[
       e.key.toLowerCase()
-    ] = true;
+    ] =
+      true;
 
   }
 );
@@ -946,14 +1335,15 @@ document.addEventListener(
 
     keys[
       e.key.toLowerCase()
-    ] = false;
+    ] =
+      false;
 
   }
 );
 
 
 // ========================================
-// 📱 TOUCH CONTROL
+// 📱 TOUCH
 // ========================================
 
 function touchMove(direction){
@@ -973,12 +1363,15 @@ function stopTouch(){
 
 
 // ========================================
-// 🔄 SWITCH CONTROL
+// 🔄 CONTROL
 // ========================================
 
 function switchControl(){
 
-  if(controlMode === "Player"){
+  if(
+    controlMode ===
+    "Player"
+  ){
 
     controlMode =
       "Enemy";
@@ -992,8 +1385,9 @@ function switchControl(){
 
 
   const button =
-    document.getElementById("controlButton");
-
+    document.getElementById(
+      "controlButton"
+    );
 
   if(button){
 
@@ -1015,7 +1409,8 @@ function gameLoop(){
   if(isPlaying){
 
     const controlledObject =
-      [...gameArea.children].find(
+      [...gameArea.children]
+      .find(
         function(obj){
 
           return (
@@ -1042,13 +1437,15 @@ function gameLoop(){
         ) || 0;
 
 
-      const speed = 4;
+      const speed =
+        4;
 
 
       if(
         keys["a"] ||
         keys["arrowleft"] ||
-        touchDirection === "left"
+        touchDirection ===
+        "left"
       ){
 
         x -= speed;
@@ -1059,7 +1456,8 @@ function gameLoop(){
       if(
         keys["d"] ||
         keys["arrowright"] ||
-        touchDirection === "right"
+        touchDirection ===
+        "right"
       ){
 
         x += speed;
@@ -1070,7 +1468,8 @@ function gameLoop(){
       if(
         keys["w"] ||
         keys["arrowup"] ||
-        touchDirection === "up"
+        touchDirection ===
+        "up"
       ){
 
         y -= speed;
@@ -1081,7 +1480,8 @@ function gameLoop(){
       if(
         keys["s"] ||
         keys["arrowdown"] ||
-        touchDirection === "down"
+        touchDirection ===
+        "down"
       ){
 
         y += speed;
@@ -1122,27 +1522,32 @@ function gameLoop(){
   }
 
 
-  requestAnimationFrame(gameLoop);
+  requestAnimationFrame(
+    gameLoop
+  );
 
 }
 
 
 // ========================================
-// 👹 FIND PLAYER
+// 👤 GET PLAYER
 // ========================================
 
 function getPlayer(){
 
-  return [...gameArea.children].find(
-    function(obj){
+  return [...gameArea.children]
+    .find(
+      function(obj){
 
-      return (
-        obj.dataset.name &&
-        obj.dataset.name.startsWith("Player")
-      );
+        return (
+          obj.dataset.name &&
+          obj.dataset.name.startsWith(
+            "Player"
+          )
+        );
 
-    }
-  );
+      }
+    );
 
 }
 
@@ -1153,25 +1558,35 @@ function getPlayer(){
 
 function enemyAI(enemy){
 
-  if(!isPlaying) return;
+  if(!isPlaying)
+    return;
 
   const player =
     getPlayer();
 
-  if(!player) return;
+  if(!player)
+    return;
 
 
   let enemyX =
-    parseFloat(enemy.style.left) || 0;
+    parseFloat(
+      enemy.style.left
+    ) || 0;
 
   let enemyY =
-    parseFloat(enemy.style.top) || 0;
+    parseFloat(
+      enemy.style.top
+    ) || 0;
 
   const playerX =
-    parseFloat(player.style.left) || 0;
+    parseFloat(
+      player.style.left
+    ) || 0;
 
   const playerY =
-    parseFloat(player.style.top) || 0;
+    parseFloat(
+      player.style.top
+    ) || 0;
 
 
   const dx =
@@ -1188,10 +1603,31 @@ function enemyAI(enemy){
     );
 
 
-  const speed = 1.2;
+  let speed =
+    1.2;
 
 
-  // Stop when close enough
+  if(
+    enemy.dataset.enemyType ===
+    "Strong"
+  ){
+
+    speed =
+      1.5;
+
+  }
+
+
+  if(
+    enemy.dataset.enemyType ===
+    "Boss"
+  ){
+
+    speed =
+      1.0;
+
+  }
+
 
   if(distance > 65){
 
@@ -1227,22 +1663,27 @@ function enemyAI(enemy){
 
 
 // ========================================
-// 🔄 ENEMY AI LOOP
+// 🔄 AI LOOP
 // ========================================
 
 setInterval(
   function(){
 
-    if(!isPlaying) return;
+    if(!isPlaying)
+      return;
 
     document
-      .querySelectorAll(".object")
+      .querySelectorAll(
+        ".object"
+      )
       .forEach(
         function(enemy){
 
           if(
             enemy.dataset.name &&
-            enemy.dataset.name.startsWith("Enemy")
+            enemy.dataset.name.startsWith(
+              "Enemy"
+            )
           ){
 
             enemyAI(enemy);
@@ -1258,23 +1699,25 @@ setInterval(
 
 
 // ========================================
-// ❤️ UPDATE PLAYER HP
+// ❤️ PLAYER HP UI
 // ========================================
 
 function updateHPUI(){
 
-  const hpText =
-    document.getElementById("playerHP");
+  const text =
+    document.getElementById(
+      "playerHP"
+    );
 
-  const hpFill =
+  const fill =
     document.getElementById(
       "playerHealthFill"
     );
 
 
-  if(hpText){
+  if(text){
 
-    hpText.innerText =
+    text.innerText =
       "❤️ " +
       Math.round(playerHP) +
       " HP";
@@ -1282,26 +1725,28 @@ function updateHPUI(){
   }
 
 
-  if(hpFill){
+  if(fill){
 
-    hpFill.style.width =
-      Math.max(0, playerHP) +
-      "%";
+    fill.style.width =
+      Math.max(
+        0,
+        playerHP
+      ) + "%";
 
 
     if(playerHP <= 20){
 
-      hpFill.style.background =
+      fill.style.background =
         "#ef4444";
 
     }else if(playerHP <= 50){
 
-      hpFill.style.background =
+      fill.style.background =
         "#f97316";
 
     }else{
 
-      hpFill.style.background =
+      fill.style.background =
         "#22c55e";
 
     }
@@ -1312,7 +1757,7 @@ function updateHPUI(){
 
 
 // ========================================
-// ⚡ UPDATE STAMINA
+// ⚡ STAMINA UI
 // ========================================
 
 function updateStaminaUI(){
@@ -1331,8 +1776,10 @@ function updateStaminaUI(){
   if(fill){
 
     fill.style.width =
-      Math.max(0, stamina) +
-      "%";
+      Math.max(
+        0,
+        stamina
+      ) + "%";
 
 
     if(stamina <= 20){
@@ -1367,7 +1814,7 @@ function updateStaminaUI(){
 
 
 // ========================================
-// 🪙 UPDATE COINS + SCORE
+// 🪙 STATS UI
 // ========================================
 
 function updateStatsUI(){
@@ -1402,65 +1849,52 @@ function updateStatsUI(){
 
 
 // ========================================
-// 🎁 REWARD
+// 🌟 LEVEL UI
 // ========================================
 
-function addReward(){
+function updateLevelUI(){
 
-  coins += 10;
+  const levelCount =
+    document.getElementById(
+      "levelCount"
+    );
 
-  score += 100;
+  if(levelCount){
 
-  updateStatsUI();
+    levelCount.textContent =
+      level;
 
-}
-// ========================================
-// 📈 NEXT LEVEL
-// ========================================
-
-function startNextLevel(){
-
-  level++;
-
-  updateLevelUI();
-
-  score += 500;
-
-  updateStatsUI();
-
-  alert(
-    "🌟 Level " +
-    level +
-    " Started!"
-  );
+  }
 
 }
 
 
 // ========================================
-// ❤️ PLAYER DAMAGE
+// ❤️ DAMAGE PLAYER
 // ========================================
 
 function damagePlayer(amount){
 
-  if(playerHP <= 0){
+  if(playerHP <= 0)
     return;
-  }
 
 
   if(isBlocking){
 
-    amount = 2;
+    amount =
+      2;
 
   }
 
 
-  playerHP -= amount;
+  playerHP -=
+    amount;
 
 
   if(playerHP < 0){
 
-    playerHP = 0;
+    playerHP =
+      0;
 
   }
 
@@ -1470,12 +1904,16 @@ function damagePlayer(amount){
 
   if(playerHP <= 0){
 
-    isPlaying = false;
+    isPlaying =
+      false;
 
-    isBlocking = false;
+    isBlocking =
+      false;
 
     const status =
-      document.getElementById("status");
+      document.getElementById(
+        "status"
+      );
 
     if(status){
 
@@ -1492,30 +1930,40 @@ function damagePlayer(amount){
 
 
 // ========================================
-// ⚔️ ENEMY ATTACK
+// 👹 ENEMY ATTACK
 // ========================================
 
 function enemyAttack(enemy){
 
-  if(!isPlaying) return;
+  if(!isPlaying)
+    return;
 
   const player =
     getPlayer();
 
-  if(!player) return;
+  if(!player)
+    return;
 
 
   const enemyX =
-    parseFloat(enemy.style.left) || 0;
+    parseFloat(
+      enemy.style.left
+    ) || 0;
 
   const enemyY =
-    parseFloat(enemy.style.top) || 0;
+    parseFloat(
+      enemy.style.top
+    ) || 0;
 
   const playerX =
-    parseFloat(player.style.left) || 0;
+    parseFloat(
+      player.style.left
+    ) || 0;
 
   const playerY =
-    parseFloat(player.style.top) || 0;
+    parseFloat(
+      player.style.top
+    ) || 0;
 
 
   const dx =
@@ -1535,7 +1983,8 @@ function enemyAttack(enemy){
   if(distance <= 75){
 
     if(
-      enemy.dataset.attacking === "true"
+      enemy.dataset.attacking ===
+      "true"
     ){
 
       return;
@@ -1547,6 +1996,32 @@ function enemyAttack(enemy){
       "true";
 
 
+    let damage =
+      5;
+
+
+    if(
+      enemy.dataset.enemyType ===
+      "Strong"
+    ){
+
+      damage =
+        8;
+
+    }
+
+
+    if(
+      enemy.dataset.enemyType ===
+      "Boss"
+    ){
+
+      damage =
+        12;
+
+    }
+
+
     showHitEffect(
       playerX + 20,
       playerY - 20,
@@ -1554,7 +2029,9 @@ function enemyAttack(enemy){
     );
 
 
-    damagePlayer(5);
+    damagePlayer(
+      damage
+    );
 
 
     setTimeout(
@@ -1579,16 +2056,21 @@ function enemyAttack(enemy){
 setInterval(
   function(){
 
-    if(!isPlaying) return;
+    if(!isPlaying)
+      return;
 
     document
-      .querySelectorAll(".object")
+      .querySelectorAll(
+        ".object"
+      )
       .forEach(
         function(enemy){
 
           if(
             enemy.dataset.name &&
-            enemy.dataset.name.startsWith("Enemy")
+            enemy.dataset.name.startsWith(
+              "Enemy"
+            )
           ){
 
             enemyAttack(enemy);
@@ -1607,10 +2089,16 @@ setInterval(
 // 💢 HIT EFFECT
 // ========================================
 
-function showHitEffect(x, y, symbol){
+function showHitEffect(
+  x,
+  y,
+  symbol
+){
 
   const hit =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   hit.className =
     "hitEffect";
@@ -1625,7 +2113,9 @@ function showHitEffect(x, y, symbol){
     y + "px";
 
 
-  gameArea.appendChild(hit);
+  gameArea.appendChild(
+    hit
+  );
 
 
   setTimeout(
@@ -1641,142 +2131,52 @@ function showHitEffect(x, y, symbol){
 
 
 // ========================================
-// 🛡️ BLOCK
-// ========================================
-
-function toggleBlock(){
-
-  if(stamina <= 0){
-
-    isBlocking = false;
-
-    updateBlockButton();
-
-    return;
-
-  }
-
-
-  isBlocking =
-    !isBlocking;
-
-
-  updateBlockButton();
-
-}
-
-
-// ========================================
-// 🛡️ BLOCK BUTTON UI
-// ========================================
-
-function updateBlockButton(){
-
-  const button =
-    document.getElementById(
-      "blockButton"
-    );
-
-
-  if(!button) return;
-
-
-  button.innerText =
-    isBlocking
-    ? "🛡️ Block ON"
-    : "🛡️ Block OFF";
-
-}
-
-
-// ========================================
-// ⚡ STAMINA SYSTEM
-// ========================================
-
-setInterval(
-  function(){
-
-    if(isBlocking){
-
-      stamina -= 5;
-
-
-      if(stamina <= 0){
-
-        stamina = 0;
-
-        isBlocking = false;
-
-        updateBlockButton();
-
-      }
-
-    }else{
-
-      stamina += 2;
-
-
-      if(stamina > 100){
-
-        stamina = 100;
-
-      }
-
-    }
-
-
-    updateStaminaUI();
-
-  },
-  500
-);
-
-
-// ========================================
 // ⚔️ PLAYER ATTACK
 // ========================================
 
 function playerAttack(){
 
-  if(!isPlaying){
-
+  if(!isPlaying)
     return;
-
-  }
 
 
   const player =
     getPlayer();
 
-
-  if(!player){
-
+  if(!player)
     return;
-
-  }
 
 
   const playerX =
-    parseFloat(player.style.left) || 0;
+    parseFloat(
+      player.style.left
+    ) || 0;
 
   const playerY =
-    parseFloat(player.style.top) || 0;
+    parseFloat(
+      player.style.top
+    ) || 0;
 
 
-  let hitEnemy = null;
+  let hitEnemy =
+    null;
 
   let closestDistance =
     Infinity;
 
 
   document
-    .querySelectorAll(".object")
+    .querySelectorAll(
+      ".object"
+    )
     .forEach(
       function(enemy){
 
         if(
           !enemy.dataset.name ||
-          !enemy.dataset.name.startsWith("Enemy")
+          !enemy.dataset.name.startsWith(
+            "Enemy"
+          )
         ){
 
           return;
@@ -1785,10 +2185,14 @@ function playerAttack(){
 
 
         const enemyX =
-          parseFloat(enemy.style.left) || 0;
+          parseFloat(
+            enemy.style.left
+          ) || 0;
 
         const enemyY =
-          parseFloat(enemy.style.top) || 0;
+          parseFloat(
+            enemy.style.top
+          ) || 0;
 
 
         const dx =
@@ -1806,8 +2210,9 @@ function playerAttack(){
 
 
         if(
-          distance <= 95 &&
-          distance < closestDistance
+          distance <= 100 &&
+          distance <
+          closestDistance
         ){
 
           closestDistance =
@@ -1822,8 +2227,6 @@ function playerAttack(){
     );
 
 
-  // ❌ Enemy not in range
-
   if(!hitEnemy){
 
     showHitEffect(
@@ -1837,58 +2240,51 @@ function playerAttack(){
   }
 
 
-  // ❤️ Enemy HP
-
   let hp =
     parseInt(
       hitEnemy.dataset.hp
     );
 
 
-  if(isNaN(hp)){
+  let maxHp =
+    parseInt(
+      hitEnemy.dataset.maxHp
+    );
 
+
+  if(isNaN(hp))
     hp = 100;
 
-  }
+  if(isNaN(maxHp))
+    maxHp = 100;
 
 
+  // ⚔️ Damage
   hp -= 20;
 
 
-  if(hp < 0){
-
+  if(hp < 0)
     hp = 0;
-
-  }
 
 
   hitEnemy.dataset.hp =
     hp;
 
 
-  // ❤️ Update enemy HP bar
+  updateEnemyHealthBar(
+    hitEnemy
+  );
 
-  const hpFill =
-    hitEnemy.querySelector(
-      ".enemyHealthFill"
-    );
-
-
-  if(hpFill){
-
-    hpFill.style.width =
-      hp + "%";
-
-  }
-
-
-  // 💥 Hit effect
 
   const enemyX =
-    parseFloat(hitEnemy.style.left) || 0;
+    parseFloat(
+      hitEnemy.style.left
+    ) || 0;
 
   const enemyY =
-    parseFloat(hitEnemy.style.top) || 0;
+    parseFloat(
+      hitEnemy.style.top
+    ) || 0;
 
 
   showHitEffect(
@@ -1898,19 +2294,56 @@ function playerAttack(){
   );
 
 
-  // 💀 Enemy defeated
-
+  // 💀 DEAD
   if(hp <= 0){
 
-    coins += 10;
+    let rewardCoins =
+      10;
 
-    score += 100;
+    let rewardScore =
+      100;
+
+
+    if(
+      hitEnemy.dataset.enemyType ===
+      "Strong"
+    ){
+
+      rewardCoins =
+        25;
+
+      rewardScore =
+        250;
+
+    }
+
+
+    if(
+      hitEnemy.dataset.enemyType ===
+      "Boss"
+    ){
+
+      rewardCoins =
+        100;
+
+      rewardScore =
+        1000;
+
+    }
+
+
+    coins +=
+      rewardCoins;
+
+    score +=
+      rewardScore;
+
 
     updateStatsUI();
 
 
     showHitEffect(
-      enemyX + 10,
+      enemyX + 15,
       enemyY - 20,
       "💀"
     );
@@ -1935,6 +2368,190 @@ function playerAttack(){
 
 
 // ========================================
+// 🛡️ BLOCK
+// ========================================
+
+function toggleBlock(){
+
+  if(stamina <= 0){
+
+    isBlocking =
+      false;
+
+    updateBlockButton();
+
+    return;
+
+  }
+
+
+  isBlocking =
+    !isBlocking;
+
+  updateBlockButton();
+
+}
+
+
+// ========================================
+// 🛡️ BLOCK UI
+// ========================================
+
+function updateBlockButton(){
+
+  const button =
+    document.getElementById(
+      "blockButton"
+    );
+
+  if(!button)
+    return;
+
+
+  button.innerText =
+    isBlocking
+    ? "🛡️ Block ON"
+    : "🛡️ Block OFF";
+
+}
+
+
+// ========================================
+// ⚡ STAMINA
+// ========================================
+
+setInterval(
+  function(){
+
+    if(isBlocking){
+
+      stamina -=
+        5;
+
+
+      if(stamina <= 0){
+
+        stamina =
+          0;
+
+        isBlocking =
+          false;
+
+        updateBlockButton();
+
+      }
+
+    }else{
+
+      stamina +=
+        2;
+
+
+      if(stamina > 100){
+
+        stamina =
+          100;
+
+      }
+
+    }
+
+
+    updateStaminaUI();
+
+  },
+  500
+);
+
+
+// ========================================
+// 🎁 REWARD
+// ========================================
+
+function addReward(){
+
+  coins +=
+    10;
+
+  score +=
+    100;
+
+  updateStatsUI();
+
+}
+
+
+// ========================================
+// 📈 NEXT LEVEL
+// ========================================
+
+function startNextLevel(){
+
+  level++;
+
+  updateLevelUI();
+
+  score +=
+    500;
+
+  updateStatsUI();
+
+
+  // Spawn stronger enemies
+  addEnemy();
+
+
+  if(level >= 2){
+
+    addStrongEnemy();
+
+  }
+
+
+  if(level >= 3){
+
+    addBossEnemy();
+
+  }
+
+
+  alert(
+    "🌟 Level " +
+    level +
+    " Started!"
+  );
+
+}
+
+
+// ========================================
+// 🔄 RESPAWN ENEMY
+// ========================================
+
+function respawnEnemy(type){
+
+  if(type === "Normal"){
+
+    addEnemy();
+
+  }
+
+  if(type === "Strong"){
+
+    addStrongEnemy();
+
+  }
+
+  if(type === "Boss"){
+
+    addBossEnemy();
+
+  }
+
+}
+
+
+// ========================================
 // 🚀 START ENGINE
 // ========================================
 
@@ -1947,6 +2564,7 @@ updateStaminaUI();
 updateStatsUI();
 
 updateLevelUI();
+
 updateBlockButton();
 
 gameLoop();
