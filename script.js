@@ -28,6 +28,25 @@ let isBlocking = false;
 let coins = 0;
 let score = 0;
 
+// ========================================
+// 🌟 LEVEL SYSTEM
+// ========================================
+
+let level = 1;
+
+function updateLevelUI(){
+
+  const levelText =
+    document.getElementById("levelCount");
+
+  if(levelText){
+
+    levelText.textContent = level;
+
+  }
+
+}
+
 
 // ========================================
 // 🎮 CREATE OBJECT
@@ -116,7 +135,73 @@ function addEnemy(){
   );
 
 }
+// ========================================
+// 👺 STRONG ENEMY
+// ========================================
 
+function addStrongEnemy(){
+
+  createObject(
+    "Enemy",
+    "👺",
+    "#ea580c"
+  );
+
+  const enemies =
+    [...gameArea.children].filter(
+      obj =>
+      obj.dataset.name &&
+      obj.dataset.name.startsWith("Enemy")
+    );
+
+  const enemy =
+    enemies[enemies.length - 1];
+
+  if(enemy){
+
+    enemy.dataset.hp = 200;
+
+    createEnemyHealthBar(enemy);
+
+  }
+
+}
+
+
+// ========================================
+// 💀 BOSS ENEMY
+// ========================================
+
+function addBossEnemy(){
+
+  createObject(
+    "Enemy",
+    "💀",
+    "#7e22ce"
+  );
+
+  const enemies =
+    [...gameArea.children].filter(
+      obj =>
+      obj.dataset.name &&
+      obj.dataset.name.startsWith("Enemy")
+    );
+
+  const enemy =
+    enemies[enemies.length - 1];
+
+  if(enemy){
+
+    enemy.dataset.hp = 500;
+
+    enemy.style.width = "90px";
+    enemy.style.height = "90px";
+
+    createEnemyHealthBar(enemy);
+
+  }
+
+}
 
 // ========================================
 // ⬛ OBJECT
@@ -1329,6 +1414,27 @@ function addReward(){
   updateStatsUI();
 
 }
+// ========================================
+// 📈 NEXT LEVEL
+// ========================================
+
+function startNextLevel(){
+
+  level++;
+
+  updateLevelUI();
+
+  score += 500;
+
+  updateStatsUI();
+
+  alert(
+    "🌟 Level " +
+    level +
+    " Started!"
+  );
+
+}
 
 
 // ========================================
@@ -1840,6 +1946,7 @@ updateStaminaUI();
 
 updateStatsUI();
 
+updateLevelUI();
 updateBlockButton();
 
 gameLoop();
