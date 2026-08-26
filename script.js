@@ -2401,30 +2401,30 @@ function enemyAttack(enemy){
       "true";
 
 
-    let damage =
-      5;
+    let damage = 5;
+let cooldown = 1000;
 
+// 👺 STRONG ENEMY
+if(
+  enemy.dataset.enemyType ===
+  "Strong"
+){
 
-    if(
-      enemy.dataset.enemyType ===
-      "Strong"
-    ){
+  damage = 10;
+  cooldown = 650;
 
-      damage =
-        8;
+}
 
-    }
+// 💀 BOSS
+if(
+  enemy.dataset.enemyType ===
+  "Boss"
+){
 
+  damage = 15;
+  cooldown = 450;
 
-    if(
-      enemy.dataset.enemyType ===
-      "Boss"
-    ){
-
-      damage =
-        12;
-
-    }
+}
 
 
     showHitEffect(
