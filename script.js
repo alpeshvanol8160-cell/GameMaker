@@ -1959,30 +1959,27 @@ function enemyAI(enemy){
     );
 
 
-  let speed =
-    1.2;
+  let speed = 1.2;
 
+// 👺 STRONG ENEMY
+if(
+  enemy.dataset.enemyType ===
+  "Strong"
+){
 
-  if(
-    enemy.dataset.enemyType ===
-    "Strong"
-  ){
+  speed = 1.8;
 
-    speed =
-      1.5;
+}
 
-  }
+// 💀 BOSS
+if(
+  enemy.dataset.enemyType ===
+  "Boss"
+){
 
+  speed = 2.2;
 
-  if(
-    enemy.dataset.enemyType ===
-    "Boss"
-  ){
-
-    speed =
-      1.8;
-
-  }
+}
 
 
   if(distance > 65){
