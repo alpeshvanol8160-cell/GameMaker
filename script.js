@@ -2672,6 +2672,72 @@ function playerAttack(){
       playerY - 10,
       "❌"
     );
+    // ========================================
+// 💥 ENEMY KNOCKBACK
+// ========================================
+
+const knockback =
+  hitEnemy.dataset.enemyType === "Boss"
+  ? 10
+  : hitEnemy.dataset.enemyType === "Strong"
+  ? 25
+  : 35;
+
+let knockX =
+  enemyX - playerX;
+
+let knockY =
+  enemyY - playerY;
+
+const knockDistance =
+  Math.sqrt(
+    knockX * knockX +
+    knockY * knockY
+  );
+
+if(knockDistance > 0){
+
+  knockX =
+    (knockX / knockDistance) *
+    knockback;
+
+  knockY =
+    (knockY / knockDistance) *
+    knockback;
+
+  let newX =
+    enemyX + knockX;
+
+  let newY =
+    enemyY + knockY;
+
+  newX =
+    Math.max(
+      0,
+      Math.min(
+        newX,
+        gameArea.clientWidth -
+        hitEnemy.offsetWidth
+      )
+    );
+
+  newY =
+    Math.max(
+      0,
+      Math.min(
+        newY,
+        gameArea.clientHeight -
+        hitEnemy.offsetHeight
+      )
+    );
+
+  hitEnemy.style.left =
+    newX + "px";
+
+  hitEnemy.style.top =
+    newY + "px";
+
+}
 
     return;
 
