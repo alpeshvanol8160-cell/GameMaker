@@ -187,17 +187,12 @@ function createObject(
 
 function createEnemyHealthBar(enemy){
 
-  const oldBar =
-    enemy.querySelector(
-      ".enemyHealthBar"
-    );
+  const old =
+    enemy.querySelector(".enemyHealthBar");
 
-  if(oldBar){
-
-    oldBar.remove();
-
+  if(old){
+    old.remove();
   }
-
 
   const hpBar =
     document.createElement("div");
@@ -205,6 +200,14 @@ function createEnemyHealthBar(enemy){
   hpBar.className =
     "enemyHealthBar";
 
+  const hpText =
+    document.createElement("div");
+
+  hpText.className =
+    "enemyHPText";
+
+  hpText.innerText =
+    "100 / 100 HP";
 
   const hpFill =
     document.createElement("div");
@@ -215,15 +218,10 @@ function createEnemyHealthBar(enemy){
   hpFill.style.width =
     "100%";
 
+  hpBar.appendChild(hpText);
+  hpBar.appendChild(hpFill);
 
-  hpBar.appendChild(
-    hpFill
-  );
-
-  enemy.appendChild(
-    hpBar
-  );
-
+  enemy.appendChild(hpBar);
 }
 
 
@@ -513,6 +511,17 @@ function updateEnemyHealthBar(enemy){
       percent + "%";
 
   }
+  const hpText =
+  enemy.querySelector(".enemyHPText");
+
+if(hpText){
+
+  hpText.innerText =
+    hp + " / " +
+    maxHp +
+    " HP";
+
+}
 
 }
 
