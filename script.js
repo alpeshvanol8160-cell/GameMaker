@@ -1078,17 +1078,21 @@ function playGame(){
 
   if(status){
 
-    if(isPlaying){
+  if(isPlaying){
 
-      status.innerText =
-        "▶ Play Mode";
+  status.innerText =
+    "▶ Play Mode";
 
-    }else{
+  startEnemySpawner();
 
-      status.innerText =
-        "Editor Mode";
+}else{
 
-    }
+  status.innerText =
+    "Editor Mode";
+
+  stopEnemySpawner();
+
+  }
 
   }
 
