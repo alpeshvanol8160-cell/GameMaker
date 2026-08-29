@@ -3155,3 +3155,117 @@ updateLevelUI();
 updateBlockButton();
 
 gameLoop();
+
+// ========================================
+// 👹 ENEMY SPAWN SYSTEM
+// ========================================
+
+let enemySpawnTimer = null;
+
+function spawnEnemy(){
+
+  if(!isPlaying || isPaused){
+    return;
+  }
+
+  const enemyTypes = [
+    {
+      type: "Normal",
+      emoji: "👹",
+      hp: 100
+    },
+    {
+      type: "Normal",
+      emoji: "👹",
+      hp: 100
+    },
+    {
+      type: "Strong",
+      emoji: "👺",
+      hp: 200
+    }
+  ];
+
+  // Boss every 5 levels
+  if(level % 5 === 0){
+    enemyTypes.push({
+      type: "Boss",
+      emoji: "💀",
+      hp: 500
+    });
+  }
+
+  const data =
+    enemyTypes[
+      Math.floor(Math.random() * enemyTypes.length)
+    ];
+
+  const enemy =
+    createObject(
+      data.type + " Enemy",
+      data.emoji,
+      "#ef4444"
+    );
+
+  if(!enemy){
+    return;
+  }
+
+  enemy.dataset.enemyType = data.type;
+  enemy.dataset.hp = data.hp;
+  enemy.dataset.maxHp = data.hp;
+  enemy.dataset.attacking = "false";
+
+  // Random position
+  const maxX = Math.max(0, gameArea.clientWidth - 70);
+  const maxY = Math.max(0, gameArea.clientHeight - 100);
+
+  enemy.style.left =
+    Math.floor(Math.random() * maxX) + "px";
+
+  enemy.style.top =
+    Math.floor(Math.random() * maxY) + "px";
+
+  createEnemyHealthBar(enemy);
+
+  // Start AI
+  if(typeof startEnemyAI === "function"){
+    startEnemyAI(enemy);
+  }
+
+  return enemy;
+}
+
+
+// ========================================
+// ⏱️ START SPAWNING
+// ========================================
+
+function startEnemySpawner(){
+
+  stopEnemySpawner();
+
+  enemySpawnTimer =
+    setInterval(() => {
+
+      if(isPlaying && !isPaused){
+        spawnEnemy();
+      }
+
+    }, 5000);
+}
+
+
+// ========================================
+// 🛑 STOP SPAWNING
+// ========================================
+
+function stopEnemySpawner(){
+
+  if(enemySpawnTimer){
+
+    clearInterval(enemySpawnTimer);
+
+    enemySpawnTimer = null;
+  }
+}
