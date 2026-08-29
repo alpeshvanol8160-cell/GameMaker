@@ -3273,3 +3273,85 @@ function stopEnemySpawner(){
     enemySpawnTimer = null;
   }
 }
+
+// ========================================
+// 📈 LEVEL BASED ENEMY SPAWN
+// ========================================
+
+function getRandomEnemyType(){
+
+  const random = Math.random();
+
+  // Level 1–2
+  if(level <= 2){
+
+    if(random < 0.80){
+      return {
+        type: "Normal",
+        emoji: "👹",
+        hp: 100
+      };
+    }
+
+    return {
+      type: "Strong",
+      emoji: "👺",
+      hp: 200
+    };
+  }
+
+
+  // Level 3–4
+  if(level <= 4){
+
+    if(random < 0.55){
+      return {
+        type: "Normal",
+        emoji: "👹",
+        hp: 100
+      };
+    }
+
+    if(random < 0.90){
+      return {
+        type: "Strong",
+        emoji: "👺",
+        hp: 200
+      };
+    }
+
+    return {
+      type: "Boss",
+      emoji: "💀",
+      hp: 500
+    };
+  }
+
+
+  // Level 5+
+  if(random < 0.30){
+
+    return {
+      type: "Normal",
+      emoji: "👹",
+      hp: 100
+    };
+
+  }
+
+  if(random < 0.75){
+
+    return {
+      type: "Strong",
+      emoji: "👺",
+      hp: 200
+    };
+
+  }
+
+  return {
+    type: "Boss",
+    emoji: "💀",
+    hp: 500
+  };
+}
