@@ -3172,37 +3172,7 @@ function spawnEnemy(){
     return;
   }
 
-  const enemyTypes = [
-    {
-      type: "Normal",
-      emoji: "👹",
-      hp: 100
-    },
-    {
-      type: "Normal",
-      emoji: "👹",
-      hp: 100
-    },
-    {
-      type: "Strong",
-      emoji: "👺",
-      hp: 200
-    }
-  ];
-
-  // Boss every 5 levels
-  if(level % 5 === 0){
-    enemyTypes.push({
-      type: "Boss",
-      emoji: "💀",
-      hp: 500
-    });
-  }
-
-  const data =
-    enemyTypes[
-      Math.floor(Math.random() * enemyTypes.length)
-    ];
+  const enemy = getRandomEnemyType();
 
   const enemy =
     createObject(
