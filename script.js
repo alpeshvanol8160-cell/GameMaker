@@ -3215,9 +3215,31 @@ function spawnEnemy(){
 // ⏱️ START SPAWNING
 // ========================================
 
+// ========================================
+// ⏱️ LEVEL BASED ENEMY SPAWNER
+// ========================================
+
 function startEnemySpawner(){
 
-  stopEnemySpawner();
+  // Stop old timer
+  if(enemySpawnTimer){
+    clearInterval(enemySpawnTimer);
+  }
+
+  // Level પ્રમાણે spawn time
+  let spawnTime = 5000;
+
+  if(level >= 3){
+    spawnTime = 4000;
+  }
+
+  if(level >= 5){
+    spawnTime = 3000;
+  }
+
+  if(level >= 10){
+    spawnTime = 2000;
+  }
 
   enemySpawnTimer =
     setInterval(() => {
@@ -3226,7 +3248,7 @@ function startEnemySpawner(){
         spawnEnemy();
       }
 
-    }, 5000);
+    }, spawnTime);
 }
 
 
