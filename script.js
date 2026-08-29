@@ -187,39 +187,37 @@ function createObject(
 
 function createEnemyHealthBar(enemy){
 
-  const old =
-    enemy.querySelector(".enemyHealthBar");
+  const old = enemy.querySelector(".enemyHealthBar");
 
   if(old){
     old.remove();
   }
 
-  const hpBar =
-    document.createElement("div");
+  const hpBar = document.createElement("div");
+  hpBar.className = "enemyHealthBar";
 
-  hpBar.className =
-    "enemyHealthBar";
+  const hpFill = document.createElement("div");
+  hpFill.className = "enemyHealthFill";
 
-  const hpText =
-    document.createElement("div");
+  const hpText = document.createElement("div");
+  hpText.className = "enemyHPText";
 
-  hpText.className =
-    "enemyHPText";
+  const maxHp =
+    Number(enemy.dataset.maxHp) ||
+    Number(enemy.dataset.hp) ||
+    100;
 
-  hpText.innerText =
-    "100 / 100 HP";
+  const hp =
+    Number(enemy.dataset.hp) ||
+    maxHp;
 
-  const hpFill =
-    document.createElement("div");
-
-  hpFill.className =
-    "enemyHealthFill";
+  hpText.innerText = hp + " / " + maxHp;
 
   hpFill.style.width =
-    "100%";
+    Math.max(0, Math.min(100, (hp / maxHp) * 100)) + "%";
 
-  hpBar.appendChild(hpText);
   hpBar.appendChild(hpFill);
+  hpBar.appendChild(hpText);
 
   enemy.appendChild(hpBar);
 }
