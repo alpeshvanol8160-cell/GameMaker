@@ -151,23 +151,32 @@ function createObject(
 
   // Enemy data
 
-  if(name === "Enemy"){
+  // ========================================
+// 👹 ENEMY DATA
+// ========================================
 
-    obj.dataset.hp =
-      "100";
+if(
+  name === "Enemy" ||
+  name === "Normal" ||
+  name === "Strong" ||
+  name === "Boss"
+){
 
-    obj.dataset.maxHp =
-      "100";
+  obj.dataset.hp =
+    "100";
 
-    obj.dataset.enemyType =
-      "Normal";
+  obj.dataset.maxHp =
+    "100";
 
-    obj.dataset.attacking =
-      "false";
+  obj.dataset.enemyType =
+    "Normal";
 
-    createEnemyHealthBar(obj);
+  obj.dataset.attacking =
+    "false";
 
-  }
+  createEnemyHealthBar(obj);
+
+}
 
 
   gameArea.appendChild(obj);
