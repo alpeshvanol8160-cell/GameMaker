@@ -2008,13 +2008,14 @@ setInterval(
       )
       .forEach(
         function(enemy){
-
           if(
-            enemy.dataset.name &&
-            enemy.dataset.name.startsWith(
-              "Enemy"
-            )
-          ){
+  enemy.dataset.enemyType === "Normal" ||
+  enemy.dataset.enemyType === "Strong" ||
+  enemy.dataset.enemyType === "Boss"
+){
+          
+
+          
 
             enemyAI(enemy);
 
@@ -2186,11 +2187,10 @@ setInterval(
         function(enemy){
 
           if(
-            enemy.dataset.name &&
-            enemy.dataset.name.startsWith(
-              "Enemy"
-            )
-          ){
+  enemy.dataset.enemyType === "Normal" ||
+  enemy.dataset.enemyType === "Strong" ||
+  enemy.dataset.enemyType === "Boss"
+){
 
             enemyAttack(enemy);
 
