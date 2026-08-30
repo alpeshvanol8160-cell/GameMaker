@@ -1,5 +1,5 @@
 // ========================================
-// 🎮 GAMEMAKER V2 - COMPLETE SCRIPT V4
+// 🎮 GAMEMAKER V2 - COMPLETE SCRIPT V5
 // ========================================
 
 let selectedObject = null;
@@ -13,7 +13,8 @@ let controlMode = "Player";
 let touchDirection = null;
 let keys = {};
 
-const gameArea = document.getElementById("gameArea");
+const gameArea =
+  document.getElementById("gameArea");
 
 // ========================================
 // ❤️ PLAYER
@@ -35,6 +36,12 @@ let score = 0;
 // ========================================
 
 let level = 1;
+
+// ========================================
+// 👹 ENEMY SPAWN
+// ========================================
+
+let enemySpawnTimer = null;
 
 
 // ========================================
@@ -84,17 +91,10 @@ function togglePause(){
 
     if(status){
 
-      if(isPlaying){
-
-        status.innerText =
-          "▶ Play Mode";
-
-      }else{
-
-        status.innerText =
-          "Editor Mode";
-
-      }
+      status.innerText =
+        isPlaying
+        ? "▶ Play Mode"
+        : "Editor Mode";
 
     }
 
@@ -149,37 +149,41 @@ function createObject(
     color;
 
 
-  // Enemy data
-
   // ========================================
-// 👹 ENEMY DATA
-// ========================================
+  // 👹 ENEMY DATA
+  // ========================================
 
-if(
-  name === "Enemy" ||
-  name === "Normal" ||
-  name === "Strong" ||
-  name === "Boss"
-){
+  if(
+    name === "Enemy" ||
+    name === "Normal" ||
+    name === "Strong" ||
+    name === "Boss"
+  ){
 
-  obj.dataset.hp =
-    "100";
+    obj.dataset.hp =
+      "100";
 
-  obj.dataset.maxHp =
-    "100";
+    obj.dataset.maxHp =
+      "100";
 
-  obj.dataset.enemyType =
-    "Normal";
+    obj.dataset.enemyType =
+      "Normal";
 
-  obj.dataset.attacking =
-    "false";
+    obj.dataset.attacking =
+      "false";
 
-  createEnemyHealthBar(obj);
-
-}
+  }
 
 
   gameArea.appendChild(obj);
+
+  if(
+    obj.dataset.enemyType
+  ){
+
+    createEnemyHealthBar(obj);
+
+  }
 
   selectObject(obj);
 
@@ -191,44 +195,150 @@ if(
 
 
 // ========================================
-// ❤️ ENEMY HEALTH BAR
+// ❤️ CREATE ENEMY HEALTH BAR
 // ========================================
 
 function createEnemyHealthBar(enemy){
 
-  const old = enemy.querySelector(".enemyHealthBar");
+  if(!enemy) return;
+
+  const old =
+    enemy.querySelector(
+      ".enemyHealthBar"
+    );
 
   if(old){
     old.remove();
   }
 
-  const hpBar = document.createElement("div");
-  hpBar.className = "enemyHealthBar";
 
-  const hpFill = document.createElement("div");
-  hpFill.className = "enemyHealthFill";
+  const hpBar =
+    document.createElement("div");
 
-  const hpText = document.createElement("div");
-  hpText.className = "enemyHPText";
+  hpBar.className =
+    "enemyHealthBar";
+
+
+  const hpFill =
+    document.createElement("div");
+
+  hpFill.className =
+    "enemyHealthFill";
+
+
+  const hpText =
+    document.createElement("div");
+
+  hpText.className =
+    "enemyHPText";
+
 
   const maxHp =
     Number(enemy.dataset.maxHp) ||
-    Number(enemy.dataset.hp) ||
     100;
 
   const hp =
     Number(enemy.dataset.hp) ||
     maxHp;
 
-  hpText.innerText = hp + " / " + maxHp;
+
+  hpText.innerText =
+    hp + " / " + maxHp + " HP";
+
 
   hpFill.style.width =
-    Math.max(0, Math.min(100, (hp / maxHp) * 100)) + "%";
+    Math.max(
+      0,
+      Math.min(
+        100,
+        (hp / maxHp) * 100
+      )
+    ) + "%";
 
-  hpBar.appendChild(hpFill);
-  hpBar.appendChild(hpText);
 
-  enemy.appendChild(hpBar);
+  hpBar.appendChild(
+    hpFill
+  );
+
+  hpBar.appendChild(
+    hpText
+  );
+
+  enemy.appendChild(
+    hpBar
+  );
+
+}
+
+
+// ========================================
+// ❤️ UPDATE ENEMY HEALTH BAR
+// ========================================
+
+function updateEnemyHealthBar(enemy){
+
+  if(!enemy) return;
+
+
+  let hp =
+    parseInt(
+      enemy.dataset.hp
+    );
+
+  let maxHp =
+    parseInt(
+      enemy.dataset.maxHp
+    );
+
+
+  if(isNaN(hp)){
+    hp = 100;
+  }
+
+  if(isNaN(maxHp)){
+    maxHp = 100;
+  }
+
+
+  const fill =
+    enemy.querySelector(
+      ".enemyHealthFill"
+    );
+
+
+  if(fill){
+
+    const percent =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          (hp / maxHp) * 100
+        )
+      );
+
+
+    fill.style.width =
+      percent + "%";
+
+  }
+
+
+  const hpText =
+    enemy.querySelector(
+      ".enemyHPText"
+    );
+
+
+  if(hpText){
+
+    hpText.innerText =
+      hp + " / " +
+      maxHp +
+      " HP";
+
+  }
+
 }
 
 
@@ -272,9 +382,15 @@ function addEnemy(){
     enemy.dataset.enemyType =
       "Normal";
 
+    enemy.dataset.attacking =
+      "false";
+
+
     positionEnemy(enemy);
 
-    updateEnemyHealthBar(enemy);
+    updateEnemyHealthBar(
+      enemy
+    );
 
   }
 
@@ -287,26 +403,16 @@ function addEnemy(){
 
 function addStrongEnemy(){
 
-  objectCount++;
-
   const enemy =
-    document.createElement("div");
-
-  enemy.className =
-    "object";
-
-  enemy.innerText =
-    "👺";
+    createObject(
+      "Strong",
+      "👺",
+      "#ea580c"
+    );
 
 
-  enemy.dataset.name =
-    "Enemy" + objectCount;
+  if(!enemy) return;
 
-  enemy.dataset.emoji =
-    "👺";
-
-  enemy.dataset.color =
-    "#ea580c";
 
   enemy.dataset.hp =
     "200";
@@ -321,31 +427,11 @@ function addStrongEnemy(){
     "false";
 
 
-  enemy.style.left =
-    "250px";
+  positionEnemy(enemy);
 
-  enemy.style.top =
-    "100px";
-
-  enemy.style.width =
-    "60px";
-
-  enemy.style.height =
-    "60px";
-
-  enemy.style.backgroundColor =
-    "#ea580c";
-
-
-  gameArea.appendChild(enemy);
-
-  createEnemyHealthBar(enemy);
-
-  makeDraggable(enemy);
-
-  selectObject(enemy);
-
-  updateEnemyHealthBar(enemy);
+  updateEnemyHealthBar(
+    enemy
+  );
 
 }
 
@@ -356,26 +442,16 @@ function addStrongEnemy(){
 
 function addBossEnemy(){
 
-  objectCount++;
-
   const boss =
-    document.createElement("div");
-
-  boss.className =
-    "object";
-
-  boss.innerText =
-    "💀";
+    createObject(
+      "Boss",
+      "💀",
+      "#7e22ce"
+    );
 
 
-  boss.dataset.name =
-    "Enemy" + objectCount;
+  if(!boss) return;
 
-  boss.dataset.emoji =
-    "💀";
-
-  boss.dataset.color =
-    "#7e22ce";
 
   boss.dataset.hp =
     "500";
@@ -390,31 +466,18 @@ function addBossEnemy(){
     "false";
 
 
-  boss.style.left =
-    "300px";
-
-  boss.style.top =
-    "120px";
-
   boss.style.width =
     "90px";
 
   boss.style.height =
     "90px";
 
-  boss.style.backgroundColor =
-    "#7e22ce";
 
+  positionEnemy(boss);
 
-  gameArea.appendChild(boss);
-
-  createEnemyHealthBar(boss);
-
-  makeDraggable(boss);
-
-  selectObject(boss);
-
-  updateEnemyHealthBar(boss);
+  updateEnemyHealthBar(
+    boss
+  );
 
 }
 
@@ -425,125 +488,37 @@ function addBossEnemy(){
 
 function positionEnemy(enemy){
 
-  let x =
-    100 +
-    Math.random() *
+  if(!enemy) return;
+
+
+  const maxX =
     Math.max(
-      50,
-      gameArea.clientWidth - 200
+      0,
+      gameArea.clientWidth -
+      enemy.offsetWidth
     );
 
 
-  let y =
-    50 +
-    Math.random() *
+  const maxY =
     Math.max(
-      50,
-      gameArea.clientHeight - 150
+      0,
+      gameArea.clientHeight -
+      enemy.offsetHeight
     );
 
 
   enemy.style.left =
-    Math.max(
-      0,
-      Math.min(
-        x,
-        gameArea.clientWidth -
-        enemy.offsetWidth
-      )
+    Math.floor(
+      Math.random() *
+      maxX
     ) + "px";
 
 
   enemy.style.top =
-    Math.max(
-      0,
-      Math.min(
-        y,
-        gameArea.clientHeight -
-        enemy.offsetHeight
-      )
+    Math.floor(
+      Math.random() *
+      maxY
     ) + "px";
-
-}
-
-
-// ========================================
-// ❤️ UPDATE ENEMY HP
-// ========================================
-
-function updateEnemyHealthBar(enemy){
-
-  if(!enemy) return;
-
-
-  let hp =
-    parseInt(
-      enemy.dataset.hp
-    );
-
-
-  let maxHp =
-    parseInt(
-      enemy.dataset.maxHp
-    );
-
-
-  if(isNaN(hp))
-    hp = 100;
-
-
-  if(isNaN(maxHp))
-    maxHp = 100;
-
-
-  const fill =
-    enemy.querySelector(
-      ".enemyHealthFill"
-    );
-
-
-  if(fill){
-
-    const percent =
-      Math.max(
-        0,
-        Math.min(
-          100,
-          (hp / maxHp) * 100
-        )
-      );
-
-
-    fill.style.width =
-      percent + "%";
-
-  }
-  const hpText =
-  enemy.querySelector(".enemyHPText");
-
-if(hpText){
-
-  hpText.innerText =
-    hp + " / " +
-    maxHp +
-    " HP";
-
-}
-
-}
-
-
-// ========================================
-// ⬛ OBJECT
-// ========================================
-
-function addObject(){
-
-  createObject(
-    "Object",
-    "⬛",
-    "#64748b"
-  );
 
 }
 
@@ -697,24 +672,20 @@ function applyProperties(){
       "objName"
     ).value.trim();
 
-
   const x =
     document.getElementById(
       "objX"
     ).value;
-
 
   const y =
     document.getElementById(
       "objY"
     ).value;
 
-
   const w =
     document.getElementById(
       "objW"
     ).value;
-
 
   const h =
     document.getElementById(
@@ -734,16 +705,13 @@ function applyProperties(){
     (parseInt(x) || 0) +
     "px";
 
-
   selectedObject.style.top =
     (parseInt(y) || 0) +
     "px";
 
-
   selectedObject.style.width =
     (parseInt(w) || 60) +
     "px";
-
 
   selectedObject.style.height =
     (parseInt(h) || 60) +
@@ -772,14 +740,11 @@ function applyProperties(){
 
 function makeDraggable(obj){
 
-  let dragging =
-    false;
+  let dragging = false;
 
-  let offsetX =
-    0;
+  let offsetX = 0;
 
-  let offsetY =
-    0;
+  let offsetY = 0;
 
 
   obj.addEventListener(
@@ -791,8 +756,7 @@ function makeDraggable(obj){
       if(gamePaused()) return;
 
 
-      dragging =
-        true;
+      dragging = true;
 
 
       const rect =
@@ -802,7 +766,6 @@ function makeDraggable(obj){
       offsetX =
         e.clientX -
         rect.left;
-
 
       offsetY =
         e.clientY -
@@ -848,7 +811,6 @@ function makeDraggable(obj){
         area.left -
         offsetX;
 
-
       let y =
         e.clientY -
         area.top -
@@ -880,7 +842,6 @@ function makeDraggable(obj){
       obj.style.left =
         x + "px";
 
-
       obj.style.top =
         y + "px";
 
@@ -895,8 +856,7 @@ function makeDraggable(obj){
     "pointerup",
     function(){
 
-      dragging =
-        false;
+      dragging = false;
 
     }
   );
@@ -906,8 +866,7 @@ function makeDraggable(obj){
     "pointercancel",
     function(){
 
-      dragging =
-        false;
+      dragging = false;
 
     }
   );
@@ -969,6 +928,9 @@ function newProject(){
     return;
 
   }
+
+
+  stopEnemySpawner();
 
 
   gameArea.innerHTML =
@@ -1069,9 +1031,7 @@ function newProject(){
 function playGame(){
 
   if(gamePaused()){
-
     return;
-
   }
 
 
@@ -1085,23 +1045,25 @@ function playGame(){
     );
 
 
-  if(status){
-
   if(isPlaying){
 
-  status.innerText =
-    "▶ Play Mode";
+    if(status){
+      status.innerText =
+        "▶ Play Mode";
+    }
 
-  startEnemySpawner();
 
-}else{
+    startEnemySpawner();
 
-  status.innerText =
-    "Editor Mode";
+  }else{
 
-  stopEnemySpawner();
+    if(status){
+      status.innerText =
+        "Editor Mode";
+    }
 
-  }
+
+    stopEnemySpawner();
 
   }
 
@@ -1131,11 +1093,7 @@ function applyImage(){
     );
 
 
-  if(!input){
-
-    return;
-
-  }
+  if(!input) return;
 
 
   const file =
@@ -1163,18 +1121,14 @@ function applyImage(){
       selectedObject.style.backgroundImage =
         `url("${e.target.result}")`;
 
-
       selectedObject.style.backgroundSize =
         "cover";
-
 
       selectedObject.style.backgroundPosition =
         "center";
 
-
       selectedObject.style.backgroundRepeat =
         "no-repeat";
-
 
       selectedObject.innerText =
         "";
@@ -1221,8 +1175,7 @@ function removeImage(){
 
 function saveProject(){
 
-  const objects =
-    [];
+  const objects = [];
 
 
   [
@@ -1283,8 +1236,7 @@ function saveProject(){
 
   const project = {
 
-    version:
-      4,
+    version: 5,
 
     objects:
       objects,
@@ -1343,9 +1295,7 @@ function loadProject(){
 
 
   if(!saved){
-
     return;
-
   }
 
 
@@ -1355,13 +1305,14 @@ function loadProject(){
       JSON.parse(saved);
 
 
+    stopEnemySpawner();
+
+
     gameArea.innerHTML =
       "";
 
-
     selectedObject =
       null;
-
 
     objectCount =
       0;
@@ -1490,18 +1441,14 @@ function loadProject(){
           obj.style.backgroundImage =
             data.image;
 
-
           obj.style.backgroundSize =
             "cover";
-
 
           obj.style.backgroundPosition =
             "center";
 
-
           obj.style.backgroundRepeat =
             "no-repeat";
-
 
           obj.innerText =
             "";
@@ -1510,9 +1457,7 @@ function loadProject(){
 
 
         if(
-          obj.dataset.name.startsWith(
-            "Enemy"
-          )
+          obj.dataset.enemyType
         ){
 
           if(!obj.dataset.hp){
@@ -1534,7 +1479,6 @@ function loadProject(){
           createEnemyHealthBar(
             obj
           );
-
 
           updateEnemyHealthBar(
             obj
@@ -1594,8 +1538,7 @@ document.addEventListener(
 
     keys[
       e.key.toLowerCase()
-    ] =
-      true;
+    ] = true;
 
   }
 );
@@ -1607,8 +1550,7 @@ document.addEventListener(
 
     keys[
       e.key.toLowerCase()
-    ] =
-      false;
+    ] = false;
 
   }
 );
@@ -1679,6 +1621,30 @@ function switchControl(){
 
 
 // ========================================
+// 👤 GET PLAYER
+// ========================================
+
+function getPlayer(){
+
+  return [
+    ...gameArea.children
+  ].find(
+    function(obj){
+
+      return (
+        obj.dataset.name &&
+        obj.dataset.name.startsWith(
+          "Player"
+        )
+      );
+
+    }
+  );
+
+}
+
+
+// ========================================
 // 🎮 MOVE PLAYER
 // ========================================
 
@@ -1701,7 +1667,6 @@ function movePlayer(direction){
       player.style.left
     ) || 0;
 
-
   let y =
     parseFloat(
       player.style.top
@@ -1715,14 +1680,11 @@ function movePlayer(direction){
   if(direction === "left")
     x -= speed;
 
-
   if(direction === "right")
     x += speed;
 
-
   if(direction === "up")
     y -= speed;
-
 
   if(direction === "down")
     y += speed;
@@ -1752,7 +1714,6 @@ function movePlayer(direction){
 
   player.style.left =
     x + "px";
-
 
   player.style.top =
     y + "px";
@@ -1795,7 +1756,6 @@ function gameLoop(){
           controlledObject.style.left
         ) || 0;
 
-
       let y =
         parseFloat(
           controlledObject.style.top
@@ -1809,8 +1769,7 @@ function gameLoop(){
       if(
         keys["a"] ||
         keys["arrowleft"] ||
-        touchDirection ===
-        "left"
+        touchDirection === "left"
       ){
 
         x -= speed;
@@ -1821,8 +1780,7 @@ function gameLoop(){
       if(
         keys["d"] ||
         keys["arrowright"] ||
-        touchDirection ===
-        "right"
+        touchDirection === "right"
       ){
 
         x += speed;
@@ -1833,8 +1791,7 @@ function gameLoop(){
       if(
         keys["w"] ||
         keys["arrowup"] ||
-        touchDirection ===
-        "up"
+        touchDirection === "up"
       ){
 
         y -= speed;
@@ -1845,8 +1802,7 @@ function gameLoop(){
       if(
         keys["s"] ||
         keys["arrowdown"] ||
-        touchDirection ===
-        "down"
+        touchDirection === "down"
       ){
 
         y += speed;
@@ -1879,7 +1835,6 @@ function gameLoop(){
       controlledObject.style.left =
         x + "px";
 
-
       controlledObject.style.top =
         y + "px";
 
@@ -1896,30 +1851,6 @@ function gameLoop(){
 
 
 // ========================================
-// 👤 GET PLAYER
-// ========================================
-
-function getPlayer(){
-
-  return [
-    ...gameArea.children
-  ].find(
-    function(obj){
-
-      return (
-        obj.dataset.name &&
-        obj.dataset.name.startsWith(
-          "Player"
-        )
-      );
-
-    }
-  );
-
-}
-
-
-// ========================================
 // 👹 ENEMY AI
 // ========================================
 
@@ -1929,20 +1860,20 @@ function enemyAI(enemy){
 
   if(gamePaused()) return;
 
+  if(!enemy) return;
+
 
   const player =
     getPlayer();
 
 
-  if(!player)
-    return;
+  if(!player) return;
 
 
   let enemyX =
     parseFloat(
       enemy.style.left
     ) || 0;
-
 
   let enemyY =
     parseFloat(
@@ -1955,7 +1886,6 @@ function enemyAI(enemy){
       player.style.left
     ) || 0;
 
-
   const playerY =
     parseFloat(
       player.style.top
@@ -1963,13 +1893,10 @@ function enemyAI(enemy){
 
 
   const dx =
-    playerX -
-    enemyX;
-
+    playerX - enemyX;
 
   const dy =
-    playerY -
-    enemyY;
+    playerY - enemyY;
 
 
   const distance =
@@ -1979,27 +1906,33 @@ function enemyAI(enemy){
     );
 
 
-  let speed = 1.2;
+  // ========================================
+  // 🏃 LEVEL + TYPE SPEED
+  // ========================================
 
-// 👺 STRONG ENEMY
-if(
-  enemy.dataset.enemyType ===
-  "Strong"
-){
+  let speed =
+    1.2 +
+    ((level - 1) * 0.05);
 
-  speed = 1.8;
 
-}
+  if(
+    enemy.dataset.enemyType ===
+    "Strong"
+  ){
 
-// 💀 BOSS
-if(
-  enemy.dataset.enemyType ===
-  "Boss"
-){
+    speed += 0.6;
 
-  speed = 2.2;
+  }
 
-}
+
+  if(
+    enemy.dataset.enemyType ===
+    "Boss"
+  ){
+
+    speed += 1.0;
+
+  }
 
 
   if(distance > 65){
@@ -2049,7 +1982,6 @@ if(
     enemy.style.left =
       enemyX + "px";
 
-
     enemy.style.top =
       enemyY + "px";
 
@@ -2065,12 +1997,9 @@ if(
 setInterval(
   function(){
 
-    if(!isPlaying)
-      return;
+    if(!isPlaying) return;
 
-
-    if(gamePaused())
-      return;
+    if(gamePaused()) return;
 
 
     document
@@ -2100,6 +2029,182 @@ setInterval(
 
 
 // ========================================
+// 👹 ENEMY ATTACK
+// ========================================
+
+function enemyAttack(enemy){
+
+  if(!isPlaying) return;
+
+  if(gamePaused()) return;
+
+  if(!enemy) return;
+
+
+  const player =
+    getPlayer();
+
+
+  if(!player) return;
+
+
+  const enemyX =
+    parseFloat(
+      enemy.style.left
+    ) || 0;
+
+  const enemyY =
+    parseFloat(
+      enemy.style.top
+    ) || 0;
+
+
+  const playerX =
+    parseFloat(
+      player.style.left
+    ) || 0;
+
+  const playerY =
+    parseFloat(
+      player.style.top
+    ) || 0;
+
+
+  const dx =
+    enemyX - playerX;
+
+  const dy =
+    enemyY - playerY;
+
+
+  const distance =
+    Math.sqrt(
+      dx * dx +
+      dy * dy
+    );
+
+
+  if(distance > 75){
+    return;
+  }
+
+
+  if(
+    enemy.dataset.attacking ===
+    "true"
+  ){
+
+    return;
+
+  }
+
+
+  enemy.dataset.attacking =
+    "true";
+
+
+  // ========================================
+  // 💥 LEVEL + TYPE DAMAGE
+  // ========================================
+
+  let damage =
+    5 +
+    ((level - 1) * 0.5);
+
+  let cooldown =
+    1000;
+
+
+  if(
+    enemy.dataset.enemyType ===
+    "Strong"
+  ){
+
+    damage += 5;
+    cooldown = 650;
+
+  }
+
+
+  if(
+    enemy.dataset.enemyType ===
+    "Boss"
+  ){
+
+    damage += 10;
+    cooldown = 450;
+
+  }
+
+
+  showHitEffect(
+    playerX + 20,
+    playerY - 20,
+    "💢"
+  );
+
+
+  damagePlayer(
+    damage
+  );
+
+
+  setTimeout(
+    function(){
+
+      if(enemy){
+
+        enemy.dataset.attacking =
+          "false";
+
+      }
+
+    },
+    cooldown
+  );
+
+}
+
+
+// ========================================
+// ⚔️ ENEMY ATTACK LOOP
+// ========================================
+
+setInterval(
+  function(){
+
+    if(!isPlaying) return;
+
+    if(gamePaused()) return;
+
+
+    document
+      .querySelectorAll(
+        ".object"
+      )
+      .forEach(
+        function(enemy){
+
+          if(
+            enemy.dataset.name &&
+            enemy.dataset.name.startsWith(
+              "Enemy"
+            )
+          ){
+
+            enemyAttack(enemy);
+
+          }
+
+        }
+      );
+
+  },
+  100
+);
+
+
+// ========================================
 // ❤️ PLAYER HP UI
 // ========================================
 
@@ -2109,7 +2214,6 @@ function updateHPUI(){
     document.getElementById(
       "playerHP"
     );
-
 
   const fill =
     document.getElementById(
@@ -2159,6 +2263,563 @@ function updateHPUI(){
 
 
 // ========================================
+// 💥 DAMAGE PLAYER
+// ========================================
+
+function damagePlayer(amount){
+
+  if(gamePaused()) return;
+
+  if(playerHP <= 0) return;
+
+
+  if(isBlocking){
+
+    amount = 2;
+
+  }
+
+
+  playerHP -=
+    amount;
+
+
+  if(playerHP < 0){
+
+    playerHP = 0;
+
+  }
+
+
+  updateHPUI();
+
+
+  if(playerHP <= 0){
+
+    isPlaying = false;
+
+    stopEnemySpawner();
+
+    isBlocking = false;
+
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+
+    if(status){
+
+      status.innerText =
+        "💀 Player Defeated";
+
+    }
+
+
+    updateBlockButton();
+
+  }
+
+}
+
+
+// ========================================
+// 💢 HIT EFFECT
+// ========================================
+
+function showHitEffect(
+  x,
+  y,
+  symbol
+){
+
+  if(gamePaused()) return;
+
+
+  const hit =
+    document.createElement(
+      "div"
+    );
+
+
+  hit.className =
+    "hitEffect";
+
+
+  hit.innerText =
+    symbol || "💥";
+
+
+  hit.style.left =
+    x + "px";
+
+  hit.style.top =
+    y + "px";
+
+
+  gameArea.appendChild(
+    hit
+  );
+
+
+  setTimeout(
+    function(){
+
+      if(hit){
+
+        hit.remove();
+
+      }
+
+    },
+    500
+  );
+
+}
+
+
+// ========================================
+// ⚔️ PLAYER ATTACK
+// ========================================
+
+function playerAttack(){
+
+  if(!isPlaying) return;
+
+  if(gamePaused()) return;
+
+
+  const player =
+    getPlayer();
+
+
+  if(!player) return;
+
+
+  const playerX =
+    parseFloat(
+      player.style.left
+    ) || 0;
+
+  const playerY =
+    parseFloat(
+      player.style.top
+    ) || 0;
+
+
+  let hitEnemy =
+    null;
+
+  let closestDistance =
+    Infinity;
+
+
+  document
+    .querySelectorAll(
+      ".object"
+    )
+    .forEach(
+      function(enemy){
+
+        if(
+          !enemy.dataset.name ||
+          !enemy.dataset.name.startsWith(
+            "Enemy"
+          )
+        ){
+
+          return;
+
+        }
+
+
+        const enemyX =
+          parseFloat(
+            enemy.style.left
+          ) || 0;
+
+        const enemyY =
+          parseFloat(
+            enemy.style.top
+          ) || 0;
+
+
+        const dx =
+          enemyX - playerX;
+
+        const dy =
+          enemyY - playerY;
+
+
+        const distance =
+          Math.sqrt(
+            dx * dx +
+            dy * dy
+          );
+
+
+        if(
+          distance <= 100 &&
+          distance <
+          closestDistance
+        ){
+
+          closestDistance =
+            distance;
+
+          hitEnemy =
+            enemy;
+
+        }
+
+      }
+    );
+
+
+  if(!hitEnemy){
+
+    showHitEffect(
+      playerX + 20,
+      playerY - 10,
+      "❌"
+    );
+
+    return;
+
+  }
+
+
+  let hp =
+    parseInt(
+      hitEnemy.dataset.hp
+    );
+
+  let maxHp =
+    parseInt(
+      hitEnemy.dataset.maxHp
+    );
+
+
+  if(isNaN(hp))
+    hp = 100;
+
+  if(isNaN(maxHp))
+    maxHp = 100;
+
+
+  // ========================================
+  // ⚔️ PLAYER DAMAGE
+  // ========================================
+
+  let damage =
+    20;
+
+
+  if(
+    hitEnemy.dataset.enemyType ===
+    "Strong"
+  ){
+
+    damage = 25;
+
+  }
+
+
+  if(
+    hitEnemy.dataset.enemyType ===
+    "Boss"
+  ){
+
+    damage = 30;
+
+  }
+
+
+  hp -= damage;
+
+
+  if(hp < 0){
+    hp = 0;
+  }
+
+
+  hitEnemy.dataset.hp =
+    hp;
+
+
+  updateEnemyHealthBar(
+    hitEnemy
+  );
+
+
+  const enemyX =
+    parseFloat(
+      hitEnemy.style.left
+    ) || 0;
+
+  const enemyY =
+    parseFloat(
+      hitEnemy.style.top
+    ) || 0;
+
+
+  showHitEffect(
+    enemyX + 15,
+    enemyY - 15,
+    "⚔️"
+  );
+
+
+  // ========================================
+  // 💥 KNOCKBACK
+  // ========================================
+
+  const knockback =
+    hitEnemy.dataset.enemyType ===
+    "Boss"
+    ? 10
+    : hitEnemy.dataset.enemyType ===
+      "Strong"
+      ? 25
+      : 35;
+
+
+  let knockX =
+    enemyX - playerX;
+
+  let knockY =
+    enemyY - playerY;
+
+
+  const knockDistance =
+    Math.sqrt(
+      knockX * knockX +
+      knockY * knockY
+    );
+
+
+  if(knockDistance > 0){
+
+    knockX =
+      (knockX / knockDistance) *
+      knockback;
+
+    knockY =
+      (knockY / knockDistance) *
+      knockback;
+
+
+    let newX =
+      enemyX + knockX;
+
+    let newY =
+      enemyY + knockY;
+
+
+    newX =
+      Math.max(
+        0,
+        Math.min(
+          newX,
+          gameArea.clientWidth -
+          hitEnemy.offsetWidth
+        )
+      );
+
+
+    newY =
+      Math.max(
+        0,
+        Math.min(
+          newY,
+          gameArea.clientHeight -
+          hitEnemy.offsetHeight
+        )
+      );
+
+
+    hitEnemy.style.left =
+      newX + "px";
+
+    hitEnemy.style.top =
+      newY + "px";
+
+  }
+
+
+  // ========================================
+  // 💀 DEAD
+  // ========================================
+
+  if(hp <= 0){
+
+    let rewardCoins =
+      10;
+
+    let rewardScore =
+      100;
+
+
+    if(
+      hitEnemy.dataset.enemyType ===
+      "Strong"
+    ){
+
+      rewardCoins = 25;
+      rewardScore = 250;
+
+    }
+
+
+    if(
+      hitEnemy.dataset.enemyType ===
+      "Boss"
+    ){
+
+      rewardCoins = 100;
+      rewardScore = 1000;
+
+    }
+
+
+    coins +=
+      rewardCoins;
+
+    score +=
+      rewardScore;
+
+
+    updateStatsUI();
+
+
+    showHitEffect(
+      enemyX + 15,
+      enemyY - 20,
+      "💀"
+    );
+
+
+    setTimeout(
+      function(){
+
+        if(hitEnemy){
+
+          hitEnemy.remove();
+
+        }
+
+      },
+      300
+    );
+
+  }
+
+}
+
+
+// ========================================
+// 🛡️ BLOCK
+// ========================================
+
+function toggleBlock(){
+
+  if(gamePaused()) return;
+
+  if(!isPlaying) return;
+
+
+  if(stamina <= 0){
+
+    isBlocking = false;
+
+    updateBlockButton();
+
+    return;
+
+  }
+
+
+  isBlocking =
+    !isBlocking;
+
+
+  updateBlockButton();
+
+}
+
+
+// ========================================
+// 🛡️ BLOCK UI
+// ========================================
+
+function updateBlockButton(){
+
+  const button =
+    document.getElementById(
+      "blockButton"
+    );
+
+
+  if(!button) return;
+
+
+  button.innerText =
+    isBlocking
+    ? "🛡️ Block ON"
+    : "🛡️ Block OFF";
+
+}
+
+
+// ========================================
+// ⚡ STAMINA
+// ========================================
+
+setInterval(
+  function(){
+
+    if(gamePaused())
+      return;
+
+
+    if(isBlocking){
+
+      stamina -= 5;
+
+
+      if(stamina <= 0){
+
+        stamina = 0;
+
+        isBlocking = false;
+
+        updateBlockButton();
+
+      }
+
+    }else{
+
+      stamina += 2;
+
+
+      if(stamina > 100){
+
+        stamina = 100;
+
+      }
+
+    }
+
+
+    updateStaminaUI();
+
+  },
+  500
+);
+
+
+// ========================================
 // ⚡ STAMINA UI
 // ========================================
 
@@ -2168,7 +2829,6 @@ function updateStaminaUI(){
     document.getElementById(
       "staminaFill"
     );
-
 
   const text =
     document.getElementById(
@@ -2217,7 +2877,7 @@ function updateStaminaUI(){
 
 
 // ========================================
-// 🪙 STATS
+// 🪙 STATS UI
 // ========================================
 
 function updateStatsUI(){
@@ -2226,7 +2886,6 @@ function updateStatsUI(){
     document.getElementById(
       "coinCount"
     );
-
 
   const scoreCount =
     document.getElementById(
@@ -2275,787 +2934,17 @@ function updateLevelUI(){
 
 
 // ========================================
-// ❤️ DAMAGE PLAYER
-// ========================================
-
-function damagePlayer(amount){
-
-  if(gamePaused())
-    return;
-
-
-  if(playerHP <= 0)
-    return;
-
-
-  if(isBlocking){
-
-    amount =
-      2;
-
-  }
-
-
-  playerHP -=
-    amount;
-
-
-  if(playerHP < 0){
-
-    playerHP =
-      0;
-
-  }
-
-
-  updateHPUI();
-
-
-  if(playerHP <= 0){
-
-    isPlaying =
-      false;
-
-
-    isBlocking =
-      false;
-
-
-    const status =
-      document.getElementById(
-        "status"
-      );
-
-
-    if(status){
-
-      status.innerText =
-        "💀 Player Defeated";
-
-    }
-
-
-    updateBlockButton();
-
-  }
-
-}
-
-
-// ========================================
-// 👹 ENEMY ATTACK
-// ========================================
-
-function enemyAttack(enemy){
-
-  if(!isPlaying)
-    return;
-
-
-  if(gamePaused())
-    return;
-
-
-  const player =
-    getPlayer();
-
-
-  if(!player)
-    return;
-
-
-  const enemyX =
-    parseFloat(
-      enemy.style.left
-    ) || 0;
-
-
-  const enemyY =
-    parseFloat(
-      enemy.style.top
-    ) || 0;
-
-
-  const playerX =
-    parseFloat(
-      player.style.left
-    ) || 0;
-
-
-  const playerY =
-    parseFloat(
-      player.style.top
-    ) || 0;
-
-
-  const dx =
-    enemyX -
-    playerX;
-
-
-  const dy =
-    enemyY -
-    playerY;
-
-
-  const distance =
-    Math.sqrt(
-      dx * dx +
-      dy * dy
-    );
-
-
-  if(distance <= 75){
-
-    if(
-      enemy.dataset.attacking ===
-      "true"
-    ){
-
-      return;
-
-    }
-
-
-    enemy.dataset.attacking =
-      "true";
-
-
-    let damage = 5;
-let cooldown = 1000;
-
-// 👺 STRONG ENEMY
-if(
-  enemy.dataset.enemyType ===
-  "Strong"
-){
-
-  damage = 10;
-  cooldown = 650;
-
-}
-
-// 💀 BOSS
-if(
-  enemy.dataset.enemyType ===
-  "Boss"
-){
-
-  damage = 15;
-  cooldown = 450;
-
-}
-
-
-    showHitEffect(
-      playerX + 20,
-      playerY - 20,
-      "💢"
-    );
-
-
-    damagePlayer(
-      damage
-    );
-
-
-    setTimeout(
-      function(){
-
-        if(enemy){
-
-          enemy.dataset.attacking =
-            "false";
-
-        }
-
-      },
-      1000
-    );
-
-  }
-
-}
-
-
-// ========================================
-// ⚔️ ENEMY ATTACK LOOP
-// ========================================
-
-setInterval(
-  function(){
-
-    if(!isPlaying)
-      return;
-
-
-    if(gamePaused())
-      return;
-
-
-    document
-      .querySelectorAll(
-        ".object"
-      )
-      .forEach(
-        function(enemy){
-
-          if(
-            enemy.dataset.name &&
-            enemy.dataset.name.startsWith(
-              "Enemy"
-            )
-          ){
-
-            enemyAttack(enemy);
-
-          }
-
-        }
-      );
-
-  },
-  100
-);
-
-
-// ========================================
-// 💢 HIT EFFECT
-// ========================================
-
-function showHitEffect(
-  x,
-  y,
-  symbol
-){
-
-  if(gamePaused())
-    return;
-
-
-  const hit =
-    document.createElement(
-      "div"
-    );
-
-
-  hit.className =
-    "hitEffect";
-
-
-  hit.innerText =
-    symbol || "💥";
-
-
-  hit.style.left =
-    x + "px";
-
-
-  hit.style.top =
-    y + "px";
-
-
-  gameArea.appendChild(
-    hit
-  );
-
-
-  setTimeout(
-    function(){
-
-      if(hit){
-
-        hit.remove();
-
-      }
-
-    },
-    500
-  );
-
-}
-
-
-// ========================================
-// ⚔️ PLAYER ATTACK
-// ========================================
-
-function playerAttack(){
-
-  if(!isPlaying)
-    return;
-
-
-  if(gamePaused())
-    return;
-
-
-  const player =
-    getPlayer();
-
-
-  if(!player)
-    return;
-
-
-  const playerX =
-    parseFloat(
-      player.style.left
-    ) || 0;
-
-
-  const playerY =
-    parseFloat(
-      player.style.top
-    ) || 0;
-
-
-  let hitEnemy =
-    null;
-
-
-  let closestDistance =
-    Infinity;
-
-
-  document
-    .querySelectorAll(
-      ".object"
-    )
-    .forEach(
-      function(enemy){
-
-        if(
-          !enemy.dataset.name ||
-          !enemy.dataset.name.startsWith(
-            "Enemy"
-          )
-        ){
-
-          return;
-
-        }
-
-
-        const enemyX =
-          parseFloat(
-            enemy.style.left
-          ) || 0;
-
-
-        const enemyY =
-          parseFloat(
-            enemy.style.top
-          ) || 0;
-
-
-        const dx =
-          enemyX -
-          playerX;
-
-
-        const dy =
-          enemyY -
-          playerY;
-
-
-        const distance =
-          Math.sqrt(
-            dx * dx +
-            dy * dy
-          );
-
-
-        if(
-          distance <= 100 &&
-          distance <
-          closestDistance
-        ){
-
-          closestDistance =
-            distance;
-
-
-          hitEnemy =
-            enemy;
-
-        }
-
-      }
-    );
-
-
-  if(!hitEnemy){
-
-    showHitEffect(
-      playerX + 20,
-      playerY - 10,
-      "❌"
-    );
-    // ========================================
-// 💥 ENEMY KNOCKBACK
-// ========================================
-
-const knockback =
-  hitEnemy.dataset.enemyType === "Boss"
-  ? 10
-  : hitEnemy.dataset.enemyType === "Strong"
-  ? 25
-  : 35;
-
-let knockX =
-  enemyX - playerX;
-
-let knockY =
-  enemyY - playerY;
-
-const knockDistance =
-  Math.sqrt(
-    knockX * knockX +
-    knockY * knockY
-  );
-
-if(knockDistance > 0){
-
-  knockX =
-    (knockX / knockDistance) *
-    knockback;
-
-  knockY =
-    (knockY / knockDistance) *
-    knockback;
-
-  let newX =
-    enemyX + knockX;
-
-  let newY =
-    enemyY + knockY;
-
-  newX =
-    Math.max(
-      0,
-      Math.min(
-        newX,
-        gameArea.clientWidth -
-        hitEnemy.offsetWidth
-      )
-    );
-
-  newY =
-    Math.max(
-      0,
-      Math.min(
-        newY,
-        gameArea.clientHeight -
-        hitEnemy.offsetHeight
-      )
-    );
-
-  hitEnemy.style.left =
-    newX + "px";
-
-  hitEnemy.style.top =
-    newY + "px";
-
-}
-
-    return;
-
-  }
-
-
-  let hp =
-    parseInt(
-      hitEnemy.dataset.hp
-    );
-
-
-  let maxHp =
-    parseInt(
-      hitEnemy.dataset.maxHp
-    );
-
-
-  if(isNaN(hp))
-    hp = 100;
-
-
-  if(isNaN(maxHp))
-    maxHp = 100;
-
-
-  // ⚔️ PLAYER DAMAGE
-
-  let damage =
-    20;
-
-
-  if(
-    hitEnemy.dataset.enemyType ===
-    "Strong"
-  ){
-
-    damage =
-      25;
-
-  }
-
-
-  if(
-    hitEnemy.dataset.enemyType ===
-    "Boss"
-  ){
-
-    damage =
-      30;
-
-  }
-
-
-  hp -=
-    damage;
-
-
-  if(hp < 0)
-    hp = 0;
-
-
-  hitEnemy.dataset.hp =
-    hp;
-
-
-  updateEnemyHealthBar(
-    hitEnemy
-  );
-
-
-  const enemyX =
-    parseFloat(
-      hitEnemy.style.left
-    ) || 0;
-
-
-  const enemyY =
-    parseFloat(
-      hitEnemy.style.top
-    ) || 0;
-
-
-  showHitEffect(
-    enemyX + 15,
-    enemyY - 15,
-    "⚔️"
-  );
-
-
-  // 💀 DEAD
-
-  if(hp <= 0){
-
-    let rewardCoins =
-      10;
-
-
-    let rewardScore =
-      100;
-
-
-    if(
-      hitEnemy.dataset.enemyType ===
-      "Strong"
-    ){
-
-      rewardCoins =
-        25;
-
-
-      rewardScore =
-        250;
-
-    }
-
-
-    if(
-      hitEnemy.dataset.enemyType ===
-      "Boss"
-    ){
-
-      rewardCoins =
-        100;
-
-
-      rewardScore =
-        1000;
-
-    }
-
-
-    coins +=
-      rewardCoins;
-
-
-    score +=
-      rewardScore;
-
-
-    updateStatsUI();
-
-
-    showHitEffect(
-      enemyX + 15,
-      enemyY - 20,
-      "💀"
-    );
-
-
-    setTimeout(
-      function(){
-
-        if(hitEnemy){
-
-          hitEnemy.remove();
-
-        }
-
-      },
-      300
-    );
-
-  }
-
-}
-
-
-// ========================================
-// 🛡️ BLOCK
-// ========================================
-
-function toggleBlock(){
-
-  if(gamePaused())
-    return;
-
-
-  if(!isPlaying)
-    return;
-
-
-  if(stamina <= 0){
-
-    isBlocking =
-      false;
-
-
-    updateBlockButton();
-
-    return;
-
-  }
-
-
-  isBlocking =
-    !isBlocking;
-
-
-  updateBlockButton();
-
-}
-
-
-// ========================================
-// 🛡️ BLOCK UI
-// ========================================
-
-function updateBlockButton(){
-
-  const button =
-    document.getElementById(
-      "blockButton"
-    );
-
-
-  if(!button)
-    return;
-
-
-  button.innerText =
-    isBlocking
-    ? "🛡️ Block ON"
-    : "🛡️ Block OFF";
-
-}
-
-
-// ========================================
-// ⚡ STAMINA
-// ========================================
-
-setInterval(
-  function(){
-
-    if(gamePaused())
-      return;
-
-
-    if(isBlocking){
-
-      stamina -=
-        5;
-
-
-      if(stamina <= 0){
-
-        stamina =
-          0;
-
-
-        isBlocking =
-          false;
-
-
-        updateBlockButton();
-
-      }
-
-    }else{
-
-      stamina +=
-        2;
-
-
-      if(stamina > 100){
-
-        stamina =
-          100;
-
-      }
-
-    }
-
-
-    updateStaminaUI();
-
-  },
-  500
-);
-
-
-// ========================================
 // 🎁 REWARD
 // ========================================
 
 function addReward(){
 
-  if(gamePaused())
-    return;
+  if(gamePaused()) return;
 
 
-  coins +=
-    10;
+  coins += 10;
 
-
-  score +=
-    100;
+  score += 100;
 
 
   updateStatsUI();
@@ -3079,19 +2968,14 @@ function startNextLevel(){
   updateLevelUI();
 
 
-  score +=
-    500;
+  score += 500;
 
 
   updateStatsUI();
 
 
-  // Normal enemy
-
   addEnemy();
 
-
-  // Strong enemy from level 2
 
   if(level >= 2){
 
@@ -3100,11 +2984,18 @@ function startNextLevel(){
   }
 
 
-  // Boss from level 3
-
   if(level >= 3){
 
     addBossEnemy();
+
+  }
+
+
+  // Restart spawner with new level speed
+
+  if(isPlaying){
+
+    startEnemySpawner();
 
   }
 
@@ -3152,6 +3043,276 @@ function respawnEnemy(type){
 
 
 // ========================================
+// 🎲 RANDOM ENEMY TYPE
+// ========================================
+
+function getRandomEnemyType(){
+
+  const random =
+    Math.random();
+
+
+  // Level 1-2
+
+  if(level <= 2){
+
+    if(random < 0.80){
+
+      return {
+        type: "Normal",
+        emoji: "👹",
+        hp: 100
+      };
+
+    }
+
+
+    return {
+      type: "Strong",
+      emoji: "👺",
+      hp: 200
+    };
+
+  }
+
+
+  // Level 3-4
+
+  if(level <= 4){
+
+    if(random < 0.55){
+
+      return {
+        type: "Normal",
+        emoji: "👹",
+        hp: 100
+      };
+
+    }
+
+
+    if(random < 0.90){
+
+      return {
+        type: "Strong",
+        emoji: "👺",
+        hp: 200
+      };
+
+    }
+
+
+    return {
+      type: "Boss",
+      emoji: "💀",
+      hp: 500
+    };
+
+  }
+
+
+  // Level 5+
+
+  if(random < 0.30){
+
+    return {
+      type: "Normal",
+      emoji: "👹",
+      hp: 100
+    };
+
+  }
+
+
+  if(random < 0.75){
+
+    return {
+      type: "Strong",
+      emoji: "👺",
+      hp: 200
+    };
+
+  }
+
+
+  return {
+    type: "Boss",
+    emoji: "💀",
+    hp: 500
+  };
+
+}
+
+
+// ========================================
+// 👹 SPAWN ENEMY
+// ========================================
+
+function spawnEnemy(){
+
+  if(!isPlaying || isPaused){
+    return;
+  }
+
+
+  const data =
+    getRandomEnemyType();
+
+
+  const enemy =
+    createObject(
+      data.type,
+      data.emoji,
+      data.type === "Boss"
+      ? "#7e22ce"
+      : data.type === "Strong"
+      ? "#ea580c"
+      : "#dc2626"
+    );
+
+
+  if(!enemy){
+    return;
+  }
+
+
+  // ========================================
+  // ❤️ LEVEL BASED HP
+  // ========================================
+
+  const hpMultiplier =
+    1 + ((level - 1) * 0.20);
+
+
+  const scaledHP =
+    Math.floor(
+      data.hp *
+      hpMultiplier
+    );
+
+
+  enemy.dataset.enemyType =
+    data.type;
+
+  enemy.dataset.hp =
+    scaledHP;
+
+  enemy.dataset.maxHp =
+    scaledHP;
+
+  enemy.dataset.attacking =
+    "false";
+
+
+  // ========================================
+  // 📍 RANDOM POSITION
+  // ========================================
+
+  positionEnemy(enemy);
+
+
+  // ========================================
+  // ❤️ HEALTH BAR
+  // ========================================
+
+  createEnemyHealthBar(
+    enemy
+  );
+
+  updateEnemyHealthBar(
+    enemy
+  );
+
+
+  return enemy;
+
+}
+
+
+// ========================================
+// ⏱️ START ENEMY SPAWNER
+// ========================================
+
+function startEnemySpawner(){
+
+  if(enemySpawnTimer){
+
+    clearInterval(
+      enemySpawnTimer
+    );
+
+  }
+
+
+  let spawnTime =
+    5000;
+
+
+  if(level >= 3){
+
+    spawnTime =
+      4000;
+
+  }
+
+
+  if(level >= 5){
+
+    spawnTime =
+      3000;
+
+  }
+
+
+  if(level >= 10){
+
+    spawnTime =
+      2000;
+
+  }
+
+
+  enemySpawnTimer =
+    setInterval(
+      function(){
+
+        if(
+          isPlaying &&
+          !isPaused
+        ){
+
+          spawnEnemy();
+
+        }
+
+      },
+      spawnTime
+    );
+
+}
+
+
+// ========================================
+// 🛑 STOP ENEMY SPAWNER
+// ========================================
+
+function stopEnemySpawner(){
+
+  if(enemySpawnTimer){
+
+    clearInterval(
+      enemySpawnTimer
+    );
+
+    enemySpawnTimer =
+      null;
+
+  }
+
+}
+
+
+// ========================================
 // 🚀 START ENGINE
 // ========================================
 
@@ -3168,191 +3329,3 @@ updateLevelUI();
 updateBlockButton();
 
 gameLoop();
-
-// ========================================
-// 👹 ENEMY SPAWN SYSTEM
-// ========================================
-
-let enemySpawnTimer = null;
-
-function spawnEnemy(){
-
-  if(!isPlaying || isPaused){
-    return;
-  }
-
-  const enemy = getRandomEnemyType();
-
-  const enemy =
-    createObject(
-      data.type + " Enemy",
-      data.emoji,
-      "#ef4444"
-    );
-
-  if(!enemy){
-    return;
-  }
-
-  enemy.dataset.enemyType = data.type;
-  enemy.dataset.hp = data.hp;
-  enemy.dataset.maxHp = data.hp;
-  enemy.dataset.attacking = "false";
-
-  // Random position
-  const maxX = Math.max(0, gameArea.clientWidth - 70);
-  const maxY = Math.max(0, gameArea.clientHeight - 100);
-
-  enemy.style.left =
-    Math.floor(Math.random() * maxX) + "px";
-
-  enemy.style.top =
-    Math.floor(Math.random() * maxY) + "px";
-
-  createEnemyHealthBar(enemy);
-
-  // Start AI
-  if(typeof startEnemyAI === "function"){
-    startEnemyAI(enemy);
-  }
-
-  return enemy;
-}
-
-
-// ========================================
-// ⏱️ START SPAWNING
-// ========================================
-
-// ========================================
-// ⏱️ LEVEL BASED ENEMY SPAWNER
-// ========================================
-
-function startEnemySpawner(){
-
-  // Stop old timer
-  if(enemySpawnTimer){
-    clearInterval(enemySpawnTimer);
-  }
-
-  // Level પ્રમાણે spawn time
-  let spawnTime = 5000;
-
-  if(level >= 3){
-    spawnTime = 4000;
-  }
-
-  if(level >= 5){
-    spawnTime = 3000;
-  }
-
-  if(level >= 10){
-    spawnTime = 2000;
-  }
-
-  enemySpawnTimer =
-    setInterval(() => {
-
-      if(isPlaying && !isPaused){
-        spawnEnemy();
-      }
-
-    }, spawnTime);
-}
-
-
-// ========================================
-// 🛑 STOP SPAWNING
-// ========================================
-
-function stopEnemySpawner(){
-
-  if(enemySpawnTimer){
-
-    clearInterval(enemySpawnTimer);
-
-    enemySpawnTimer = null;
-  }
-}
-
-// ========================================
-// 📈 LEVEL BASED ENEMY SPAWN
-// ========================================
-
-function getRandomEnemyType(){
-
-  const random = Math.random();
-
-  // Level 1–2
-  if(level <= 2){
-
-    if(random < 0.80){
-      return {
-        type: "Normal",
-        emoji: "👹",
-        hp: 100
-      };
-    }
-
-    return {
-      type: "Strong",
-      emoji: "👺",
-      hp: 200
-    };
-  }
-
-
-  // Level 3–4
-  if(level <= 4){
-
-    if(random < 0.55){
-      return {
-        type: "Normal",
-        emoji: "👹",
-        hp: 100
-      };
-    }
-
-    if(random < 0.90){
-      return {
-        type: "Strong",
-        emoji: "👺",
-        hp: 200
-      };
-    }
-
-    return {
-      type: "Boss",
-      emoji: "💀",
-      hp: 500
-    };
-  }
-
-
-  // Level 5+
-  if(random < 0.30){
-
-    return {
-      type: "Normal",
-      emoji: "👹",
-      hp: 100
-    };
-
-  }
-
-  if(random < 0.75){
-
-    return {
-      type: "Strong",
-      emoji: "👺",
-      hp: 200
-    };
-
-  }
-
-  return {
-    type: "Boss",
-    emoji: "💀",
-    hp: 500
-  };
-}
